@@ -2,66 +2,62 @@
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0d1117,50:161b22,100:0d1117&height=120&section=header" width="100%" />
 
 # Hi, I'm Shaurya 👋
-Builder. Civic-tech + sports analytics + a lot of open source.
+9th grade · Irvington HS · Fremont, CA
 
 <p align="center">
   <a href="mailto:sshaurya914@gmail.com"><img src="https://img.icons8.com/color/48/gmail-new.png" width="32" alt="Email"/></a>
+  <a href="https://www.linkedin.com/in/shaurya-singh-b7591540b"><img src="https://img.icons8.com/color/48/linkedin.png" width="32" alt="LinkedIn"/></a>
   <a href="https://github.com/LeSingh1"><img src="https://cdn.simpleicons.org/github/e6edf3" width="32" alt="GitHub"/></a>
 </p>
 </div>
 <br>
 
+## 🏆 Recent Win
+
+- **🥇 Beta Fund AI Super Hackathon — Winner ($500)** for **ShadowBuyer**, an autonomous B2B procurement agent swarm
+- **🤖 3× FTC Robotics Qualifier Finalist** — Lead CAD Designer & CAD Team Captain
+
+---
+
 ## 🛠️ Open Source
 
-Active multi-repo contributor across foundational tooling. ~48 PRs merged, ~50 in review across **Apple, Microsoft, NVIDIA, OpenAI, Google, Meta, Vercel, Stripe, Shopify, Cloudflare, HuggingFace,** and the major language/framework repos.
+**23 substantive merged PRs** across Apple, OpenAI, Meta, Microsoft, NVIDIA, Google, Cloudflare, Jest, Hono, and MLX.
 
-### Substantive landings
+### Flagship landings
 
 | PR | What it fixes |
 |---|---|
-| [apple/container#1559](https://github.com/apple/container/pull/1559) | Reject conflicting DNS flags in `container run`/`create` (fixes #1536) |
-| [apple/coremltools#2700](https://github.com/apple/coremltools/pull/2700) | `_EfficientKMeans` cluster reduction now uses intra-cluster errors (fixes #2698) |
-| [microsoft/rushstack#5805](https://github.com/microsoft/rushstack/pull/5805) | `package-deps-hash` skips Windows reserved device names (fixes #5604) |
-| [microsoft/rushstack#5804](https://github.com/microsoft/rushstack/pull/5804) | Route `lockfile-changed` warning to stderr (fixes #5406) |
-| [honojs/hono#4951](https://github.com/honojs/hono/pull/4951) | `compress` middleware respects Accept-Encoding when encoding option is set |
-| [jestjs/jest#16196](https://github.com/jestjs/jest/pull/16196) | `toMatchObject` / `objectContaining` accept class instances |
-| [openai/openai-agents-python#3485](https://github.com/openai/openai-agents-python/pull/3485) | Redact invalid JSON payload in `ModelBehaviorError` data |
-| [NVIDIA/apex#2003](https://github.com/NVIDIA/apex/pull/2003) | Fix `E721` type comparisons across the codebase |
+| [facebook/pyrefly#3415](https://github.com/facebook/pyrefly/pull/3415) | Fixed negative narrowing for `isinstance` tuple targets in Meta's Python type checker (landed via Phabricator) |
+| [apple/container#1559](https://github.com/apple/container/pull/1559) | Reject conflicting DNS flags in the `apple/container` CLI |
+| [apple/coremltools#2700](https://github.com/apple/coremltools/pull/2700) | K-Means weight-palettization correctness — use intra-cluster error instead of centroid coordinate sums |
+| [apple/password-manager-resources#1094](https://github.com/apple/password-manager-resources/pull/1094) | Node.js CI validation for all 419 password-rule entries; catches malformed rules before browsers see them |
+| [microsoft/rushstack#5805](https://github.com/microsoft/rushstack/pull/5805) | `package-deps-hash` handles Windows reserved names (`CON`, `PRN`, `NUL`) when branches are checked out on Linux/macOS |
+| [microsoft/rushstack#5804](https://github.com/microsoft/rushstack/pull/5804) | Rush lockfile-change warnings route to stderr so piping stdout doesn't break |
+| [honojs/hono#4951](https://github.com/honojs/hono/pull/4951) | `compress` middleware respects `Accept-Encoding` exclusions; +8 tests across zero-q, wildcard, multi-q-value, override cases |
+| [jestjs/jest#16196](https://github.com/jestjs/jest/pull/16196) | Widened `toMatchObject` / `objectContaining` TS matcher signatures to support class instances (longstanding TS2345) |
+| [NVIDIA/apex#2003](https://github.com/NVIDIA/apex/pull/2003) | Replaced `type(x) == cls` with `isinstance` across fused optimizer, GPU Direct Storage, and OpenFold Triton paths |
+| [openai/openai-agents-python#3485](https://github.com/openai/openai-agents-python/pull/3485) | Redacts raw failed JSON tool input from `ModelBehaviorError` when tool-data logging is disabled |
 
-Plus targeted fixes/docs in **apple/swift-nio, apple/servicetalk, apple/containerization, apple/foundationdb, apple/password-manager-resources, NVIDIA/TransformerEngine, NVIDIA/earth2studio, NVIDIA/gpu-operator, ml-explore/mlx, google/go-cloud, facebook/lexical, cloudflare/workers-sdk, openai/openai-agents-python**.
+Plus targeted fixes/docs in **apple/swift-nio, apple/servicetalk, apple/containerization, apple/foundationdb, ml-explore/mlx, NVIDIA/gpu-operator, NVIDIA/TransformerEngine, NVIDIA/earth2studio, google/go-cloud, facebook/lexical, cloudflare/workers-sdk**.
 
-### In review
+## 🚀 Projects
 
-Open PRs across **python/cpython, rust-lang/rust, rust-lang/rust-analyzer, denoland/deno, denoland/std, vuejs/core, solidjs/solid, python/mypy, sqlalchemy/sqlalchemy, evanw/esbuild, vitest-dev/vitest, trpc/trpc, TanStack/query, drizzle-team/drizzle-orm, vercel/ai, vercel/satori, vercel/swr, huggingface/datasets, simonw/sqlite-utils, apple/coremltools (4), microsoft/fluentui, microsoft/microsoft-ui-xaml, microsoft/PowerApps-Samples, stripe/react-stripe-js, stripe/smokescreen, stripe/skycfg, Shopify/draggable, Shopify/hydrogen, facebook/openzl, facebook/idb, NVIDIA/Megatron-LM, NVIDIA/earth2studio, openai/evals, openai/whisper, openai/openai-node, openai/openai-cookbook, openai/tiktoken, openai/shap-e, openai/transformer-debugger, openai/openai-realtime-console, openai/openai-realtime-agents**.
+- **[ShadowBuyer](https://github.com/LeSingh1/shadowbuyer)** 🏆 — Autonomous B2B procurement agent swarm. Six agents (vendor scouting, quote collection, adversarial negotiation, contract redline, email drafting). Python · FastAPI · React · Vite · Zeabur. Live demo cut pricing from $195 → $157.50 per host/month (≈$225K annual savings at 500 hosts). **Won $500 at Beta Fund AI Super Hackathon.**
+- **[urbanmind-vision](https://github.com/LeSingh1/urbanmind-vision)** — Full-stack AI infrastructure planning simulator. 50-year city simulation with a PPO RL agent (Stable Baselines3), constraint-validated road generator, WebSocket-streamed frames, Claude-driven AI Copilot. React + FastAPI + Mapbox.
+- **[shotsense-scout](https://github.com/LeSingh1/shotsense-scout)** — NBA playoff shot-quality agent. MongoDB Atlas Vector Search + Google Cloud Agent Builder + Gemini.
+- **[nba_shot_quality](https://github.com/LeSingh1/nba_shot_quality)** — Calibrated NBA xFG% model on `nba_api`. GroupKFold, `TargetEncoder` in-pipeline, empirical-Bayes shrinkage, LogReg baseline. Frontend uses canvas shot maps and Three.js arc replays.
+- **[edgeboard](https://github.com/LeSingh1/edgeboard)** — Real-time PrizePicks board + lineup optimizer. Real player projections (MLB Stats API, ESPN), live in-game stats, correlation-aware Smart Suggest.
 
-## 🚀 Current Builds
+## 🤖 Robotics & Leadership
 
-- **[edgeboard](https://github.com/LeSingh1/edgeboard)** — Personal real-time PrizePicks board + lineup optimizer. Real player projections (MLB Stats API, ESPN), live in-game stats, accurate Power/Flex multipliers, correlation-aware Smart Suggest.
-- **[urbanmind-vision](https://github.com/LeSingh1/urbanmind-vision)** — Full-stack AI infrastructure planning simulator. React + FastAPI + Claude + Mapbox, 50-year city simulation with a PPO RL agent (Stable Baselines3) and a constraint-validated road generator. Canonical base for the UrbanMind series.
-- **[shadowbuyer](https://github.com/LeSingh1/shadowbuyer)** — Autonomous B2B procurement agent swarm. Adversarial negotiator (Qwen3-Max vs GLM-5.1) routed through TokenRouter, deployed on Zeabur.
-- **[shotsense-scout](https://github.com/LeSingh1/shotsense-scout)** — MongoDB-powered NBA playoff shot-quality agent. Gemini + Google Cloud Agent Builder + MongoDB Atlas Vector Search.
-- **[nba_shot_quality](https://github.com/LeSingh1/nba_shot_quality)** — Calibrated NBA xFG% model on the free `nba_api` playoff dataset. Methodology-first: GroupKFold, `TargetEncoder` inside the Pipeline, empirical-Bayes shrinkage, LogReg baseline. Production-grade frontend with canvas shot maps and Three.js arc replays.
+- **Lead CAD Designer & CAD Team Captain** — FTC Robotics. Fusion 360: chassis, mechanisms, full robot layout, technical blueprints. **3× FTC Qualifier Finalist.**
+- **Senior Patrol Leader** — Boy Scouts. Leads a troop of 40–50 scouts.
+- **Team Captain** — Irvington HS Basketball. Leads the team in scoring, rebounding, and blocks.
 
-## 🏆 Hackathon Series
+## 📚 Professional Development
 
-The UrbanMind core (React + Zustand + Mapbox/MapLibre + Claude) is the shared spine across six entries — same architecture, retargeted scenario data, different rubric.
-
-| Project | Hackathon | Focus |
-|---|---|---|
-| [urbanmind-vision](https://github.com/LeSingh1/urbanmind-vision) | AI Autonomous Smart City Hackathon 2026 | 50-year city simulation with an RL agent |
-| [civicops-planner](https://github.com/LeSingh1/civicops-planner) | Internal Tools Hacks | Internal city-planning dashboard |
-| [citypilot-ai](https://github.com/LeSingh1/citypilot-ai) | Creator Colosseum 2025 | Startup pitch + feasibility tool |
-| [civicplan-ai](https://github.com/LeSingh1/civicplan-ai) | HackAmerica 2025 — Civic Good | Civic infrastructure planner |
-| [greengrid-ai](https://github.com/LeSingh1/greengrid-ai) | Tech to Treasure Environmental Hackathon | Climate resilience planner |
-| [weatherready-ai](https://github.com/LeSingh1/weatherready-ai) | WeatherWise Hack | Extreme weather readiness |
-| [shadowbuyer](https://github.com/LeSingh1/shadowbuyer) | Procurement agent hack | Adversarial B2B agent swarm |
-
-## How I work
-
-- **State machine first.** Most of my apps share an `idle → analyzing → plan_ready → applying → complete` Zustand store. UI is downstream of state, not the other way around.
-- **One canonical data file per project.** Scenario data lives in a single `data/*.ts`. Editing one file changes the demo end-to-end.
-- **Methodology over scoreboard chasing.** For ML I default to leakage-resistant CV, calibration, and shrinkage before tuning. Calibrated baseline > overfit ensemble.
-- **Polish is a feature.** Hero, empty states, loading shimmer, real screenshots — the demo is the deliverable.
+- **Anthropic Academy** (Completed May 2026) — AI fluency, Claude fundamentals, Claude Code, agent skills, subagents
+- *In progress:* Claude API, Claude on Amazon Bedrock, Claude on Google Cloud Vertex AI, Model Context Protocol
 
 ## Stack
 
