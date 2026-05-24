@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./rookie-card-v11.svg" alt="Shaurya Singh — Rookie Card, 1st Edition" width="100%"/>
+<img src="./rookie-card-v12.svg" alt="Shaurya Singh — Rookie Card, 1st Edition" width="100%"/>
 
 </div>
 
