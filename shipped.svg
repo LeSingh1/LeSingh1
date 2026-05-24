@@ -1,0 +1,61 @@
+<svg viewBox="0 0 760 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Shipped: 23 PRs merged, 10 orgs reached, $225K saved in demo">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0d1117"/>
+      <stop offset="50%" stop-color="#161b22"/>
+      <stop offset="100%" stop-color="#0d1117"/>
+    </linearGradient>
+    <linearGradient id="num" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#58a6ff"/>
+      <stop offset="100%" stop-color="#bc8cff"/>
+    </linearGradient>
+    <linearGradient id="rule" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#58a6ff" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#58a6ff" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#58a6ff" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="760" height="220" rx="14" fill="url(#bg)" stroke="#30363d" stroke-width="1"/>
+
+  <text x="380" y="38" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="11" fill="#58a6ff" letter-spacing="4">
+    SHIPPED · MAY 2026
+    <animate attributeName="opacity" values="0.55;1;0.55" dur="3.2s" repeatCount="indefinite"/>
+  </text>
+
+  <line x1="120" y1="55" x2="640" y2="55" stroke="url(#rule)" stroke-width="1">
+    <animate attributeName="opacity" values="0.4;1;0.4" dur="3.2s" repeatCount="indefinite"/>
+  </line>
+
+  <g transform="translate(135, 130)" opacity="0">
+    <text text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="68" font-weight="700" fill="url(#num)" filter="url(#glow)">23</text>
+    <text text-anchor="middle" y="38" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="10" fill="#8b949e" letter-spacing="3">PRs MERGED</text>
+    <animate attributeName="opacity" from="0" to="1" begin="0.2s" dur="0.8s" fill="freeze"/>
+    <animateTransform attributeName="transform" type="translate" from="135 145" to="135 130" begin="0.2s" dur="0.8s" fill="freeze"/>
+  </g>
+
+  <g transform="translate(380, 130)" opacity="0">
+    <text text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="68" font-weight="700" fill="url(#num)" filter="url(#glow)">10</text>
+    <text text-anchor="middle" y="38" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="10" fill="#8b949e" letter-spacing="3">ORGS REACHED</text>
+    <animate attributeName="opacity" from="0" to="1" begin="0.55s" dur="0.8s" fill="freeze"/>
+    <animateTransform attributeName="transform" type="translate" from="380 145" to="380 130" begin="0.55s" dur="0.8s" fill="freeze"/>
+  </g>
+
+  <g transform="translate(625, 130)" opacity="0">
+    <text text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="58" font-weight="700" fill="url(#num)" filter="url(#glow)">$225K</text>
+    <text text-anchor="middle" y="38" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="10" fill="#8b949e" letter-spacing="3">SAVED IN ONE DEMO</text>
+    <animate attributeName="opacity" from="0" to="1" begin="0.9s" dur="0.8s" fill="freeze"/>
+    <animateTransform attributeName="transform" type="translate" from="625 145" to="625 130" begin="0.9s" dur="0.8s" fill="freeze"/>
+  </g>
+
+  <line x1="240" y1="105" x2="240" y2="150" stroke="#30363d" stroke-width="1"/>
+  <line x1="520" y1="105" x2="520" y2="150" stroke="#30363d" stroke-width="1"/>
+
+  <text x="380" y="195" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="10" fill="#6e7681" letter-spacing="3">
+    apple · meta · microsoft · nvidia · openai · google · cloudflare · hono · jest · mlx
+  </text>
+</svg>
