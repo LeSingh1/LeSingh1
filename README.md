@@ -6,34 +6,17 @@
 
 <br/>
 
-<!-- ============ STATS PANEL ============ -->
+<!-- ============ ANIMATED STATS BANNER ============ -->
 
 <div align="center">
 
-<table>
-<tr>
-<td align="center" width="20%">
-<h1>23</h1>
-<sub><b>PRs MERGED</b></sub>
-</td>
-<td align="center" width="20%">
-<h1>10</h1>
-<sub><b>ORGS REACHED</b></sub>
-</td>
-<td align="center" width="20%">
-<h1>$500</h1>
-<sub><b>HACKATHON WIN</b></sub>
-</td>
-<td align="center" width="20%">
-<h1>$225K</h1>
-<sub><b>SAVED IN DEMO</b></sub>
-</td>
-<td align="center" width="20%">
-<h1>50+</h1>
-<sub><b>PRs IN REVIEW</b></sub>
-</td>
-</tr>
-</table>
+<img src="./stats-banner.svg" alt="Career Stats: 23 PRs merged · 10 orgs reached · $500 hackathon win · $225K saved in demo · 50+ PRs in review" width="100%"/>
+
+<br/><br/>
+
+<a href="https://github.com/LeSingh1">
+  <img src="https://readme-typing-svg.demolab.com/?lines=Open+source+forward.;9th+grade.+Class+of+'29.;23+PRs+merged+to+Big+Tech.;Beta+Fund+AI+Hackathon+winner.;Lakers+Edition+%E2%98%85+1st+Edition+Holo.&font=Helvetica&weight=900&size=24&duration=2600&pause=600&color=FDB927&background=2D0F5000&center=true&vCenter=true&width=720&height=48" alt="What I do" />
+</a>
 
 </div>
 
@@ -41,7 +24,9 @@
 
 <!-- ============ CAREER HIGHLIGHTS ============ -->
 
-## <img src="https://img.shields.io/badge/-CAREER_HIGHLIGHTS-FDB927?style=for-the-badge&labelColor=552583&color=FDB927" height="28"/>
+<img src="https://capsule-render.vercel.app/api?type=rect&color=0:2d0f50,50:FDB927,100:2d0f50&height=4" width="100%" alt=""/>
+
+## <img src="https://img.shields.io/badge/-CAREER_HIGHLIGHTS-FDB927?style=for-the-badge&labelColor=552583&color=FDB927" height="32"/>
 
 <table>
 <tr>
@@ -70,7 +55,9 @@ Saved a roleplayed F500 buyer **$225K** in one run
 
 <!-- ============ FLAGSHIP OS LANDINGS ============ -->
 
-## <img src="https://img.shields.io/badge/-FLAGSHIP_OPEN_SOURCE-FDB927?style=for-the-badge&labelColor=552583&color=FDB927" height="28"/>
+<img src="https://capsule-render.vercel.app/api?type=rect&color=0:2d0f50,50:FDB927,100:2d0f50&height=4" width="100%" alt=""/>
+
+## <img src="https://img.shields.io/badge/-FLAGSHIP_OPEN_SOURCE-FDB927?style=for-the-badge&labelColor=552583&color=FDB927" height="32"/>
 
 | Org | PR | What it fixes |
 |:---:|---|---|
@@ -91,7 +78,9 @@ Saved a roleplayed F500 buyer **$225K** in one run
 
 <!-- ============ CURRENTLY SHIPPING ============ -->
 
-## <img src="https://img.shields.io/badge/-CURRENTLY_SHIPPING-FDB927?style=for-the-badge&labelColor=552583&color=FDB927" height="28"/>
+<img src="https://capsule-render.vercel.app/api?type=rect&color=0:2d0f50,50:FDB927,100:2d0f50&height=4" width="100%" alt=""/>
+
+## <img src="https://img.shields.io/badge/-CURRENTLY_SHIPPING-FDB927?style=for-the-badge&labelColor=552583&color=FDB927" height="32"/>
 
 <table>
 <tr>
@@ -146,7 +135,9 @@ Real-time PrizePicks board + lineup optimizer. Live MLB Stats API + ESPN data, c
 
 <!-- ============ OFF THE COURT ============ -->
 
-## <img src="https://img.shields.io/badge/-OFF_THE_COURT-FDB927?style=for-the-badge&labelColor=552583&color=FDB927" height="28"/>
+<img src="https://capsule-render.vercel.app/api?type=rect&color=0:2d0f50,50:FDB927,100:2d0f50&height=4" width="100%" alt=""/>
+
+## <img src="https://img.shields.io/badge/-OFF_THE_COURT-FDB927?style=for-the-badge&labelColor=552583&color=FDB927" height="32"/>
 
 | Role | Where |
 |---|---|
@@ -160,7 +151,9 @@ Real-time PrizePicks board + lineup optimizer. Live MLB Stats API + ESPN data, c
 
 <!-- ============ REACH ============ -->
 
-## <img src="https://img.shields.io/badge/-REACH-FDB927?style=for-the-badge&labelColor=552583&color=FDB927" height="28"/>
+<img src="https://capsule-render.vercel.app/api?type=rect&color=0:2d0f50,50:FDB927,100:2d0f50&height=4" width="100%" alt=""/>
+
+## <img src="https://img.shields.io/badge/-REACH-FDB927?style=for-the-badge&labelColor=552583&color=FDB927" height="32"/>
 
 <div align="center">
 
