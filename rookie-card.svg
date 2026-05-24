@@ -157,8 +157,8 @@
 
   <!-- Name + HP -->
   <text x="56" y="252" class="card-name" font-size="30">Shaurya Singh</text>
-  <text x="410" y="246" class="hp-label" font-size="13" text-anchor="end">HP</text>
-  <text x="480" y="252" class="hp-num" font-size="30" text-anchor="end">140</text>
+  <text x="410" y="246" class="hp-label" font-size="13" text-anchor="end">XP</text>
+  <text x="480" y="252" class="hp-num" font-size="30" text-anchor="end">2300</text>
 
   <g transform="translate(494 240)">
     <circle r="11" fill="#fde047" stroke="#7c4a00" stroke-width="1.5"/>
@@ -240,8 +240,9 @@
   </g>
 
   <!-- Flavor + illus -->
-  <text x="56" y="842" class="flavor-text" font-size="9">A 9th grader from Fremont, CA. Known to unintentionally cause maintainers to wonder if they should hire him.   LV.14  #23</text>
-  <text x="56" y="862" class="illus" font-size="8">Illus. ./LeSingh1   © 2026 GitHub, Meta, Apple, Microsoft, NVIDIA, Cloudflare</text>
-  <text x="484" y="862" class="illus" font-size="8" text-anchor="end">023/2029 ★</text>
+  <text x="56" y="841" class="flavor-text" font-size="9.5">A 9th grader from Fremont, CA. Known to unintentionally cause</text>
+  <text x="56" y="854" class="flavor-text" font-size="9.5">maintainers to wonder if they should hire him.</text>
+  <text x="56" y="869" class="illus" font-size="8">Illus. ./LeSingh1   © 2026 GitHub · Meta · Apple · Microsoft · NVIDIA</text>
+  <text x="484" y="869" class="illus" font-size="8" text-anchor="end">023/2029 ★</text>
 
 </svg>
