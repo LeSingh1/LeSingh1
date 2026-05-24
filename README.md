@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./rookie-card-v8.svg" alt="Shaurya Singh — Rookie Card, 1st Edition" width="100%"/>
+<img src="./rookie-card.svg" alt="Shaurya Singh — Rookie Card, 1st Edition" width="100%"/>
 
 </div>
 
@@ -41,14 +41,33 @@ Plus targeted fixes in **apple/swift-nio, apple/servicetalk, apple/containerizat
 
 ## Off the Court
 
-- **Senior Patrol Leader** · Boy Scouts of America · troop of 40 to 50
-- **Freshman team basketball captain** · Irvington HS
-- **Lead CAD Designer & CAD Team Captain** · FTC Robotics · 3× regional finalist
-- **2 Eagle Scout service projects led**
-- **Anthropic Academy** (completed May 2026) · agentic systems track
+| Role | Where |
+|---|---|
+| **Senior Patrol Leader** | Boy Scouts of America · troop of 40 to 50 |
+| **Freshman Team Captain** | Irvington HS Basketball |
+| **Lead CAD Designer & Captain** | FTC Robotics · 3× regional finalist |
+| **Eagle Scout Projects (2)** | led from proposal through completion |
+| **Anthropic Academy** | Agentic Systems track · completed May 2026 |
 
-## Reach
+---
 
-- github.com/LeSingh1
-- linkedin.com/in/shaurya-singh-b7591540b
-- sshaurya914 [at] gmail
+<div align="center">
+
+### Reach
+
+<a href="https://github.com/LeSingh1"><img src="https://img.shields.io/badge/GitHub-LeSingh1-552583?style=for-the-badge&logo=github&logoColor=FDB927&labelColor=2d0f50" alt="GitHub"/></a>
+<a href="https://www.linkedin.com/in/shaurya-singh-b7591540b"><img src="https://img.shields.io/badge/LinkedIn-Shaurya_Singh-552583?style=for-the-badge&logo=linkedin&logoColor=FDB927&labelColor=2d0f50" alt="LinkedIn"/></a>
+<a href="mailto:sshaurya914@gmail.com"><img src="https://img.shields.io/badge/Email-sshaurya914-552583?style=for-the-badge&logo=gmail&logoColor=FDB927&labelColor=2d0f50" alt="Email"/></a>
+
+<br/>
+
+<sub><i>9th grade · Irvington High School · Class of 2029 · Fremont, CA</i></sub>
+
+<br/>
+
+<sub><b>★ ROOKIE CARD #023/2029 ★ 1ST EDITION HOLO ★ LAKERS EDITION ★</b></sub>
+
+</div>
+
+<!-- Closing wave in Lakers colors -->
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:552583,50:FDB927,100:552583&height=80&section=footer" width="100%" alt=""/>
