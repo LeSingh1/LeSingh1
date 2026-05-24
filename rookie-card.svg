@@ -1,0 +1,247 @@
+<svg width="900" height="560" viewBox="0 0 900 560" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Shaurya Singh rookie card">
+  <defs>
+    <linearGradient id="holo" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fb7185">
+        <animate attributeName="stop-color" values="#fb7185;#a78bfa;#22d3ee;#34d399;#fbbf24;#fb7185" dur="9s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="50%" stop-color="#22d3ee">
+        <animate attributeName="stop-color" values="#22d3ee;#34d399;#fbbf24;#fb7185;#a78bfa;#22d3ee" dur="9s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="100%" stop-color="#a78bfa">
+        <animate attributeName="stop-color" values="#a78bfa;#fb7185;#a78bfa;#22d3ee;#34d399;#a78bfa" dur="9s" repeatCount="indefinite"/>
+      </stop>
+    </linearGradient>
+
+    <linearGradient id="cardbg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fef9ef"/>
+      <stop offset="100%" stop-color="#f1e9d2"/>
+    </linearGradient>
+
+    <linearGradient id="artbg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e1b4b"/>
+    </linearGradient>
+
+    <linearGradient id="ball" x1="20%" y1="20%" x2="80%" y2="80%">
+      <stop offset="0%" stop-color="#fb923c"/>
+      <stop offset="100%" stop-color="#c2410c"/>
+    </linearGradient>
+
+    <linearGradient id="shimmer" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#ffffff" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+
+    <radialGradient id="dots" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+
+    <pattern id="grain" x="0" y="0" width="3" height="3" patternUnits="userSpaceOnUse">
+      <rect width="3" height="3" fill="#ffffff" fill-opacity="0.015"/>
+      <circle cx="1" cy="1" r="0.4" fill="#000000" fill-opacity="0.04"/>
+    </pattern>
+
+    <style><![CDATA[
+      .name { font-family: Georgia, 'Times New Roman', serif; font-weight: 900; fill: #0f172a; letter-spacing: -0.01em; }
+      .name-sub { font-family: 'Courier New', monospace; fill: #475569; font-size: 11px; letter-spacing: 0.22em; font-weight: 700; }
+      .name-meta { font-family: 'Courier New', monospace; fill: #94a3b8; font-size: 10px; letter-spacing: 0.18em; }
+      .stat-num { font-family: Georgia, serif; font-weight: 900; fill: #0f172a; font-size: 32px; }
+      .stat-label { font-family: 'Courier New', monospace; fill: #64748b; font-size: 9px; letter-spacing: 0.2em; font-weight: 700; }
+      .flavor { font-family: Georgia, serif; font-style: italic; fill: #334155; font-size: 13px; }
+      .stamp-red { font-family: 'Courier New', monospace; fill: #dc2626; font-size: 9px; font-weight: 900; letter-spacing: 0.25em; }
+      .stamp-dim { font-family: 'Courier New', monospace; fill: #94a3b8; font-size: 9px; letter-spacing: 0.2em; }
+      .sat-label { font-family: 'Courier New', monospace; fill: #e2e8f0; font-size: 9px; font-weight: 700; letter-spacing: 0.15em; }
+      .sat-sub { font-family: 'Courier New', monospace; fill: #64748b; font-size: 7px; letter-spacing: 0.1em; }
+      .seam { fill: none; stroke: #7c2d12; stroke-width: 2; stroke-linecap: round; }
+      .trace { stroke: #fbbf24; stroke-width: 1; fill: none; stroke-dasharray: 2 2; opacity: 0.5; }
+
+      @keyframes shimmerSweep {
+        0% { transform: translateX(-700px); }
+        100% { transform: translateX(900px); }
+      }
+      .shimmer-bar { animation: shimmerSweep 5s ease-in-out infinite; }
+
+      @keyframes bobUp { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+      .ball-bob { animation: bobUp 3.2s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+
+      @keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+      .twinkle { animation: twinkle 2s ease-in-out infinite; }
+
+      @keyframes dash { to { stroke-dashoffset: -16; } }
+      .trace-anim { animation: dash 1.4s linear infinite; }
+    ]]></style>
+  </defs>
+
+  <!-- Dark background outside card -->
+  <rect width="900" height="560" fill="#0a0f1e"/>
+  <rect width="900" height="560" fill="url(#dots)" opacity="0.4"/>
+
+  <!-- Holographic foil edge (card border) -->
+  <rect x="20" y="20" width="860" height="520" rx="18" fill="url(#holo)"/>
+
+  <!-- Card body -->
+  <rect x="26" y="26" width="848" height="508" rx="14" fill="url(#cardbg)"/>
+  <rect x="26" y="26" width="848" height="508" rx="14" fill="url(#grain)"/>
+
+  <!-- Top label strip -->
+  <g>
+    <rect x="40" y="42" width="100" height="20" rx="3" fill="#dc2626"/>
+    <text x="90" y="56" class="stamp-red" fill="#fef9ef" text-anchor="middle">ROOKIE · '26</text>
+
+    <text x="448" y="56" class="stamp-dim" text-anchor="middle">SUPERPOWERS · TRADING CARD CO.</text>
+
+    <text x="860" y="56" class="stamp-dim" text-anchor="end">№ 023 / 0050</text>
+  </g>
+
+  <!-- ART PANEL (left half) -->
+  <g>
+    <rect x="40" y="76" width="420" height="370" rx="10" fill="url(#artbg)"/>
+
+    <!-- starfield in art panel -->
+    <g fill="#ffffff">
+      <circle class="twinkle" cx="80"  cy="115" r="0.9"/>
+      <circle class="twinkle" cx="395" cy="98"  r="1.1" style="animation-delay:0.4s"/>
+      <circle class="twinkle" cx="430" cy="200" r="0.8" style="animation-delay:0.9s"/>
+      <circle class="twinkle" cx="65"  cy="290" r="1.0" style="animation-delay:1.3s"/>
+      <circle class="twinkle" cx="405" cy="385" r="0.9" style="animation-delay:1.7s"/>
+      <circle class="twinkle" cx="150" cy="410" r="0.7" style="animation-delay:0.2s"/>
+      <circle class="twinkle" cx="295" cy="105" r="0.7" style="animation-delay:1.1s"/>
+      <circle class="twinkle" cx="55"  cy="420" r="0.8" style="animation-delay:1.5s"/>
+    </g>
+
+    <!-- 8 trajectory traces from ball outward (dashed, animated) -->
+    <g class="trace trace-anim" stroke="#fbbf24">
+      <path d="M 250 260 Q 180 200 110 130"/>
+      <path d="M 250 260 Q 250 180 250 105"/>
+      <path d="M 250 260 Q 320 200 395 130"/>
+      <path d="M 250 260 Q 340 230 420 245"/>
+      <path d="M 250 260 Q 320 320 395 390"/>
+      <path d="M 250 260 Q 250 330 250 410"/>
+      <path d="M 250 260 Q 180 320 105 390"/>
+      <path d="M 250 260 Q 160 240 80 245"/>
+    </g>
+
+    <!-- Basketball -->
+    <g class="ball-bob" transform="translate(250 260)">
+      <circle r="62" fill="url(#ball)"/>
+      <circle r="62" fill="none" stroke="#7c2d12" stroke-width="2"/>
+      <line class="seam" x1="-62" y1="0" x2="62" y2="0"/>
+      <line class="seam" x1="0" y1="-62" x2="0" y2="62"/>
+      <path class="seam" d="M -56 -28 Q -28 0 -56 28"/>
+      <path class="seam" d="M 56 -28 Q 28 0 56 28"/>
+      <!-- specular highlight -->
+      <ellipse cx="-18" cy="-22" rx="16" ry="10" fill="#fff" fill-opacity="0.18"/>
+    </g>
+
+    <!-- Org satellites -->
+    <g>
+      <circle cx="110" cy="130" r="3" fill="#22d3ee"/>
+      <text x="118" y="127" class="sat-label">META</text>
+      <text x="118" y="138" class="sat-sub">pyrefly · landed</text>
+
+      <circle cx="250" cy="105" r="3" fill="#22d3ee"/>
+      <text x="258" y="102" class="sat-label">APPLE</text>
+      <text x="258" y="113" class="sat-sub">container</text>
+
+      <circle cx="395" cy="130" r="3" fill="#22d3ee"/>
+      <text x="320" y="127" class="sat-label" text-anchor="start">MSFT</text>
+      <text x="320" y="138" class="sat-sub">rushstack</text>
+
+      <circle cx="420" cy="245" r="3" fill="#22d3ee"/>
+      <text x="345" y="243" class="sat-label">NVIDIA</text>
+      <text x="345" y="254" class="sat-sub">cccl</text>
+
+      <circle cx="395" cy="390" r="3" fill="#22d3ee"/>
+      <text x="320" y="388" class="sat-label">CFLR</text>
+      <text x="320" y="399" class="sat-sub">workers-sdk</text>
+
+      <circle cx="250" cy="410" r="3" fill="#22d3ee"/>
+      <text x="258" y="408" class="sat-label">GOOGLE</text>
+      <text x="258" y="419" class="sat-sub">+2 repos</text>
+
+      <circle cx="105" cy="390" r="3" fill="#22d3ee"/>
+      <text x="113" y="388" class="sat-label">OPENAI</text>
+      <text x="113" y="399" class="sat-sub">sdk docs</text>
+
+      <circle cx="80" cy="245" r="3" fill="#22d3ee"/>
+      <text x="88" y="243" class="sat-label">ASTRAL</text>
+      <text x="88" y="254" class="sat-sub">tooling</text>
+    </g>
+
+    <!-- Caption strip -->
+    <text x="250" y="438" class="stamp-dim" fill="#64748b" text-anchor="middle">SHIPPING TO REPOS THAT SHIP TO BILLIONS</text>
+  </g>
+
+  <!-- INFO PANEL (right half) -->
+  <g>
+    <!-- accent stripe -->
+    <rect x="478" y="76" width="4" height="370" fill="#dc2626"/>
+
+    <!-- Name -->
+    <text x="498" y="115" class="name" font-size="38">SHAURYA</text>
+    <text x="498" y="155" class="name" font-size="38">SINGH</text>
+    <text x="498" y="175" class="name-sub">OPEN SOURCE · FORWARD</text>
+    <text x="498" y="190" class="name-meta">IRVINGTON HS · FREMONT, CA · '29</text>
+
+    <!-- Divider -->
+    <line x1="498" y1="208" x2="852" y2="208" stroke="#0f172a" stroke-width="1" stroke-dasharray="2 3"/>
+
+    <!-- Stats grid: 2x2 -->
+    <g transform="translate(498 232)">
+      <!-- top-left -->
+      <text class="stat-label">PRs MERGED</text>
+      <text y="32" class="stat-num">23</text>
+
+      <!-- top-right -->
+      <text x="180" class="stat-label">ORGS REACHED</text>
+      <text x="180" y="32" class="stat-num">10</text>
+
+      <!-- bottom-left -->
+      <text y="70" class="stat-label">HACKATHON WIN</text>
+      <text y="102" class="stat-num">$500</text>
+
+      <!-- bottom-right -->
+      <text x="180" y="70" class="stat-label">CLASS OF</text>
+      <text x="180" y="102" class="stat-num">2029</text>
+    </g>
+
+    <!-- Divider -->
+    <line x1="498" y1="362" x2="852" y2="362" stroke="#0f172a" stroke-width="1" stroke-dasharray="2 3"/>
+
+    <!-- Flavor -->
+    <text x="498" y="388" class="flavor">"started shipping in middle school.</text>
+    <text x="498" y="406" class="flavor">23 merges later, still 9th grade."</text>
+
+    <!-- Stamps at bottom -->
+    <g transform="translate(498 432)">
+      <rect width="78" height="14" rx="2" fill="#dc2626"/>
+      <text x="39" y="10" class="stamp-red" fill="#fef9ef" text-anchor="middle">1ST EDITION</text>
+
+      <text x="92" y="10" class="stamp-dim" fill="#475569">HOLO</text>
+
+      <g transform="translate(140 0)" fill="#dc2626">
+        <text y="10" font-family="Georgia, serif" font-size="14" font-weight="900">★ ★ ★ ★ ★</text>
+      </g>
+
+      <text x="354" y="10" class="stamp-dim" fill="#475569" text-anchor="end">BETA FUND '26 · WINNER</text>
+    </g>
+  </g>
+
+  <!-- Bottom info strip -->
+  <g transform="translate(40 466)">
+    <text class="stamp-dim" fill="#94a3b8">CARD #023 — SHAURYA SINGH — OPEN SOURCE FORWARD</text>
+    <text x="820" class="stamp-dim" fill="#94a3b8" text-anchor="end">github.com/LeSingh1</text>
+  </g>
+
+  <line x1="40" y1="478" x2="860" y2="478" stroke="#94a3b8" stroke-width="0.5" stroke-dasharray="1 2"/>
+
+  <text x="40" y="498" class="stamp-dim" fill="#64748b">RESPECT MERGERS · WAIT YOUR TURN · NO EM-DASHES IN PR BODIES · BUNDLE TYPO FIXES</text>
+  <text x="40" y="514" class="stamp-dim" fill="#64748b">CONTAINS: 1 BASKETBALL, 23 MERGE COMMITS, 50+ OPEN PRs, ∞ COMMITS PENDING</text>
+
+  <!-- Holographic shimmer sweep on top -->
+  <g clip-path="inset(20px 20px round 18px)">
+    <rect class="shimmer-bar" x="-200" y="0" width="200" height="560" fill="url(#shimmer)" transform="skewX(-20)"/>
+  </g>
+</svg>
