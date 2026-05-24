@@ -31,7 +31,6 @@
 │   ─ Freshman team basketball captain · Irvington HS                                        │
 │   ─ Lead CAD designer · FTC Robotics · 3× regional finalist                                │
 │   ─ 2 Eagle Scout service projects led                                                     │
-│   ─ Multiple stage productions, lead and supporting roles                                  │
 │   ─ Anthropic Academy · certified · agentic systems track                                  │
 │                                                                                            │
 ├────────────────────────────────────────────────────────────────────────────────────────────┤
