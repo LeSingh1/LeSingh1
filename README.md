@@ -64,61 +64,6 @@ Saved a roleplayed Fortune 500 buyer $225K in a single negotiation.
 
 <br/>
 
-<!-- ============ CURRENTLY SHIPPING ============ -->
-
-<img src="./header-shipping.svg" alt="CURRENTLY SHIPPING" width="100%"/>
-
-<table>
-<tr>
-<td width="50%" valign="top">
-
-### [ShadowBuyer](https://github.com/LeSingh1/shadowbuyer)
-Autonomous B2B procurement swarm. Six agents: vendor scout, quote pull, adversarial negotiate, contract redline, email draft. Cut a demo from $195 → $157.50 per host/month.
-
-`python` `fastapi` `react` `vite`
-
-</td>
-<td width="50%" valign="top">
-
-### [urbanmind-vision](https://github.com/LeSingh1/urbanmind-vision)
-50-year city-planning simulator. PPO RL agent (Stable Baselines3), constraint-validated road generator, WebSocket-streamed frames, Claude AI Copilot.
-
-`react` `fastapi` `mapbox` `stable-baselines3`
-
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top">
-
-### [shotsense-scout](https://github.com/LeSingh1/shotsense-scout)
-NBA playoff shot-quality agent. MongoDB Atlas Vector Search + Google Cloud Agent Builder + Gemini.
-
-`mongodb` `gcp` `gemini`
-
-</td>
-<td width="50%" valign="top">
-
-### [nba_shot_quality](https://github.com/LeSingh1/nba_shot_quality)
-Calibrated xFG% on `nba_api`. GroupKFold, in-pipeline `TargetEncoder`, empirical-Bayes shrinkage. Canvas shot maps + Three.js arc replays.
-
-`python` `three.js` `scikit-learn`
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top">
-
-### [edgeboard](https://github.com/LeSingh1/edgeboard)
-Real-time PrizePicks board + lineup optimizer. Live MLB Stats API + ESPN. Correlation-aware Smart Suggest.
-
-`typescript` `react` `mlb-stats`
-
-</td>
-</tr>
-</table>
-
-<br/>
-
 <!-- ============ OFF THE COURT ============ -->
 
 <img src="./header-court.svg" alt="OFF THE COURT" width="100%"/>
