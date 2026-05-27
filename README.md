@@ -8,7 +8,7 @@
 
 <div align="center">
 
-<img src="./stats-banner.svg" alt="23 PRs merged · 10 orgs · $500 hackathon win · $225K saved in demo · 50+ PRs in review" width="100%"/>
+<img src="./stats-banner.svg" alt="25 PRs merged · 11 orgs · $500 hackathon win · $225K saved in demo · 50+ PRs in review" width="100%"/>
 
 </div>
 
@@ -35,7 +35,7 @@ Saved a roleplayed Fortune 500 buyer $225K in a single negotiation.
 [#3415](https://github.com/facebook/pyrefly/pull/3415) landed on `main` via Phabricator. Meta's Python type checker.
 
 #### Reach
-23 merges across Meta, Apple, Microsoft, NVIDIA, Cloudflare, Google, OpenAI, Astral. Walked in cold.
+25 merges across Meta, Apple, Microsoft, NVIDIA, Cloudflare, Google, OpenAI, Vue, Jest, Hono, ml-explore. Walked in cold.
 
 </td>
 </tr>
@@ -50,6 +50,7 @@ Saved a roleplayed Fortune 500 buyer $225K in a single negotiation.
 | Org | PR | What it fixes |
 |:---:|---|---|
 | **Meta** | [pyrefly#3415](https://github.com/facebook/pyrefly/pull/3415) | Negative narrowing for `isinstance` tuple targets. Phabricator landing. |
+| **Vue** | [vue/core#14865](https://github.com/vuejs/core/pull/14865) | Skip idle persisted transition hooks in keep-alive moves. Runtime-core fix; ecosystem CI green across 16 suites. |
 | **Apple** | [container#1559](https://github.com/apple/container/pull/1559) | Reject conflicting DNS flags in the CLI. |
 | **Apple** | [coremltools#2700](https://github.com/apple/coremltools/pull/2700) | K-Means weight-palettization correctness — intra-cluster error, not centroid sums. |
 | **Apple** | [password-manager#1094](https://github.com/apple/password-manager-resources/pull/1094) | Node.js CI validation for all 419 password-rule entries. |
