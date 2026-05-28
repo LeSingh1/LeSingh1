@@ -71,6 +71,8 @@ Saved a roleplayed Fortune 500 buyer $225K in a single negotiation.
 
 <br/>
 
+<div align="center">
+
 **`Languages`**
 <br>
 <img src="https://skillicons.dev/icons?i=python,ts,rust,go,swift,cpp,js&theme=dark" alt="Languages"/>
@@ -82,6 +84,8 @@ Saved a roleplayed Fortune 500 buyer $225K in a single negotiation.
 **`Infra & Tools`**
 <br>
 <img src="https://skillicons.dev/icons?i=docker,mongodb,postgres,redis,gcp,linux,git,github&theme=dark" alt="Infra and Tools"/>
+
+</div>
 
 <br/>
 
