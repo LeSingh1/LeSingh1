@@ -1,15 +1,15 @@
-<svg width="900" height="78" viewBox="0 0 900 78" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CONTACT">
+<svg width="900" height="78" viewBox="0 0 900 78" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="THE STACK">
   <defs>
-    <linearGradient id="bg-reach" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="bg-stack" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#552583"/>
       <stop offset="100%" stop-color="#2d0f50"/>
     </linearGradient>
-    <linearGradient id="gold-reach" x1="0%" y1="0%" x2="100%" y2="0%">
+    <linearGradient id="gold-stack" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" stop-color="#ca8a04"/>
       <stop offset="50%" stop-color="#FDB927"/>
       <stop offset="100%" stop-color="#ca8a04"/>
     </linearGradient>
-    <linearGradient id="shine-reach" x1="0%" y1="0%" x2="100%" y2="0%">
+    <linearGradient id="shine-stack" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" stop-color="#FDB927" stop-opacity="0"/>
       <stop offset="50%" stop-color="#FDB927" stop-opacity="0.22"/>
       <stop offset="100%" stop-color="#FDB927" stop-opacity="0"/>
@@ -19,15 +19,15 @@
       .shine { animation: sweep 7s ease-in-out infinite; }
     ]]></style>
   </defs>
-  <rect width="900" height="78" rx="4" fill="url(#bg-reach)"/>
-  <rect width="900" height="3" fill="url(#gold-reach)"/>
-  <rect y="75" width="900" height="3" fill="url(#gold-reach)"/>
+  <rect width="900" height="78" rx="4" fill="url(#bg-stack)"/>
+  <rect width="900" height="3" fill="url(#gold-stack)"/>
+  <rect y="75" width="900" height="3" fill="url(#gold-stack)"/>
   <text x="36" y="52"
         font-family="'Helvetica Neue', 'Arial Black', Impact, sans-serif"
         font-weight="900"
         font-size="34"
         fill="#FDB927"
-        letter-spacing="0.08em">CONTACT</text>
+        letter-spacing="0.08em">THE STACK</text>
   <line x1="780" y1="32" x2="780" y2="50" stroke="#FDB927" stroke-width="1" opacity="0.4"/>
   <text x="864" y="52"
         font-family="Georgia, 'Times New Roman', serif"
@@ -35,6 +35,6 @@
         font-size="28"
         fill="#FDB927"
         opacity="0.85"
-        text-anchor="end">05</text>
-  <rect class="shine" x="-280" y="0" width="280" height="78" fill="url(#shine-reach)" rx="4"/>
+        text-anchor="end">03</text>
+  <rect class="shine" x="-280" y="0" width="280" height="78" fill="url(#shine-stack)" rx="4"/>
 </svg>

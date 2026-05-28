@@ -65,6 +65,44 @@ Saved a roleplayed Fortune 500 buyer $225K in a single negotiation.
 
 <br/>
 
+<!-- ============ THE STACK ============ -->
+
+<img src="./header-stack.svg" alt="THE STACK" width="100%"/>
+
+<br/>
+
+**Languages**
+
+<img src="https://img.shields.io/badge/Python-552583?style=flat-square&logo=python&logoColor=FDB927" alt="Python"/>
+<img src="https://img.shields.io/badge/TypeScript-552583?style=flat-square&logo=typescript&logoColor=FDB927" alt="TypeScript"/>
+<img src="https://img.shields.io/badge/Rust-552583?style=flat-square&logo=rust&logoColor=FDB927" alt="Rust"/>
+<img src="https://img.shields.io/badge/Go-552583?style=flat-square&logo=go&logoColor=FDB927" alt="Go"/>
+<img src="https://img.shields.io/badge/Swift-552583?style=flat-square&logo=swift&logoColor=FDB927" alt="Swift"/>
+<img src="https://img.shields.io/badge/C++-552583?style=flat-square&logo=cplusplus&logoColor=FDB927" alt="C++"/>
+<img src="https://img.shields.io/badge/JavaScript-552583?style=flat-square&logo=javascript&logoColor=FDB927" alt="JavaScript"/>
+
+**Frameworks**
+
+<img src="https://img.shields.io/badge/FastAPI-552583?style=flat-square&logo=fastapi&logoColor=FDB927" alt="FastAPI"/>
+<img src="https://img.shields.io/badge/Next.js-552583?style=flat-square&logo=nextdotjs&logoColor=FDB927" alt="Next.js"/>
+<img src="https://img.shields.io/badge/React-552583?style=flat-square&logo=react&logoColor=FDB927" alt="React"/>
+<img src="https://img.shields.io/badge/Node.js-552583?style=flat-square&logo=nodedotjs&logoColor=FDB927" alt="Node.js"/>
+<img src="https://img.shields.io/badge/Three.js-552583?style=flat-square&logo=threedotjs&logoColor=FDB927" alt="Three.js"/>
+<img src="https://img.shields.io/badge/Vite-552583?style=flat-square&logo=vite&logoColor=FDB927" alt="Vite"/>
+
+**Infra &amp; Tools**
+
+<img src="https://img.shields.io/badge/Docker-552583?style=flat-square&logo=docker&logoColor=FDB927" alt="Docker"/>
+<img src="https://img.shields.io/badge/MongoDB-552583?style=flat-square&logo=mongodb&logoColor=FDB927" alt="MongoDB"/>
+<img src="https://img.shields.io/badge/PostgreSQL-552583?style=flat-square&logo=postgresql&logoColor=FDB927" alt="PostgreSQL"/>
+<img src="https://img.shields.io/badge/Redis-552583?style=flat-square&logo=redis&logoColor=FDB927" alt="Redis"/>
+<img src="https://img.shields.io/badge/GCP-552583?style=flat-square&logo=googlecloud&logoColor=FDB927" alt="GCP"/>
+<img src="https://img.shields.io/badge/Linux-552583?style=flat-square&logo=linux&logoColor=FDB927" alt="Linux"/>
+<img src="https://img.shields.io/badge/Git-552583?style=flat-square&logo=git&logoColor=FDB927" alt="Git"/>
+<img src="https://img.shields.io/badge/GitHub-552583?style=flat-square&logo=github&logoColor=FDB927" alt="GitHub"/>
+
+<br/>
+
 <!-- ============ OFF THE COURT ============ -->
 
 <img src="./header-court.svg" alt="OFF THE COURT" width="100%"/>

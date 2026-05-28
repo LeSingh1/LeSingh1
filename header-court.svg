@@ -35,6 +35,6 @@
         font-size="28"
         fill="#FDB927"
         opacity="0.85"
-        text-anchor="end">03</text>
+        text-anchor="end">04</text>
   <rect class="shine" x="-280" y="0" width="280" height="78" fill="url(#shine-court)" rx="4"/>
 </svg>
