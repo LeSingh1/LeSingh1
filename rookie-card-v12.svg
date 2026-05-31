@@ -125,7 +125,7 @@
   <text x="26" y="74" class="psa-label" font-size="15">1ST EDITION  · LAKERS</text>
 
   <line x1="26" y1="82" x2="406" y2="82" stroke="#0a0a0a" stroke-width="0.5"/>
-  <text x="26" y="97" class="psa-label" font-size="10" fill="#991b1b">★ BETA FUND $500 WINNER · 23 PRs MERGED · 10 ORGS</text>
+  <text x="26" y="97" class="psa-label" font-size="10" fill="#991b1b">★ 2× HACKATHON WINNER · $1,100 · 25 PRs MERGED · 11 ORGS</text>
   <text x="26" y="111" class="psa-label" font-size="10" fill="#991b1b">★ FACEBOOK/PYREFLY#3415 · LANDED VIA PHABRICATOR</text>
 
   <text x="485" y="36" class="psa-label" font-size="16">#23</text>
@@ -321,10 +321,10 @@
       <text x="36" y="4" class="energy-letter" font-size="11" fill="#552583" text-anchor="middle">$</text>
     </g>
     <text x="62" y="5" class="attack-name" font-size="15">Beta Fund Slam</text>
-    <text x="448" y="6" class="attack-dmg" font-size="24" text-anchor="end">$500</text>
+    <text x="448" y="6" class="attack-dmg" font-size="24" text-anchor="end">$1,100</text>
   </g>
-  <text x="56" y="833" class="desc-text">Won 1st place at Beta Fund AI Super Hackathon with ShadowBuyer.</text>
-  <text x="56" y="847" class="desc-text">Saved a roleplayed Fortune 500 buyer $225,000 in one demo run.</text>
+  <text x="56" y="833" class="desc-text">1st place twice: SwarmMarket (Audience Favorite) + ShadowBuyer at</text>
+  <text x="56" y="847" class="desc-text">Beta Fund hackathons. Saved a Fortune 500 buyer $225K in one run.</text>
 
   <rect x="56" y="858" width="448" height="2" fill="url(#purpleDeep)"/>
 
