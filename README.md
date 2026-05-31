@@ -8,7 +8,7 @@
 
 <div align="center">
 
-<img src="./stats-banner.svg" alt="25 PRs merged · 11 orgs · $500 hackathon win · $225K saved in demo · 50+ PRs in review" width="100%"/>
+<img src="./stats-banner.svg" alt="25 PRs merged · 11 orgs · $1,100 across two hackathon wins · $225K saved in demo · 50+ PRs in review" width="100%"/>
 
 </div>
 
@@ -22,11 +22,11 @@
 <tr>
 <td width="50%" valign="top">
 
-#### Beta Fund AI Super Hackathon
-First place. $500. Built [ShadowBuyer](https://github.com/LeSingh1/shadowbuyer) in a weekend.
+#### Beta Fund × EverMind Hackathon
+First place, Audience Favorite. $600. Built [SwarmMarket](https://github.com/LeSingh1/swarm-market) — an app store for agent experience, where agents publish and install skill-packs over MCP.
 
-#### ShadowBuyer demo run
-Saved a roleplayed Fortune 500 buyer $225K in a single negotiation.
+#### Beta Fund AI Super Hackathon
+First place. $500. Built [ShadowBuyer](https://github.com/LeSingh1/shadowbuyer). Saved a roleplayed Fortune 500 buyer $225K in a single negotiation.
 
 </td>
 <td width="50%" valign="top">
