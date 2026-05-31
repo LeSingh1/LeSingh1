@@ -93,13 +93,17 @@ First place. $500. Built [ShadowBuyer](https://github.com/LeSingh1/shadowbuyer).
 
 <img src="./header-court.svg" alt="OFF THE COURT" width="100%"/>
 
-|  |  |
-|---|---|
-| **Senior Patrol Leader** | Boy Scouts. Troop of 40 to 50 scouts. Lead it. |
-| **Freshman Team Captain** | Irvington HS varsity is next. |
-| **Lead CAD Designer** | FTC Robotics. 3× regional finalist. Fusion 360. |
-| **Eagle Scout Projects** | Two, led from proposal through completion. |
-| **Anthropic Academy** | Agentic systems track. May 2026. |
+<div align="center">
+
+<table>
+<tr><td><b>Senior Patrol Leader</b></td><td>Boy Scouts. Troop of 40 to 50 scouts. Lead it.</td></tr>
+<tr><td><b>Freshman Team Captain</b></td><td>Irvington HS varsity is next.</td></tr>
+<tr><td><b>Lead CAD Designer</b></td><td>FTC Robotics. 3× regional finalist. Fusion 360.</td></tr>
+<tr><td><b>Eagle Scout Projects</b></td><td>Two, led from proposal through completion.</td></tr>
+<tr><td><b>Anthropic Academy</b></td><td>Agentic systems track. May 2026.</td></tr>
+</table>
+
+</div>
 
 <br/>
 
