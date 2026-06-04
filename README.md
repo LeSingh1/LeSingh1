@@ -8,7 +8,7 @@
 
 <div align="center">
 
-<img src="./stats-banner.svg" alt="28 PRs merged · 11 orgs · $1,100 across two hackathon wins · $225K saved in demo · 50+ PRs in review" width="100%"/>
+<img src="./stats-banner.svg" alt="29 PRs merged · 11 orgs · $1,100 across two hackathon wins · $225K saved in demo · 50+ PRs in review" width="100%"/>
 
 </div>
 
@@ -35,7 +35,7 @@ First place. $500. Built [ShadowBuyer](https://github.com/LeSingh1/shadowbuyer).
 [#3415](https://github.com/facebook/pyrefly/pull/3415) landed on `main` via Phabricator. Meta's Python type checker.
 
 #### Reach
-28 merges across Meta, Apple, Microsoft, NVIDIA, Cloudflare, Google, OpenAI, Vue, Jest, Hono, ml-explore. Walked in cold.
+29 merges across Meta, Apple, Microsoft, NVIDIA, Cloudflare, Google, OpenAI, Vue, Jest, Hono, ml-explore. Walked in cold.
 
 </td>
 </tr>
@@ -79,7 +79,6 @@ Ten more bug fixes filed in one push, each with a regression test that fails bef
 | **Jest** | [jest#16226](https://github.com/jestjs/jest/pull/16226) | `jest.spyOn` on an inherited getter or setter cleans up the own accessor on restore. |
 | **Pydantic** | [pydantic#13271](https://github.com/pydantic/pydantic/pull/13271) | Inherited forward refs resolve against the base class module that defined the field. |
 | **Fastify** | [fastify-static#586](https://github.com/fastify/fastify-static/pull/586) | Pre-compressed responses set `Vary: Accept-Encoding` so shared caches keep variants separate. |
-| **Google** | [go-cloud#3721](https://github.com/google/go-cloud/pull/3721) | `fileblob` parses `dir_file_mode` as octal so the documented `0777` default works. |
 | **Starlette** | [starlette#3317](https://github.com/Kludex/starlette/pull/3317) | `URL.replace()` no longer raises on a path-only URL when changing the port or credentials. |
 
 <br/>
