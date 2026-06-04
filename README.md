@@ -8,7 +8,7 @@
 
 <div align="center">
 
-<img src="./stats-banner.svg" alt="25 PRs merged · 11 orgs · $1,100 across two hackathon wins · $225K saved in demo · 50+ PRs in review" width="100%"/>
+<img src="./stats-banner.svg" alt="28 PRs merged · 11 orgs · $1,100 across two hackathon wins · $225K saved in demo · 50+ PRs in review" width="100%"/>
 
 </div>
 
@@ -35,7 +35,7 @@ First place. $500. Built [ShadowBuyer](https://github.com/LeSingh1/shadowbuyer).
 [#3415](https://github.com/facebook/pyrefly/pull/3415) landed on `main` via Phabricator. Meta's Python type checker.
 
 #### Reach
-25 merges across Meta, Apple, Microsoft, NVIDIA, Cloudflare, Google, OpenAI, Vue, Jest, Hono, ml-explore. Walked in cold.
+28 merges across Meta, Apple, Microsoft, NVIDIA, Cloudflare, Google, OpenAI, Vue, Jest, Hono, ml-explore. Walked in cold.
 
 </td>
 </tr>
@@ -62,6 +62,25 @@ First place. $500. Built [ShadowBuyer](https://github.com/LeSingh1/shadowbuyer).
 | **OpenAI** | [agents-python#3485](https://github.com/openai/openai-agents-python/pull/3485) | Redacts raw failed JSON tool input from `ModelBehaviorError`. |
 
 <sub>Smaller fixes across `apple/swift-nio`, `apple/servicetalk`, `apple/containerization`, `apple/foundationdb`, `ml-explore/mlx`, `NVIDIA/gpu-operator`, `NVIDIA/TransformerEngine`, `NVIDIA/earth2studio`, `google/go-cloud`, `facebook/lexical`, `cloudflare/workers-sdk`.</sub>
+
+<br/>
+
+#### In review
+
+Ten more bug fixes filed in one push, each with a regression test that fails before and passes after.
+
+| Org | PR | What it fixes |
+|:---:|---|---|
+| **Microsoft** | [rushstack#5818](https://github.com/microsoft/rushstack/pull/5818) | `rush change` includes seconds in filenames so two changes in the same minute no longer overwrite each other. |
+| **Vue** | [vue/core#14915](https://github.com/vuejs/core/pull/14915) | A plain `<template>` element now renders its children through `template.content` instead of dropping them. |
+| **Cloudflare** | [workers-sdk#14176](https://github.com/cloudflare/workers-sdk/pull/14176) | `wrangler d1 execute` stops rejecting valid SQL that has `BEGIN TRANSACTION` inside a string or comment. |
+| **Prettier** | [prettier#19286](https://github.com/prettier/prettier/pull/19286) | CSS relative colors keep a sign attached to the channel, so `oklch(from red l c +130)` is not rewritten to `+ 130`. |
+| **Hono** | [hono#5003](https://github.com/honojs/hono/pull/5003) | The lambda-edge adapter base64-encodes compressed bodies so gzipped responses are not corrupted. |
+| **Jest** | [jest#16226](https://github.com/jestjs/jest/pull/16226) | `jest.spyOn` on an inherited getter or setter cleans up the own accessor on restore. |
+| **Pydantic** | [pydantic#13271](https://github.com/pydantic/pydantic/pull/13271) | Inherited forward refs resolve against the base class module that defined the field. |
+| **Fastify** | [fastify-static#586](https://github.com/fastify/fastify-static/pull/586) | Pre-compressed responses set `Vary: Accept-Encoding` so shared caches keep variants separate. |
+| **Google** | [go-cloud#3721](https://github.com/google/go-cloud/pull/3721) | `fileblob` parses `dir_file_mode` as octal so the documented `0777` default works. |
+| **Starlette** | [starlette#3317](https://github.com/Kludex/starlette/pull/3317) | `URL.replace()` no longer raises on a path-only URL when changing the port or credentials. |
 
 <br/>
 
