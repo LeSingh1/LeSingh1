@@ -8,7 +8,7 @@
 
 <div align="center">
 
-<img src="./stats-banner.svg" alt="29 PRs merged · 11 orgs · $1,100 across two hackathon wins · $225K saved in demo · 50+ PRs in review" width="100%"/>
+<img src="./stats-banner.svg" alt="30 PRs merged · 11 orgs · $1,100 across two hackathon wins · $225K saved in demo · 50+ PRs in review" width="100%"/>
 
 </div>
 
@@ -35,7 +35,7 @@ First place. $500. Built [ShadowBuyer](https://github.com/LeSingh1/shadowbuyer).
 [#3415](https://github.com/facebook/pyrefly/pull/3415) landed on `main` via Phabricator. Meta's Python type checker.
 
 #### Reach
-29 merges across Meta, Apple, Microsoft, NVIDIA, Cloudflare, Google, OpenAI, Vue, Jest, Hono, ml-explore. Walked in cold.
+30 merges across Meta, Apple, Microsoft, NVIDIA, Cloudflare, Google, OpenAI, Vue, Jest, Hono, ml-explore. Walked in cold.
 
 </td>
 </tr>
@@ -77,8 +77,9 @@ Ten more bug fixes filed in one push, each with a regression test that fails bef
 | **Prettier** | [prettier#19286](https://github.com/prettier/prettier/pull/19286) | CSS relative colors keep a sign attached to the channel, so `oklch(from red l c +130)` is not rewritten to `+ 130`. |
 | **Hono** | [hono#5003](https://github.com/honojs/hono/pull/5003) | The lambda-edge adapter base64-encodes compressed bodies so gzipped responses are not corrupted. |
 | **Jest** | [jest#16226](https://github.com/jestjs/jest/pull/16226) | `jest.spyOn` on an inherited getter or setter cleans up the own accessor on restore. |
-| **Pydantic** | [pydantic#13271](https://github.com/pydantic/pydantic/pull/13271) | Inherited forward refs resolve against the base class module that defined the field. |
+| **Fastify** | [fastify#6753](https://github.com/fastify/fastify/pull/6753) | `hasRequestDecorator` / `hasReplyDecorator` now see constructor-assigned built-in properties. Approved. |
 | **Fastify** | [fastify-static#586](https://github.com/fastify/fastify-static/pull/586) | Pre-compressed responses set `Vary: Accept-Encoding` so shared caches keep variants separate. |
+| **Deno** | [deno#34866](https://github.com/denoland/deno/pull/34866) | `deno test --doc` strips blockquote prefixes from JSDoc code blocks without corrupting non-blockquote lines. |
 | **Starlette** | [starlette#3317](https://github.com/Kludex/starlette/pull/3317) | `URL.replace()` no longer raises on a path-only URL when changing the port or credentials. |
 
 <br/>
