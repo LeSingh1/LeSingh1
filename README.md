@@ -43,6 +43,29 @@ First place. $500. Built [ShadowBuyer](https://github.com/LeSingh1/shadowbuyer).
 
 <br/>
 
+<!-- ============ FEATURED BUILDS ============ -->
+
+<img src="./header-builds.svg" alt="FEATURED BUILDS" width="100%"/>
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+#### EdgeBoard
+A real-time PrizePicks board and lineup optimizer. It pulls the live board, projects each player's stat from their recent game log, calibrates the probability, and scores slips on the real payout tiers. 13 sports, models retrain themselves every day. Next.js and TypeScript. [Repo](https://github.com/LeSingh1/edgeboard).
+
+</td>
+<td width="50%" valign="top">
+
+#### edge-models
+Player prop projection models for 13 sports, trained on about 147M synthesized rows from real game logs. Isotonic calibration with a clamp that stops it overclaiming, plus an honest per-sport backtest for each one. [Repo](https://github.com/LeSingh1/edge-models).
+
+</td>
+</tr>
+</table>
+
+<br/>
+
 <!-- ============ FLAGSHIP MERGES ============ -->
 
 <img src="./header-flagship.svg" alt="FLAGSHIP MERGES" width="100%"/>
