@@ -8,7 +8,7 @@
 
 <div align="center">
 
-<img src="./stats-banner.svg" alt="30 PRs merged · 11 orgs · $1,100 across two hackathon wins · $225K saved in demo · 50+ PRs in review" width="100%"/>
+<img src="./stats-banner.svg" alt="37 PRs merged · 11 orgs · $1,100 across two hackathon wins · $225K saved in demo · 50+ PRs in review" width="100%"/>
 
 </div>
 
@@ -35,7 +35,7 @@ First place. $500. Built [ShadowBuyer](https://github.com/LeSingh1/shadowbuyer).
 [#3415](https://github.com/facebook/pyrefly/pull/3415) landed on `main` via Phabricator. Meta's Python type checker.
 
 #### Reach
-30 merges across Meta, Apple, Microsoft, NVIDIA, Cloudflare, Google, OpenAI, Vue, Jest, Hono, ml-explore. Walked in cold.
+37 merges across Meta, Apple, Microsoft, NVIDIA, Google, Cloudflare, OpenAI, Vue, Deno, Jest, Hono, ml-explore. Walked in cold.
 
 </td>
 </tr>
@@ -81,29 +81,34 @@ Player prop projection models for 13 sports, trained on about 147M synthesized r
 | **Microsoft** | [rushstack#5804](https://github.com/microsoft/rushstack/pull/5804) | Lockfile warnings to stderr so piping stdout doesn't break. |
 | **Hono** | [hono#4951](https://github.com/honojs/hono/pull/4951) | `compress` middleware respects `Accept-Encoding` exclusions. +8 tests. |
 | **Jest** | [jest#16196](https://github.com/jestjs/jest/pull/16196) | Widened `toMatchObject` / `objectContaining` matcher signatures for class instances. |
+| **NVIDIA** | [TransformerEngine#3065](https://github.com/NVIDIA/TransformerEngine/pull/3065) | Propagates `skip_fp8_weight_update` through `GroupedLinear` during FP8 CUDA graph capture, with a graphed-callables test. |
 | **NVIDIA** | [apex#2003](https://github.com/NVIDIA/apex/pull/2003) | `type(x) == cls` → `isinstance` across fused optimizer, GDS, OpenFold Triton. |
+| **Google** | [go-cloud#3727](https://github.com/google/go-cloud/pull/3727) | `memblob` Copy no longer aliases attributes between source and destination. Fourth go-cloud merge. |
+| **Starlette** | [starlette#3317](https://github.com/Kludex/starlette/pull/3317) | `URL.replace()` no longer raises on a path-only URL when changing the port or credentials. |
 | **OpenAI** | [agents-python#3485](https://github.com/openai/openai-agents-python/pull/3485) | Redacts raw failed JSON tool input from `ModelBehaviorError`. |
 
-<sub>Smaller fixes across `apple/swift-nio`, `apple/servicetalk`, `apple/containerization`, `apple/foundationdb`, `ml-explore/mlx`, `NVIDIA/gpu-operator`, `NVIDIA/TransformerEngine`, `NVIDIA/earth2studio`, `google/go-cloud`, `facebook/lexical`, `cloudflare/workers-sdk`.</sub>
+<sub>Smaller fixes across `apple/swift-nio`, `apple/servicetalk`, `apple/containerization`, `apple/foundationdb`, `ml-explore/mlx`, `NVIDIA/gpu-operator`, `NVIDIA/earth2studio`, `google/go-cloud`, `facebook/lexical`, `cloudflare/workers-sdk`, `denoland/deno`, `microsoft/rushstack`, `microsoft/PowerApps-Samples`.</sub>
 
 <br/>
 
 #### In review
 
-Ten more bug fixes filed in one push, each with a regression test that fails before and passes after.
+A rolling set of fixes in review, each with a regression test that fails before and passes after.
 
 | Org | PR | What it fixes |
 |:---:|---|---|
-| **Microsoft** | [rushstack#5818](https://github.com/microsoft/rushstack/pull/5818) | `rush change` includes seconds in filenames so two changes in the same minute no longer overwrite each other. |
+| **Rust** | [rust#156787](https://github.com/rust-lang/rust/pull/156787) | Clarifies the `ArcInner::weak` lock-sentinel comment in `alloc`. Reviewer signed off, squashed, in queue. |
+| **Deno** | [deno#34866](https://github.com/denoland/deno/pull/34866) | `deno test --doc` strips blockquote prefixes from quoted code blocks without corrupting non-blockquote lines. |
+| **Fastify** | [fastify#6753](https://github.com/fastify/fastify/pull/6753) | `hasRequestDecorator` / `hasReplyDecorator` now see constructor-assigned built-in properties. Approved. |
+| **Fastify** | [fastify-static#586](https://github.com/fastify/fastify-static/pull/586) | Pre-compressed responses set `Vary: Accept-Encoding` so shared caches keep variants separate. Approved. |
 | **Vue** | [vue/core#14915](https://github.com/vuejs/core/pull/14915) | A plain `<template>` element now renders its children through `template.content` instead of dropping them. |
 | **Cloudflare** | [workers-sdk#14176](https://github.com/cloudflare/workers-sdk/pull/14176) | `wrangler d1 execute` stops rejecting valid SQL that has `BEGIN TRANSACTION` inside a string or comment. |
-| **Prettier** | [prettier#19286](https://github.com/prettier/prettier/pull/19286) | CSS relative colors keep a sign attached to the channel, so `oklch(from red l c +130)` is not rewritten to `+ 130`. |
+| **TanStack** | [router#7612](https://github.com/TanStack/router/pull/7612) | `PathParamError` is re-exported from the React, Solid, and Vue router packages. |
+| **Uvicorn** | [uvicorn#2989](https://github.com/Kludex/uvicorn/pull/2989) | `--reload` exclude dirs are respected even when an exact-name include matches. |
+| **Charm** | [lipgloss#700](https://github.com/charmbracelet/lipgloss/pull/700) | Border size getters measure the real border width instead of returning a hardcoded 1. |
+| **Valibot** | [valibot#1498](https://github.com/fabian-hiller/valibot/pull/1498) | ULID validation rejects overflowed timestamps by restricting the first character to 0-7. |
 | **Hono** | [hono#5003](https://github.com/honojs/hono/pull/5003) | The lambda-edge adapter base64-encodes compressed bodies so gzipped responses are not corrupted. |
 | **Jest** | [jest#16226](https://github.com/jestjs/jest/pull/16226) | `jest.spyOn` on an inherited getter or setter cleans up the own accessor on restore. |
-| **Fastify** | [fastify#6753](https://github.com/fastify/fastify/pull/6753) | `hasRequestDecorator` / `hasReplyDecorator` now see constructor-assigned built-in properties. Approved. |
-| **Fastify** | [fastify-static#586](https://github.com/fastify/fastify-static/pull/586) | Pre-compressed responses set `Vary: Accept-Encoding` so shared caches keep variants separate. |
-| **Deno** | [deno#34866](https://github.com/denoland/deno/pull/34866) | `deno test --doc` strips blockquote prefixes from JSDoc code blocks without corrupting non-blockquote lines. |
-| **Starlette** | [starlette#3317](https://github.com/Kludex/starlette/pull/3317) | `URL.replace()` no longer raises on a path-only URL when changing the port or credentials. |
 
 <br/>
 
