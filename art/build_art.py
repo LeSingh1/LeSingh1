@@ -1,346 +1,391 @@
 #!/usr/bin/env python3
-"""Generate the README artwork.
+"""Generate the profile artwork — 76ers broadcast graphics.
 
-Design: a 1776 Philadelphia letterpress broadside in 76ers colours.
-Dunlap printed the Declaration in Caslon a few blocks from where the
-Sixers play; the team is named for the year. So the page is set like a
-printed proclamation rather than a dashboard.
+Visual language: hard diagonal colour blocks, ben-day halftone, diagonal
+hatching, a thirteen-star arc, red/white/blue stripe bars, and heavy
+condensed type. Drawn from the team's palette and the 1776 star motif; the
+"76" lockup here is original artwork, not a trace of the team's logo.
 
-Every piece of display type is emitted as vector outlines. GitHub renders
-README SVGs inside <img>, which cannot load webfonts, so outlines are the
-only way Caslon survives on someone else's machine.
+Two rules the previous version learned the hard way, both load-bearing:
+
+1. NEVER put a CSS transform animation on an element that carries an SVG
+   `transform` attribute. The CSS transform replaces the attribute instead of
+   composing with it and the element snaps to the origin. Animate a child, or
+   wrap the element in a positioned <g>.
+
+2. The resting state must be the finished artwork. GitHub renders README
+   images inside <img>; link-preview cards and thumbnailers may rasterise at
+   t=0 without ever advancing the timeline. Nothing essential may animate in
+   from opacity 0, and no number may animate in from a wrong value. SMIL
+   counters therefore carry their FINAL value as the element attribute, so a
+   frozen render shows the truth and a live render plays the count-up.
+
+Every glyph is emitted as vector outlines, because <img>-embedded SVG cannot
+load a webfont.
 """
+import math
 import os
 from text2path import load, text_path
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "profile", "art")
-CASLON = "/System/Library/Fonts/Supplemental/BigCaslon.ttf"
-BASKER = "/System/Library/Fonts/Supplemental/Baskerville.ttc"
 
-caslon = load(CASLON)
-bask_bold = load(BASKER, 1)
-bask_ital = load(BASKER, 2)
-bask_reg = load(BASKER, 0)
+HELV = "/System/Library/Fonts/HelveticaNeue.ttc"
+DIN = "/System/Library/Fonts/Supplemental/DIN Condensed Bold.ttf"
 
-# ---- 76ers palette, plus paper ------------------------------------------
-# Two inkings of the same press. Light is a broadside on laid paper; dark is
-# the same forme pulled in cream ink on a slate sheet. Set via set_theme().
-LIGHT = dict(
-    BLUE="#006BB6", RED="#ED174C", NAVY="#00285E",
-    INK="#15120E", PAPER="#F1E9D6", PAPER_D="#E4D8BE", FADE="#8A7C60",
-    NOISE="0.055",
-)
-DARK = dict(
-    BLUE="#3B9BE0", RED="#FF3F6E", NAVY="#8FC2F0",
-    INK="#EDE3CD", PAPER="#141A22", PAPER_D="#0A0E14", FADE="#7E8CA0",
-    NOISE="0.075",
-)
+black = load(HELV, 9)      # Helvetica Neue Condensed Black — the wordmark
+cbold = load(HELV, 4)      # Helvetica Neue Condensed Bold
+din = load(DIN)            # DIN Condensed Bold — labels, broadcast furniture
 
-BLUE = RED = NAVY = INK = PAPER = PAPER_D = FADE = NOISE = ""
+# ---- palette -------------------------------------------------------------
+BLUE = "#006BB6"
+RED = "#ED174C"
+NAVY = "#002B5C"
+DEEP = "#00203F"
+WHITE = "#FFFFFF"
+BONE = "#EEF2F7"
+
+THEME = {}
 
 
 def set_theme(dark: bool):
-    g = globals()
-    g.update(DARK if dark else LIGHT)
+    """Light = white sheet with navy type. Dark = navy field with white type."""
+    THEME.clear()
+    THEME.update(
+        dark=dark,
+        field=DEEP if dark else BONE,
+        field2=NAVY if dark else WHITE,
+        ink=WHITE if dark else NAVY,
+        sub="#9FB6D0" if dark else "#5A7189",
+        dots=WHITE if dark else NAVY,
+        dotop="0.10" if dark else "0.07",
+    )
 
 
 def P(font, text, size, tracking=0.0):
-    """(path_d, width) for text rendered as outlines."""
     return text_path(font, text, size, tracking)
 
 
-def centered(font, text, size, tracking, cx, y, fill, extra=""):
+def fit(font, text, size, max_w, tracking=0.0, floor=8.0):
+    """Shrink until the string fits max_w. Nothing may run past its frame."""
+    while size > floor:
+        d, w = P(font, text, size, tracking)
+        if w <= max_w:
+            return d, w, size
+        size -= 1.0
     d, w = P(font, text, size, tracking)
-    return (
-        f'<path d="{d}" fill="{fill}" transform="translate({cx - w/2:.2f} {y})" {extra}/>',
-        w,
-    )
+    return d, w, size
 
 
-def paper_defs(uid, w, h):
-    """Laid-paper ground: fibre noise, a warm vignette, and press texture."""
-    return f"""
-    <filter id="fib{uid}" x="0" y="0" width="100%" height="100%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" seed="7" result="n"/>
+# ---- shared defs ---------------------------------------------------------
+def defs(uid, extra=""):
+    t = THEME
+    return f"""<defs>
+    <pattern id="ht{uid}" width="9" height="9" patternUnits="userSpaceOnUse">
+      <circle cx="2.2" cy="2.2" r="1.7" fill="{t['dots']}" opacity="{t['dotop']}"/>
+    </pattern>
+    <pattern id="htb{uid}" width="14" height="14" patternUnits="userSpaceOnUse">
+      <circle cx="3.4" cy="3.4" r="3.0" fill="{WHITE}" opacity="0.16"/>
+    </pattern>
+    <pattern id="hatch{uid}" width="13" height="13" patternUnits="userSpaceOnUse"
+             patternTransform="rotate(-38)">
+      <rect width="5" height="13" fill="{WHITE}" opacity="0.22"/>
+    </pattern>
+    <filter id="grain{uid}" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="4" seed="11" result="n"/>
       <feColorMatrix in="n" type="saturate" values="0"/>
-      <feComponentTransfer><feFuncA type="linear" slope="{NOISE}"/></feComponentTransfer>
+      <feComponentTransfer><feFuncA type="linear" slope="0.07"/></feComponentTransfer>
     </filter>
-    <filter id="blot{uid}" x="-20%" y="-20%" width="140%" height="140%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="3" seed="19" result="t"/>
-      <feDisplacementMap in="SourceGraphic" in2="t" scale="1.7" xChannelSelector="R" yChannelSelector="G"/>
+    <filter id="rough{uid}" x="-8%" y="-8%" width="116%" height="116%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.028" numOctaves="4" seed="5" result="t"/>
+      <feDisplacementMap in="SourceGraphic" in2="t" scale="6"
+                         xChannelSelector="R" yChannelSelector="G"/>
     </filter>
-    <radialGradient id="vig{uid}" cx="50%" cy="46%" r="72%">
-      <stop offset="55%" stop-color="{PAPER}"/>
-      <stop offset="100%" stop-color="{PAPER_D}"/>
-    </radialGradient>"""
+    <linearGradient id="sheen{uid}" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="{WHITE}" stop-opacity="0"/>
+      <stop offset="50%" stop-color="{WHITE}" stop-opacity="0.30"/>
+      <stop offset="100%" stop-color="{WHITE}" stop-opacity="0"/>
+    </linearGradient>{extra}
+  </defs>"""
 
 
-def paper_ground(uid, w, h, r=3):
-    return f"""  <rect width="{w}" height="{h}" rx="{r}" fill="url(#vig{uid})"/>
-  <rect width="{w}" height="{h}" rx="{r}" filter="url(#fib{uid})" opacity="0.85"/>"""
+STAR = ("M0,-10 L2.7,-3.4 L9.6,-3.1 L4.1,1.4 L6.0,8.1 "
+        "L0,4.1 L-6.0,8.1 L-4.1,1.4 L-9.6,-3.1 L-2.7,-3.4 Z")
+
+
+def stripe_bars(x, y, h, w=7, gap=5, on_dark=None):
+    """The red/white/blue bar stack off the team's flag.
+
+    The middle bar is white on a dark field and navy on a light one —
+    a white bar on the light sheet is an invisible bar.
+    """
+    if on_dark is None:
+        on_dark = THEME.get("dark", True)
+    mid = WHITE if on_dark else NAVY
+    return "".join(
+        f'<rect x="{x + i*(w+gap)}" y="{y}" width="{w}" height="{h}" fill="{c}"/>'
+        for i, c in enumerate((RED, mid, BLUE)))
+
+
+def mark76(uid, cx, cy, r, animate=True):
+    """Original 76 roundel: star arc over a red 7 and a blue 6."""
+    s = [f'<g transform="translate({cx} {cy})">']
+    spin = f' class="spin{uid}"' if animate else ""
+    s.append(f'  <g{spin}>')
+    s.append(f'    <circle r="{r}" fill="{WHITE}"/>')
+    s.append(f'    <circle r="{r-7}" fill="none" stroke="{BLUE}" stroke-width="9"/>')
+    s.append(f'    <circle r="{r-21}" fill="none" stroke="{RED}" stroke-width="3" opacity=".85"/>')
+    s.append("  </g>")
+    # thirteen stars, arcing across the top like the 1776 ring
+    for i in range(13):
+        a = math.radians(-172 + i * (164 / 12))
+        sx, sy = (r - 36) * math.cos(a), (r - 36) * math.sin(a)
+        s.append(f'  <g transform="translate({sx:.1f} {sy:.1f}) scale({r/230:.3f})">'
+                 f'<path class="tw{uid} k{uid}{i}" d="{STAR}" fill="{BLUE}"/></g>')
+    # The numerals, sized to sit inside the inner ring rather than punch
+    # through it: fit the pair to the ring's chord, not to the outer radius.
+    inner = r - 30
+    size = r * 1.15
+    for _ in range(40):
+        d7, w7 = P(black, "7", size)
+        d6, w6 = P(black, "6", size)
+        if w7 + w6 + r * 0.04 <= inner * 1.45:
+            break
+        size -= r * 0.03
+    total = w7 + w6 + r * 0.04
+    x0 = -total / 2
+    base = size * 0.36
+    s.append(f'  <path d="{d7}" fill="{RED}" transform="translate({x0:.1f} {base:.1f})"/>')
+    s.append(f'  <path d="{d6}" fill="{BLUE}" '
+             f'transform="translate({x0 + w7 + r*0.04:.1f} {base:.1f})"/>')
+    s.append("</g>")
+    return "\n".join(s)
 
 
 # =========================================================================
-# HERO — the broadside
+# HERO
 # =========================================================================
 def hero():
-    W, H = 1200, 460
-    cx = W / 2
-    s = []
-    s.append(
-        f'<svg width="{W}" height="{H}" viewBox="0 0 {W} {H}" xmlns="http://www.w3.org/2000/svg" '
-        f'role="img" aria-label="Shaurya Singh — builder of agents, Philadelphia 1776 broadside">'
-    )
-    s.append("<defs>")
-    s.append(paper_defs("H", W, H))
-    # the two ink plates, offset then registered — a press finding alignment
-    s.append(f"""
+    W, H = 1200, 440
+    t = THEME
+    uid = "H"
+    s = [f'<svg width="{W}" height="{H}" viewBox="0 0 {W} {H}" '
+         f'xmlns="http://www.w3.org/2000/svg" role="img" '
+         f'aria-label="Shaurya Singh — builder of agents, fixer of other people\'s code">']
+
+    star_css = "".join(
+        f".k{uid}{i}{{animation:pop{uid} 3.2s ease-in-out infinite {0.9+i*0.09:.2f}s}}"
+        for i in range(13))
+    s.append(defs(uid, f"""
     <style><![CDATA[
-      /* The press cycle: the two colour plates drift into register under the
-         black impression. Nothing here animates opacity from zero — if a
-         renderer never advances the timeline (a preview card, a thumbnailer,
-         an <img> rasterised at t=0) the sheet must still read as finished.
-         Motion is the enhancement; the resting state is the artwork. */
-      @keyframes registerR {{
-        0%      {{ transform: translate(7px, -5px); }}
-        55%,100% {{ transform: translate(0,0); }}
-      }}
-      @keyframes registerB {{
-        0%      {{ transform: translate(-8px, 6px); }}
-        62%,100% {{ transform: translate(0,0); }}
-      }}
-      @keyframes strike {{
-        0%      {{ transform: scale(1.018); }}
-        58%,100% {{ transform: scale(1); }}
-      }}
-      /* No entrance animation on .late/.later. Those elements carry SVG
-         transform attributes for placement, and a CSS transform animation
-         replaces the attribute outright rather than composing with it —
-         which stacks every one of them at the origin. The motion budget goes
-         to plate registration, the star ring and the bell crack instead. */
-      @keyframes crack {{
-        0%, 8%  {{ stroke-dashoffset: 190; }}
-        38%     {{ stroke-dashoffset: 0; }}
-        92%     {{ stroke-dashoffset: 0; }}
-        100%    {{ stroke-dashoffset: 190; }}
-      }}
-      @keyframes twinkle {{
-        0%,100% {{ opacity: .38; transform: scale(.92); }}
-        50%     {{ opacity: 1;  transform: scale(1.06); }}
-      }}
-      @keyframes rule {{ from {{ transform: scaleX(.72) }} to {{ transform: scaleX(1) }} }}
+      /* Motion only. Nothing here reveals essential content from nothing. */
+      @keyframes pop{uid} {{ 0%,100% {{opacity:.45}} 50% {{opacity:1}} }}
+      @keyframes sweep{uid} {{ 0% {{transform:translateX(-460px)}} 100% {{transform:translateX(1500px)}} }}
+      @keyframes drift{uid} {{ 0% {{transform:translate(0,0)}} 100% {{transform:translate(9px,9px)}} }}
+      @keyframes breathe{uid} {{ 0%,100% {{transform:scale(1)}} 50% {{transform:scale(1.022)}} }}
+      @keyframes bar{uid} {{ 0% {{transform:scaleX(.55)}} 100% {{transform:scaleX(1)}} }}
+      .sw{uid} {{ animation: sweep{uid} 6.5s cubic-bezier(.5,0,.5,1) infinite }}
+      .dr{uid} {{ animation: drift{uid} 7s linear infinite alternate }}
+      .spin{uid} {{ animation: breathe{uid} 4.5s ease-in-out infinite;
+                    transform-box: fill-box; transform-origin: center }}
+      .tw{uid} {{ transform-box: fill-box; transform-origin: center }}
+      .b1{uid} {{ animation: bar{uid} 1.4s cubic-bezier(.16,1,.3,1) both; transform-origin: left center }}
+      {star_css}
+    ]]></style>"""))
 
-      .plateR {{ animation: registerR 1.5s cubic-bezier(.2,.8,.2,1) both; }}
-      .plateB {{ animation: registerB 1.5s cubic-bezier(.2,.8,.2,1) both; }}
-      .name   {{ animation: strike 1.5s cubic-bezier(.16,1,.3,1) both;
-                 transform-origin: 600px 246px; }}
-      .rulein {{ animation: rule 1.1s cubic-bezier(.16,1,.3,1) .25s both; }}
-      .crackline {{ stroke-dasharray: 190; animation: crack 6s ease-in-out infinite; }}
-      .st {{ transform-box: fill-box; transform-origin: center; }}
-"""
-    )
-    for i in range(13):
-        s.append(f"      .s{i} {{ animation: twinkle 3.4s ease-in-out infinite {1.6 + i*0.11:.2f}s; }}\n")
-    s.append("    ]]></style>")
-    s.append("</defs>")
+    # --- field ------------------------------------------------------------
+    s.append(f'<rect width="{W}" height="{H}" fill="{t["field"]}"/>')
+    # blue block cut on a hard diagonal, the broadcast wedge
+    s.append(f'<path d="M690 0 H{W} V{H} H560 Z" fill="{BLUE}"/>')
+    s.append(f'<path d="M690 0 H{W} V{H} H560 Z" fill="url(#htb{uid})"/>')
+    # red keyline riding the diagonal
+    s.append(f'<path d="M672 0 L542 {H} L566 {H} L696 0 Z" fill="{RED}"/>')
+    s.append(f'<path d="M655 0 L525 {H} L533 {H} L663 0 Z" fill="{RED}" opacity=".55"/>')
+    # halftone across the light side + a hatched corner
+    s.append(f'<g class="dr{uid}"><rect width="700" height="{H}" fill="url(#ht{uid})"/></g>')
+    s.append(f'<path d="M{W-230} 0 H{W} V150 Z" fill="url(#hatch{uid})"/>')
 
-    s.append(paper_ground("H", W, H, r=4))
+    # --- splatter: a few rough marks so it reads printed, not vector -------
+    # Kept clear of the type column; ink spots behind words read as dirt.
+    s.append(f'<g filter="url(#rough{uid})" opacity=".45">')
+    for cx_, cy_, rr, col in ((738, 372, 16, WHITE), (795, 404, 10, WHITE),
+                              (1042, 58, 13, WHITE), (1112, 104, 8, WHITE),
+                              (632, 42, 9, RED)):
+        s.append(f'  <circle cx="{cx_}" cy="{cy_}" r="{rr}" fill="{col}" opacity=".45"/>')
+    s.append("</g>")
 
-    # --- printed border: thick/thin engraved frame -----------------------
-    s.append(f'  <rect x="14" y="14" width="{W-28}" height="{H-28}" fill="none" stroke="{INK}" stroke-width="3" opacity="0.88"/>')
-    s.append(f'  <rect x="22" y="22" width="{W-44}" height="{H-44}" fill="none" stroke="{INK}" stroke-width="1" opacity="0.6"/>')
+    # --- stripe bars, off the team flag ------------------------------------
+    s.append(stripe_bars(46, 52, H - 104))
 
-    # --- margin ornaments: the bell on the left, the ball on the right ---
-    # Kept out of the text block. A watermark behind the name just muddied
-    # the type, and the crack read as a stray mark across the standfirst.
-    s.append(f"""  <g class="late" opacity="0.62" transform="translate(84 300) scale(0.35)">
-    <rect x="-46" y="-206" width="92" height="16" rx="3" fill="{NAVY}"/>
-    <ellipse cx="0" cy="-216" rx="11" ry="14" fill="none" stroke="{NAVY}" stroke-width="7"/>
-    <rect x="-31" y="-190" width="62" height="14" fill="{NAVY}"/>
-    <path d="M-31 -176 C-31 -166 -35 -152 -40 -138
-             C-49 -110 -55 -66 -55 -26
-             L55 -26 C55 -66 49 -110 40 -138
-             C35 -152 31 -166 31 -176 Z" fill="{NAVY}"/>
-    <path d="M-66 -26 L66 -26 L66 -8 L-66 -8 Z" fill="{NAVY}"/>
-    <ellipse cx="0" cy="-8" rx="66" ry="9" fill="{NAVY}"/>
-    <rect x="-5" y="-8" width="10" height="20" rx="2" fill="{NAVY}"/>
-    <ellipse cx="0" cy="14" rx="9" ry="11" fill="{NAVY}"/>
-    <path class="crackline" d="M20 -14 l14 -30 l-11 -26 l17 -31 l-9 -27 l15 -26"
-          fill="none" stroke="{PAPER}" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
-  </g>""")
-    s.append(f"""  <g class="late" opacity="0.62" transform="translate(1116 264)"
-       fill="none" stroke="{RED}" stroke-width="3" stroke-linecap="round">
-    <circle r="40"/>
-    <line x1="-40" y1="0" x2="40" y2="0"/>
-    <line x1="0" y1="-40" x2="0" y2="40"/>
-    <path d="M-26 -30 C-9 -11 -9 11 -26 30"/>
-    <path d="M26 -30 C9 -11 9 11 26 30"/>
-  </g>""")
+    # --- the 76 roundel ----------------------------------------------------
+    s.append(mark76(uid, 966, 214, 132))
 
-    # --- top line: No. 76 / roundel / MMXXVI -----------------------------
-    d, w = P(bask_bold, "No. 76", 20, 1.2)
-    s.append(f'  <path class="late" d="{d}" fill="{FADE}" transform="translate(58 70)"/>')
-    d, w = P(bask_bold, "MMXXVI", 20, 3.0)
-    s.append(f'  <path class="late" d="{d}" fill="{FADE}" transform="translate({W-58-w} 70)"/>')
+    # --- wordmark. Every string is fitted to the space actually available at
+    # its own baseline: the blue wedge leans left as it descends, so a width
+    # that clears it at the top runs underneath it lower down.
+    left = 108
 
-    # 13 stars in a ring — the Betsy Ross circle, and the Sixers logo
-    import math
-    star = "M0,-9 L2.4,-3.1 L8.6,-2.8 L3.7,1.2 L5.4,7.2 L0,3.7 L-5.4,7.2 L-3.7,1.2 L-8.6,-2.8 L-2.4,-3.1 Z"
-    s.append(f'  <g class="late" transform="translate({cx} 64)">')
-    for i in range(13):
-        a = -math.pi / 2 + i * (2 * math.pi / 13)
-        sx, sy = 42 * math.cos(a), 42 * math.sin(a)
-        col = RED if i % 2 == 0 else BLUE
-        # Position on the parent <g>, animate on the child. A CSS transform on
-        # the path would otherwise replace the placement transform outright and
-        # stack all thirteen stars at the centre.
-        s.append(f'    <g transform="translate({sx:.2f} {sy:.2f}) scale(.62)">'
-                 f'<path class="st s{i}" d="{star}" fill="{col}"/></g>')
-    d76, w76 = P(caslon, "76", 44, 1)
-    s.append(f'    <path d="{d76}" fill="{INK}" transform="translate({-w76/2:.2f} 15)"/>')
-    s.append("  </g>")
+    def room(y, pad=22):
+        """Usable width at baseline y, stopping short of the red keyline."""
+        return (655 - 130 * y / H) - left - pad
 
-    # --- the name, struck in two plates ----------------------------------
-    NAME, SIZE, TRACK = "SHAURYA SINGH", 92, 7.0
-    dn, wn = P(caslon, NAME, SIZE, TRACK)
-    nx = cx - wn / 2
-    # Emit the outline once and reference it three times: the file is served
-    # on every profile view, so 90KB of duplicated path data is not free.
-    s.insert(
-        s.index("</defs>"),
-        f'<path id="nm" d="{dn}"/>',
-    )
-    s.append('  <g class="name">')
-    # red plate, then blue plate, then the black impression on top:
-    # slight misregistration is the whole charm of relief printing
-    s.append(f'    <g class="plateR"><use href="#nm" fill="{RED}" opacity="0.9" transform="translate({nx:.2f} 262)"/></g>')
-    s.append(f'    <g class="plateB"><use href="#nm" fill="{BLUE}" opacity="0.9" transform="translate({nx:.2f} 262)"/></g>')
-    s.append(f'    <use href="#nm" fill="{INK}" transform="translate({nx:.2f} 262)" filter="url(#blotH)"/>')
-    s.append("  </g>")
+    d1, w1, sz1 = fit(black, "SHAURYA", 104, room(196), tracking=2.0)
+    d2, w2, sz2 = fit(black, "SINGH", 104, room(284), tracking=2.0)
+    sz = min(sz1, sz2)
+    d1, w1 = P(black, "SHAURYA", sz, 2.0)
+    d2, w2 = P(black, "SINGH", sz, 2.0)
+    s.append(f'<path d="{d1}" fill="{t["ink"]}" transform="translate({left} 196)"/>')
+    s.append(f'<path d="{d2}" fill="{t["ink"]}" transform="translate({left} 284)"/>')
 
-    # --- ornamental rule with a centre lozenge ---------------------------
-    s.append(f'  <g class="rulein" style="transform-origin:{cx}px 292px">')
-    s.append(f'    <line x1="150" y1="292" x2="{cx-58}" y2="292" stroke="{INK}" stroke-width="2.4"/>')
-    s.append(f'    <line x1="{cx+58}" y1="292" x2="{W-150}" y2="292" stroke="{INK}" stroke-width="2.4"/>')
-    s.append(f'    <line x1="150" y1="297" x2="{cx-58}" y2="297" stroke="{INK}" stroke-width="0.9" opacity=".6"/>')
-    s.append(f'    <line x1="{cx+58}" y1="297" x2="{W-150}" y2="297" stroke="{INK}" stroke-width="0.9" opacity=".6"/>')
-    s.append(f'    <path d="M{cx-34} 294 l16 -9 l18 9 l-18 9 z" fill="{RED}"/>')
-    s.append(f'    <path d="M{cx+2} 294 l16 -9 l18 9 l-18 9 z" fill="{BLUE}"/>')
-    s.append("  </g>")
+    # rule under the wordmark
+    s.append(f'<g class="b1{uid}" style="transform-origin:{left}px 306px">')
+    s.append(f'  <rect x="{left}" y="300" width="150" height="9" fill="{RED}"/>')
+    s.append(f'  <rect x="{left+158}" y="300" width="92" height="9" fill="{BLUE}"/>')
+    s.append("</g>")
 
-    # --- the standfirst, colonial broadside voice ------------------------
-    line, _ = centered(bask_bold, "BUILDER OF AGENTS  ·  FIXER OF OTHER PEOPLE'S CODE", 21, 2.6, cx, 336, INK, 'class="late"')
-    s.append("  " + line)
-    line, _ = centered(bask_ital, "One hundred merges into the commons, and counting.", 25, 0, cx, 374, NAVY, 'class="later"')
-    s.append("  " + line)
+    # --- supporting type ---------------------------------------------------
+    dt, wt, _ = fit(din, "BUILDER OF AGENTS  ·  FIXER OF OTHER PEOPLE'S CODE",
+                    26, room(348), tracking=1.4)
+    s.append(f'<path d="{dt}" fill="{t["ink"]}" opacity=".92" transform="translate({left} 348)"/>')
+    dk, wk, _ = fit(din, "100 MERGES  ·  21 ORGANIZATIONS  ·  CLASS OF 2029",
+                    21, room(382), tracking=1.1)
+    s.append(f'<path d="{dk}" fill="{t["sub"]}" transform="translate({left} 382)"/>')
 
-    # --- footer imprint, the way a printer signs a broadside -------------
-    line, _ = centered(bask_reg, "PRINTED AT FREMONT, CALIFORNIA  ·  SET IN CASLON  ·  CLASS OF MMXXIX", 13, 2.2, cx, 414, FADE, 'class="later"')
-    s.append("  " + line)
+    dn, wn, _ = fit(din, "PHILADELPHIA 76ERS  ·  FREMONT, CALIFORNIA", 19, room(92), tracking=1.4)
+    s.append(f'<path d="{dn}" fill="{t["sub"]}" transform="translate({left} 92)"/>')
 
+    # --- light sweep across the whole card ---------------------------------
+    s.append(f'<rect class="sw{uid}" x="-460" y="0" width="300" height="{H}" '
+             f'fill="url(#sheen{uid})" transform="skewX(-18)"/>')
+    s.append(f'<rect width="{W}" height="{H}" filter="url(#grain{uid})" opacity=".8"/>')
     s.append("</svg>")
     return "\n".join(s)
 
 
 # =========================================================================
-# LEDGER — the stat line, as a printer's tally
+# LEDGER — broadcast lower-third with real count-up
 # =========================================================================
 def ledger():
-    W, H = 1200, 204
-    s = [
-        f'<svg width="{W}" height="{H}" viewBox="0 0 {W} {H}" xmlns="http://www.w3.org/2000/svg" '
-        f'role="img" aria-label="94 merges, 40 organisations, 2 hackathon wins, $225K saved in demo">',
-        "<defs>",
-        paper_defs("L", W, H),
-        f"""<style><![CDATA[
-      /* Motion only — never a reveal. See the note in hero(). */
-      @keyframes rise {{ from {{ transform: translateY(13px) }} to {{ transform: translateY(0) }} }}
-      @keyframes drawUp {{ from {{ transform: scaleY(.4) }} to {{ transform: scaleY(1) }} }}
-      .c1 {{ animation: rise .8s cubic-bezier(.16,1,.3,1) .05s both }}
-      .c2 {{ animation: rise .8s cubic-bezier(.16,1,.3,1) .17s both }}
-      .c3 {{ animation: rise .8s cubic-bezier(.16,1,.3,1) .29s both }}
-      .c4 {{ animation: rise .8s cubic-bezier(.16,1,.3,1) .41s both }}
-      .div {{ animation: drawUp .7s ease-out .3s both; transform-origin: center }}
-    ]]></style>""",
-        "</defs>",
-        paper_ground("L", W, H, r=4),
-        f'  <rect x="10" y="10" width="{W-20}" height="{H-20}" fill="none" stroke="{INK}" stroke-width="2.2" opacity=".85"/>',
-        f'  <rect x="17" y="17" width="{W-34}" height="{H-34}" fill="none" stroke="{INK}" stroke-width="0.8" opacity=".5"/>',
-    ]
+    W, H = 1200, 190
+    t = THEME
+    uid = "L"
+    head = [f'<svg width="{W}" height="{H}" viewBox="0 0 {W} {H}" '
+            f'xmlns="http://www.w3.org/2000/svg" role="img" '
+            f'aria-label="100 merges landed, 21 organizations, 44 repositories, 2 hackathons won">']
+    css_frames = []
+    s = []
 
-    # Caslon sets figures oldstyle — 4 and 9 descend below the baseline, which
-    # is right for a ledger but means the accent rule has to clear them.
-    stats = [
-        ("100", "MERGES LANDED", RED),
-        ("21", "ORGANIZATIONS", BLUE),
-        ("44", "REPOSITORIES", RED),
-        ("$225K", "SAVED IN DEMO", BLUE),
-    ]
-    slot = (W - 60) / len(stats)
+    s.append(f'<rect width="{W}" height="{H}" fill="{NAVY if t["dark"] else WHITE}"/>')
+    s.append(f'<rect width="{W}" height="{H}" fill="url(#ht{uid})"/>')
+    s.append(f'<rect y="0" width="{W}" height="7" fill="{RED}"/>')
+    s.append(f'<rect y="{H-7}" width="{W}" height="7" fill="{BLUE}"/>')
+
+    ink = WHITE if t["dark"] else NAVY
+    stats = [("100", "MERGES LANDED", RED), ("21", "ORGANIZATIONS", BLUE),
+             ("44", "REPOSITORIES", RED), ("2", "HACKATHONS WON", BLUE)]
+    slot = W / 4
     for i, (num, lab, col) in enumerate(stats):
-        cx = 30 + slot * (i + 0.5)
-        dn, wn = P(caslon, num, 62, 0)
-        s.append(f'  <g class="c{i+1}">')
-        s.append(f'    <path d="{dn}" fill="{INK}" transform="translate({cx-wn/2:.2f} 96)"/>')
-        s.append(f'    <line x1="{cx-28}" y1="130" x2="{cx+28}" y2="130" stroke="{col}" stroke-width="1.8"/>')
-        dl, wl = P(bask_bold, lab, 13, 3.0)
-        s.append(f'    <path d="{dl}" fill="{col}" transform="translate({cx-wl/2:.2f} 152)"/>')
-        s.append("  </g>")
-        if i < len(stats) - 1:
-            dx = 30 + slot * (i + 1)
-            s.append(f'  <line class="div" x1="{dx}" y1="46" x2="{dx}" y2="158" stroke="{INK}" stroke-width="0.9" opacity=".35"/>')
+        cx = slot * (i + 0.5)
+        target = int(num)
+        # Roll-up frames, driven by CSS rather than SMIL. Both the 0% and the
+        # 100% keyframe of every frame hold the RESTING state — final number
+        # visible, intermediates hidden — so a renderer stuck at t=0 and one
+        # that runs to completion both show the true figure. The count-up only
+        # exists in between.
+        frames = sorted({int(target * p) for p in (0, .28, .55, .74, .87, .95)} | {target})
+        n = len(frames)
+        lead, roll = 6.0, 88.0          # percent of the 1.4s cycle
+        seg = roll / n
+        for j, v in enumerate(frames):
+            dv, wv = P(black, str(v), 74)
+            a, b = lead + j * seg, lead + (j + 1) * seg
+            cls = f"n{uid}{i}_{j}"
+            if j == n - 1:
+                kf = (f"@keyframes {cls}k{{0%,{lead-0.1:.1f}%{{opacity:1}}"
+                      f"{lead:.1f}%,{lead+roll-seg:.1f}%{{opacity:0}}"
+                      f"{lead+roll-seg+0.1:.1f}%,100%{{opacity:1}}}}")
+                op = "1"
+            else:
+                # Intermediates are ghosted, never solid: if anything snaps a
+                # frame mid-roll it reads as a spinning counter rather than as
+                # a real figure. Only the true number is ever fully opaque.
+                kf = (f"@keyframes {cls}k{{0%,{a-0.1:.1f}%{{opacity:0}}"
+                      f"{a:.1f}%,{b:.1f}%{{opacity:.42}}"
+                      f"{b+0.1:.1f}%,100%{{opacity:0}}}}")
+                op = "0"
+            css_frames.append(f"{kf}.{cls}{{animation:{cls}k 1.4s linear forwards}}")
+            s.append(f'<g class="{cls}" opacity="{op}" '
+                     f'transform="translate({cx - wv/2:.1f} 96)">'
+                     f'<path d="{dv}" fill="{ink}"/></g>')
+        dl, wl, _ = fit(din, lab, 21, slot - 40, tracking=2.4)
+        s.append(f'<path d="{dl}" fill="{col}" transform="translate({cx-wl/2:.1f} 146)"/>')
+        s.append(f'<g class="u{uid}" style="transform-origin:{cx}px 116px">'
+                 f'<rect x="{cx-34}" y="112" width="68" height="5" fill="{col}"/></g>')
+        if i < 3:
+            s.append(f'<rect x="{slot*(i+1)-1}" y="42" width="2" height="100" '
+                     f'fill="{ink}" opacity=".16"/>')
 
-    dt, wt = P(bask_bold, "THE LEDGER  ·  AUGUST MMXXVI", 12, 3.4)
-    s.append(f'  <path d="{dt}" fill="{FADE}" transform="translate({(W-wt)/2:.2f} 182)"/>')
+    s.append(f'<rect class="sw{uid}" x="-400" y="0" width="240" height="{H}" '
+             f'fill="url(#sheen{uid})" transform="skewX(-18)"/>')
+    s.append(f'<rect width="{W}" height="{H}" filter="url(#grain{uid})" opacity=".7"/>')
     s.append("</svg>")
-    return "\n".join(s)
+    head.append(defs(uid, f"""
+    <style><![CDATA[
+      @keyframes sweep{uid} {{ 0% {{transform:translateX(-400px)}} 100% {{transform:translateX(1500px)}} }}
+      @keyframes bar{uid} {{ from {{transform:scaleX(.3)}} to {{transform:scaleX(1)}} }}
+      .sw{uid} {{ animation: sweep{uid} 7s cubic-bezier(.5,0,.5,1) infinite }}
+      .u{uid} {{ animation: bar{uid} 1.1s cubic-bezier(.16,1,.3,1) both }}
+      {"".join(css_frames)}
+    ]]></style>"""))
+    return "\n".join(head + s)
 
 
 # =========================================================================
-# SECTION RULES — engraved headers
+# SECTION HEADERS
 # =========================================================================
-def rule(name, numeral, title, accent):
-    W, H = 1200, 86
+def rule(name, num, title, accent):
+    W, H = 1200, 92
+    t = THEME
     uid = "R" + name
-    s = [
-        f'<svg width="{W}" height="{H}" viewBox="0 0 {W} {H}" xmlns="http://www.w3.org/2000/svg" '
-        f'role="img" aria-label="{title}">',
-        "<defs>",
-        paper_defs(uid, W, H),
-        f"""<style><![CDATA[
-      /* The accent bar may wipe from nothing — it is pure decoration. The
-         numeral and title only ever slide, so the header reads at t=0. */
-      @keyframes wipe{uid} {{ from {{ transform: scaleX(0) }} to {{ transform: scaleX(1) }} }}
-      @keyframes slide{uid} {{ from {{ transform: translateX(-9px) }} to {{ transform: translateX(0) }} }}
-      .w{uid} {{ animation: wipe{uid} 1.1s cubic-bezier(.16,1,.3,1) both; transform-origin: 0 0 }}
-      .t{uid} {{ /* placement is an SVG attribute; leave it alone */ }}
-    ]]></style>""",
-        "</defs>",
-        paper_ground(uid, W, H, r=3),
-        f'  <rect class="w{uid}" x="0" y="0" width="{W}" height="5" fill="{accent}"/>',
-        f'  <line x1="0" y1="{H-3}" x2="{W}" y2="{H-3}" stroke="{INK}" stroke-width="2" opacity=".8"/>',
-    ]
-    # roman numeral in a printed square
-    s.append(f'  <g class="t{uid}">')
-    s.append(f'    <rect x="30" y="26" width="40" height="40" fill="{INK}"/>')
-    dn, wn = P(bask_bold, numeral, 20, 1.0)
-    s.append(f'    <path d="{dn}" fill="{PAPER}" transform="translate({50-wn/2:.2f} 54)"/>')
-    dt, wt = P(caslon, title, 40, 4.0)
-    s.append(f'    <path d="{dt}" fill="{INK}" transform="translate(90 58)"/>')
-    # trailing rule out to the right edge
-    s.append(f'    <line x1="{90+wt+22}" y1="46" x2="{W-30}" y2="46" stroke="{accent}" stroke-width="1.4" opacity=".55"/>')
-    s.append("  </g>")
+    s = [f'<svg width="{W}" height="{H}" viewBox="0 0 {W} {H}" '
+         f'xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{title}">']
+    s.append(defs(uid, f"""
+    <style><![CDATA[
+      @keyframes sweep{uid} {{ 0% {{transform:translateX(-300px)}} 100% {{transform:translateX(1450px)}} }}
+      @keyframes grow{uid} {{ from {{transform:scaleX(.82)}} to {{transform:scaleX(1)}} }}
+      .sw{uid} {{ animation: sweep{uid} 8s cubic-bezier(.5,0,.5,1) infinite }}
+      .g{uid} {{ animation: grow{uid} 1.2s cubic-bezier(.16,1,.3,1) both; transform-origin: 0 0 }}
+    ]]></style>"""))
+
+    s.append(f'<rect width="{W}" height="{H}" fill="{NAVY if t["dark"] else BONE}"/>')
+    s.append(f'<rect width="{W}" height="{H}" fill="url(#ht{uid})"/>')
+    # numeral block with a hard diagonal trailing edge
+    s.append(f'<path d="M0 0 H150 L124 {H} H0 Z" fill="{accent}"/>')
+    s.append(f'<path d="M150 0 H172 L146 {H} H124 Z" fill="{accent}" opacity=".28"/>')
+    dnum, wnum = P(black, num, 46)
+    s.append(f'<path d="{dnum}" fill="{WHITE}" transform="translate({64-wnum/2:.1f} 63)"/>')
+
+    ink = WHITE if t["dark"] else NAVY
+    dt, wt, _ = fit(black, title.upper(), 42, 760, tracking=1.4)
+    s.append(f'<path d="{dt}" fill="{ink}" transform="translate(208 62)"/>')
+    # trailing rule + stripe bars on the right
+    s.append(f'<g class="g{uid}" style="transform-origin:{208+wt+26}px 46px">'
+             f'<rect x="{208+wt+26}" y="43" width="{max(40, W-260-wt-90)}" height="3" '
+             f'fill="{accent}" opacity=".6"/></g>')
+    s.append(stripe_bars(W - 62, 22, H - 44))
+    s.append(f'<rect class="sw{uid}" x="-300" y="0" width="180" height="{H}" '
+             f'fill="url(#sheen{uid})" transform="skewX(-18)"/>')
+    s.append(f'<rect width="{W}" height="{H}" filter="url(#grain{uid})" opacity=".7"/>')
     s.append("</svg>")
     return "\n".join(s)
 
 
 SECTIONS = [
-    ("career", "I", "Career Highlights", "RED"),
-    ("builds", "II", "Featured Builds", "BLUE"),
-    ("merges", "III", "The Merge Docket", "RED"),
-    ("stack", "IV", "The Stack", "BLUE"),
-    ("court", "V", "Off the Court", "RED"),
-    ("reach", "VI", "Reach Me", "BLUE"),
+    ("career", "01", "Career Highlights", RED),
+    ("builds", "02", "Featured Builds", BLUE),
+    ("merges", "03", "The Merge Docket", RED),
+    ("stack", "04", "The Stack", BLUE),
+    ("court", "05", "Off the Court", RED),
+    ("reach", "06", "Reach Me", BLUE),
 ]
 
 
@@ -351,9 +396,8 @@ def main():
         set_theme(dark)
         suf = "-dark" if dark else ""
         files = {f"hero{suf}.svg": hero(), f"ledger{suf}.svg": ledger()}
-        # Accent colours are looked up after set_theme, so SECTIONS stores keys.
-        for name, num, title, key in SECTIONS:
-            files[f"rule-{name}{suf}.svg"] = rule(name, num, title, globals()[key])
+        for nm, num, title, accent in SECTIONS:
+            files[f"rule-{nm}{suf}.svg"] = rule(nm, num, title, accent)
         for fn, body in files.items():
             with open(os.path.join(OUT, fn), "w") as f:
                 f.write(body)
