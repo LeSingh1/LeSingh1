@@ -1,302 +1,300 @@
 #!/usr/bin/env python3
-"""Generate the profile artwork — 76ers broadcast graphics.
+"""Generate the profile artwork — a 76ers graffiti rookie card.
 
-Visual language: hard diagonal colour blocks, ben-day halftone, diagonal
-hatching, a thirteen-star arc, red/white/blue stripe bars, and heavy
-condensed type. Drawn from the team's palette and the 1776 star motif; the
-"76" lockup here is original artwork, not a trace of the team's logo.
+The 76ers marks are trademarks of the Philadelphia 76ers / NBA; this is a fan
+rendition on a personal page.
 
-Two rules the previous version learned the hard way, both load-bearing:
+Three rules, all learned by breaking them:
 
 1. NEVER put a CSS transform animation on an element that carries an SVG
-   `transform` attribute. The CSS transform replaces the attribute instead of
+   `transform` attribute. The CSS transform replaces the attribute rather than
    composing with it and the element snaps to the origin. Animate a child, or
    wrap the element in a positioned <g>.
 
 2. The resting state must be the finished artwork. GitHub renders README
-   images inside <img>; link-preview cards and thumbnailers may rasterise at
-   t=0 without ever advancing the timeline. Nothing essential may animate in
-   from opacity 0, and no number may animate in from a wrong value. SMIL
-   counters therefore carry their FINAL value as the element attribute, so a
-   frozen render shows the truth and a live render plays the count-up.
+   images inside <img>; preview cards and thumbnailers can rasterise at t=0 or
+   a few hundred ms in, without ever running the timeline to completion.
+   Nothing essential may animate in from opacity 0, and no number may animate
+   in from a wrong value.
 
-Every glyph is emitted as vector outlines, because <img>-embedded SVG cannot
-load a webfont.
+3. Text is fitted, never hardcoded. fit() shrinks a string until it clears the
+   space actually available, so copy changes cannot push type off an edge.
+
+Every glyph is a vector outline: <img>-embedded SVG cannot load a webfont.
 """
-import math
 import os
+
+import graffiti as G
+import sixers_mark as SM
 from text2path import load, text_path
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "profile", "art")
 
 HELV = "/System/Library/Fonts/HelveticaNeue.ttc"
 DIN = "/System/Library/Fonts/Supplemental/DIN Condensed Bold.ttf"
+black = load(HELV, 9)      # Helvetica Neue Condensed Black
+din = load(DIN)            # DIN Condensed Bold
 
-black = load(HELV, 9)      # Helvetica Neue Condensed Black — the wordmark
-cbold = load(HELV, 4)      # Helvetica Neue Condensed Bold
-din = load(DIN)            # DIN Condensed Bold — labels, broadcast furniture
-
-# ---- palette -------------------------------------------------------------
-BLUE = "#006BB6"
-RED = "#ED174C"
-NAVY = "#002B5C"
-DEEP = "#00203F"
-WHITE = "#FFFFFF"
-BONE = "#EEF2F7"
-
+RED, BLUE, NAVY = "#c8102e", "#1d428a", "#0b2a5b"
+DEEP, WHITE, BONE = "#061A38", "#FFFFFF", "#F2F5FA"
+RED_TXT, BLUE_TXT = "#ff5a78", "#7FB0EE"   # tinted for small type on navy
 THEME = {}
 
 
-def set_theme(dark: bool):
-    """Light = white sheet with navy type. Dark = navy field with white type."""
+def set_theme(dark):
     THEME.clear()
     THEME.update(
         dark=dark,
-        field=DEEP if dark else BONE,
-        field2=NAVY if dark else WHITE,
+        page=DEEP if dark else BONE,
         ink=WHITE if dark else NAVY,
-        sub="#9FB6D0" if dark else "#5A7189",
-        dots=WHITE if dark else NAVY,
-        dotop="0.10" if dark else "0.07",
+        sub="#9DB8D6" if dark else "#54708C",
+        dot=WHITE if dark else NAVY,
+        dotop="0.13" if dark else "0.10",
     )
 
 
-def P(font, text, size, tracking=0.0):
-    return text_path(font, text, size, tracking)
+def P(f, t, s, tr=0.0):
+    return text_path(f, t, s, tr)
 
 
-def fit(font, text, size, max_w, tracking=0.0, floor=8.0):
-    """Shrink until the string fits max_w. Nothing may run past its frame."""
-    while size > floor:
-        d, w = P(font, text, size, tracking)
+def fit(f, t, s, max_w, tr=0.0, floor=7.0):
+    while s > floor:
+        d, w = P(f, t, s, tr)
         if w <= max_w:
-            return d, w, size
-        size -= 1.0
-    d, w = P(font, text, size, tracking)
-    return d, w, size
+            return d, w, s
+        s -= 0.5
+    d, w = P(f, t, s, tr)
+    return d, w, s
 
 
-# ---- shared defs ---------------------------------------------------------
-def defs(uid, extra=""):
-    t = THEME
-    return f"""<defs>
-    <pattern id="ht{uid}" width="9" height="9" patternUnits="userSpaceOnUse">
-      <circle cx="2.2" cy="2.2" r="1.7" fill="{t['dots']}" opacity="{t['dotop']}"/>
-    </pattern>
-    <pattern id="htb{uid}" width="14" height="14" patternUnits="userSpaceOnUse">
-      <circle cx="3.4" cy="3.4" r="3.0" fill="{WHITE}" opacity="0.16"/>
-    </pattern>
-    <pattern id="hatch{uid}" width="13" height="13" patternUnits="userSpaceOnUse"
-             patternTransform="rotate(-38)">
-      <rect width="5" height="13" fill="{WHITE}" opacity="0.22"/>
-    </pattern>
-    <filter id="grain{uid}" x="0" y="0" width="100%" height="100%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="4" seed="11" result="n"/>
-      <feColorMatrix in="n" type="saturate" values="0"/>
-      <feComponentTransfer><feFuncA type="linear" slope="0.07"/></feComponentTransfer>
-    </filter>
-    <filter id="rough{uid}" x="-8%" y="-8%" width="116%" height="116%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.028" numOctaves="4" seed="5" result="t"/>
-      <feDisplacementMap in="SourceGraphic" in2="t" scale="6"
-                         xChannelSelector="R" yChannelSelector="G"/>
-    </filter>
-    <linearGradient id="sheen{uid}" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="{WHITE}" stop-opacity="0"/>
-      <stop offset="50%" stop-color="{WHITE}" stop-opacity="0.30"/>
-      <stop offset="100%" stop-color="{WHITE}" stop-opacity="0"/>
-    </linearGradient>{extra}
-  </defs>"""
-
-
-STAR = ("M0,-10 L2.7,-3.4 L9.6,-3.1 L4.1,1.4 L6.0,8.1 "
-        "L0,4.1 L-6.0,8.1 L-4.1,1.4 L-9.6,-3.1 L-2.7,-3.4 Z")
-
-
-def stripe_bars(x, y, h, w=7, gap=5, on_dark=None):
-    """The red/white/blue bar stack off the team's flag.
-
-    The middle bar is white on a dark field and navy on a light one —
-    a white bar on the light sheet is an invisible bar.
-    """
-    if on_dark is None:
-        on_dark = THEME.get("dark", True)
-    mid = WHITE if on_dark else NAVY
-    return "".join(
-        f'<rect x="{x + i*(w+gap)}" y="{y}" width="{w}" height="{h}" fill="{c}"/>'
-        for i, c in enumerate((RED, mid, BLUE)))
-
-
-def mark76(uid, cx, cy, r, animate=True):
-    """Original 76 roundel: star arc over a red 7 and a blue 6."""
-    s = [f'<g transform="translate({cx} {cy})">']
-    spin = f' class="spin{uid}"' if animate else ""
-    s.append(f'  <g{spin}>')
-    s.append(f'    <circle r="{r}" fill="{WHITE}"/>')
-    s.append(f'    <circle r="{r-7}" fill="none" stroke="{BLUE}" stroke-width="9"/>')
-    s.append(f'    <circle r="{r-21}" fill="none" stroke="{RED}" stroke-width="3" opacity=".85"/>')
-    s.append("  </g>")
-    # thirteen stars, arcing across the top like the 1776 ring
-    for i in range(13):
-        a = math.radians(-172 + i * (164 / 12))
-        sx, sy = (r - 36) * math.cos(a), (r - 36) * math.sin(a)
-        s.append(f'  <g transform="translate({sx:.1f} {sy:.1f}) scale({r/230:.3f})">'
-                 f'<path class="tw{uid} k{uid}{i}" d="{STAR}" fill="{BLUE}"/></g>')
-    # The numerals, sized to sit inside the inner ring rather than punch
-    # through it: fit the pair to the ring's chord, not to the outer radius.
-    inner = r - 30
-    size = r * 1.15
-    for _ in range(40):
-        d7, w7 = P(black, "7", size)
-        d6, w6 = P(black, "6", size)
-        if w7 + w6 + r * 0.04 <= inner * 1.45:
-            break
-        size -= r * 0.03
-    total = w7 + w6 + r * 0.04
-    x0 = -total / 2
-    base = size * 0.36
-    s.append(f'  <path d="{d7}" fill="{RED}" transform="translate({x0:.1f} {base:.1f})"/>')
-    s.append(f'  <path d="{d6}" fill="{BLUE}" '
-             f'transform="translate({x0 + w7 + r*0.04:.1f} {base:.1f})"/>')
-    s.append("</g>")
-    return "\n".join(s)
+def centered(f, t, s, cx, y, fill, max_w, tr=0.0, extra=""):
+    d, w, _ = fit(f, t, s, max_w, tr)
+    return f'<path d="{d}" fill="{fill}" transform="translate({cx-w/2:.1f} {y})" {extra}/>'
 
 
 # =========================================================================
-# HERO
+# HERO — the rookie card
 # =========================================================================
 def hero():
-    W, H = 1200, 440
-    t = THEME
+    W, H = 1200, 680
     uid = "H"
+    t = THEME
+    CX = W / 2
+    CW, CH = 452, 588                      # card size
+    CXL, CYT = CX - CW / 2, 48             # card top-left
     s = [f'<svg width="{W}" height="{H}" viewBox="0 0 {W} {H}" '
          f'xmlns="http://www.w3.org/2000/svg" role="img" '
-         f'aria-label="Shaurya Singh — builder of agents, fixer of other people\'s code">']
+         f'aria-label="Shaurya Singh rookie card — builder of agents, '
+         f'100 merges landed">']
 
-    star_css = "".join(
-        f".k{uid}{i}{{animation:pop{uid} 3.2s ease-in-out infinite {0.9+i*0.09:.2f}s}}"
-        for i in range(13))
-    s.append(defs(uid, f"""
+    stars_css = ""
+    s.append(f"""<defs>
+    {G.filters(uid)}
+    {G.patterns(uid, t['dot'], t['dotop'])}
+    <clipPath id="card{uid}">
+      <rect x="{CXL}" y="{CYT}" width="{CW}" height="{CH}" rx="18"/>
+    </clipPath>
+    <linearGradient id="foil{uid}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8FC7F5"/><stop offset="18%" stop-color="#FFFFFF"/>
+      <stop offset="36%" stop-color="{RED}"/><stop offset="54%" stop-color="#FFFFFF"/>
+      <stop offset="72%" stop-color="{BLUE}"/><stop offset="88%" stop-color="#CFE6FA"/>
+      <stop offset="100%" stop-color="#8FC7F5"/>
+      <animate attributeName="x1" values="0%;-100%;0%" dur="9s" repeatCount="indefinite"/>
+      <animate attributeName="x2" values="100%;0%;100%" dur="9s" repeatCount="indefinite"/>
+    </linearGradient>
+    <linearGradient id="holo{uid}" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0"/>
+      <stop offset="38%" stop-color="#BFE3FF" stop-opacity="0.30"/>
+      <stop offset="50%" stop-color="#FFFFFF" stop-opacity="0.62"/>
+      <stop offset="62%" stop-color="#FFC7D8" stop-opacity="0.30"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="plate{uid}" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#17407f"/><stop offset="100%" stop-color="#08214a"/>
+    </linearGradient>
     <style><![CDATA[
-      /* Motion only. Nothing here reveals essential content from nothing. */
-      @keyframes pop{uid} {{ 0%,100% {{opacity:.45}} 50% {{opacity:1}} }}
-      @keyframes sweep{uid} {{ 0% {{transform:translateX(-460px)}} 100% {{transform:translateX(1500px)}} }}
-      @keyframes drift{uid} {{ 0% {{transform:translate(0,0)}} 100% {{transform:translate(9px,9px)}} }}
-      @keyframes breathe{uid} {{ 0%,100% {{transform:scale(1)}} 50% {{transform:scale(1.022)}} }}
-      @keyframes bar{uid} {{ 0% {{transform:scaleX(.55)}} 100% {{transform:scaleX(1)}} }}
-      .sw{uid} {{ animation: sweep{uid} 6.5s cubic-bezier(.5,0,.5,1) infinite }}
-      .dr{uid} {{ animation: drift{uid} 7s linear infinite alternate }}
-      .spin{uid} {{ animation: breathe{uid} 4.5s ease-in-out infinite;
+      /* Motion only — every element is already visible at rest. */
+      @keyframes bob{uid} {{ 0%,100%{{transform:scale(1)}} 50%{{transform:scale(1.028)}} }}
+      .badge{uid} {{ animation: bob{uid} 5.5s ease-in-out infinite;
+                     transform-box: fill-box; transform-origin: center }}
+      @keyframes holo{uid} {{ 0%{{transform:translateX(-620px)}} 100%{{transform:translateX(1360px)}} }}
+      @keyframes tilt{uid} {{ 0%,100%{{transform:rotate(-.5deg) scale(1)}}
+                              50%{{transform:rotate(.5deg) scale(1.008)}} }}
+      @keyframes drip{uid} {{ 0%{{transform:scaleY(.88)}} 100%{{transform:scaleY(1)}} }}
+      @keyframes puff{uid} {{ 0%,100%{{opacity:.42}} 50%{{opacity:.78}} }}
+      .holo{uid} {{ animation: holo{uid} 4.6s cubic-bezier(.45,0,.55,1) infinite }}
+      .card{uid} {{ animation: tilt{uid} 9s ease-in-out infinite;
                     transform-box: fill-box; transform-origin: center }}
-      .tw{uid} {{ transform-box: fill-box; transform-origin: center }}
-      .b1{uid} {{ animation: bar{uid} 1.4s cubic-bezier(.16,1,.3,1) both; transform-origin: left center }}
-      {star_css}
-    ]]></style>"""))
+      .drip{uid} {{ animation: drip{uid} 3.4s ease-in-out infinite alternate;
+                    transform-box: fill-box; transform-origin: top center }}
+      .puff{uid} {{ animation: puff{uid} 5s ease-in-out infinite }}
+      {stars_css}
+    ]]></style>
+  </defs>""")
 
-    # --- field ------------------------------------------------------------
-    s.append(f'<rect width="{W}" height="{H}" fill="{t["field"]}"/>')
-    # blue block cut on a hard diagonal, the broadcast wedge
-    s.append(f'<path d="M690 0 H{W} V{H} H560 Z" fill="{BLUE}"/>')
-    s.append(f'<path d="M690 0 H{W} V{H} H560 Z" fill="url(#htb{uid})"/>')
-    # red keyline riding the diagonal
-    s.append(f'<path d="M672 0 L542 {H} L566 {H} L696 0 Z" fill="{RED}"/>')
-    s.append(f'<path d="M655 0 L525 {H} L533 {H} L663 0 Z" fill="{RED}" opacity=".55"/>')
-    # halftone across the light side + a hatched corner
-    s.append(f'<g class="dr{uid}"><rect width="700" height="{H}" fill="url(#ht{uid})"/></g>')
-    s.append(f'<path d="M{W-230} 0 H{W} V150 Z" fill="url(#hatch{uid})"/>')
+    # Wall graffiti has to be inked in the opposite of the wall. White spray
+    # on a light sheet is invisible spray.
+    WI = WHITE if t["dark"] else NAVY
+    # ---------------- background: the wall ----------------
+    s.append(f'<rect width="{W}" height="{H}" fill="{t["page"]}"/>')
+    s.append(f'<rect width="{W}" height="{H}" fill="url(#dots{uid})"/>')
+    s.append(f'<path d="M0 0 H300 L0 250 Z" fill="url(#slash{uid})" opacity=".5"/>')
+    s.append(f'<path d="M{W} {H} H{W-300} L{W} {H-250} Z" fill="url(#slash{uid})" opacity=".5"/>')
 
-    # --- splatter: a few rough marks so it reads printed, not vector -------
-    # Kept clear of the type column; ink spots behind words read as dirt.
-    s.append(f'<g filter="url(#rough{uid})" opacity=".45">')
-    for cx_, cy_, rr, col in ((738, 372, 16, WHITE), (795, 404, 10, WHITE),
-                              (1042, 58, 13, WHITE), (1112, 104, 8, WHITE),
-                              (632, 42, 9, RED)):
-        s.append(f'  <circle cx="{cx_}" cy="{cy_}" r="{rr}" fill="{col}" opacity=".45"/>')
-    s.append("</g>")
+    # rough colour masses either side of the card
+    s.append(G.blob(190, 250, 150, 132, 11, WI, 0.055, uid=uid))
+    s.append(G.blob(1010, 430, 158, 138, 23, WI, 0.05, uid=uid))
+    s.append(G.brush_stroke(60, 150, 330, 118, 46, 5, RED, 0.85, uid=uid))
+    s.append(G.brush_stroke(1150, 560, 880, 592, 40, 8, BLUE, 0.85, uid=uid))
+    s.append(G.brush_stroke(70, 470, 300, 505, 30, 12, BLUE, 0.6, uid=uid))
+    s.append(G.brush_stroke(900, 150, 1140, 128, 26, 17, RED, 0.6, uid=uid))
 
-    # --- stripe bars, off the team flag ------------------------------------
-    s.append(stripe_bars(46, 52, H - 104))
+    s.append(f'<g class="puff{uid}">{G.splatter(150, 330, 130, 31, RED, 20, 3, 15, .85, uid)}</g>')
+    s.append(f'<g class="puff{uid}">{G.splatter(1040, 260, 140, 44, BLUE, 22, 3, 16, .85, uid)}</g>')
+    s.append(G.splatter(240, 600, 120, 57, WI, 16, 2, 10, .5, uid))
+    s.append(G.splatter(960, 90, 110, 63, WI, 14, 2, 9, .45, uid))
 
-    # --- the 76 roundel ----------------------------------------------------
-    s.append(mark76(uid, 966, 214, 132))
+    s.append(G.drips(78, 176, 250, 71, RED, 6, 30, 130, cls=f"drip{uid}"))
+    s.append(G.drips(900, 610, 240, 83, BLUE, 5, 24, 66, cls=f"drip{uid}"))
+    s.append(G.speckle(0, 0, W, H, 97, 210, WI, 0.34, 2.4))
+    # ghosted basketballs behind the wall clutter
+    for bx, by, br in ((176, 452, 120), (1024, 196, 104)):
+        s.append(f'<g fill="none" stroke="{WI}" stroke-opacity=".13" stroke-width="7" '
+                 f'transform="translate({bx} {by})">'
+                 f'<circle r="{br}"/><line x1="{-br}" y1="0" x2="{br}" y2="0"/>'
+                 f'<line x1="0" y1="{-br}" x2="0" y2="{br}"/>'
+                 f'<path d="M{-br*0.66} {-br*0.75} C{-br*0.22} {-br*0.28} {-br*0.22} {br*0.28} {-br*0.66} {br*0.75}"/>'
+                 f'<path d="M{br*0.66} {-br*0.75} C{br*0.22} {-br*0.28} {br*0.22} {br*0.28} {br*0.66} {br*0.75}"/></g>')
+    s.append(G.splatter(320, 120, 90, 111, WI, 12, 2, 8, .35, uid))
+    s.append(G.splatter(880, 520, 100, 119, WI, 13, 2, 9, .35, uid))
+    s.append(G.splatter(60, 250, 80, 127, BLUE, 11, 2, 10, .6, uid))
+    s.append(G.splatter(1150, 620, 90, 131, RED, 11, 2, 10, .6, uid))
+    s.append(G.drips(240, 500, 90, 137, WI, 3, 14, 40, cls=f"drip{uid}"))
 
-    # --- wordmark. Every string is fitted to the space actually available at
-    # its own baseline: the blue wedge leans left as it descends, so a width
-    # that clears it at the top runs underneath it lower down.
-    left = 108
+    # loose stars on the wall
+    for sx, sy, sc, col in [
+            (110, 92, 2.1, BLUE), (268, 62, 1.5, RED), (1128, 214, 2.0, RED),
+            (1062, 596, 1.6, WI), (86, 604, 1.8, RED), (1150, 420, 1.3, BLUE),
+            (196, 424, 1.2, WI)]:
+        s.append(f'<g transform="translate({sx} {sy}) scale({sc})">'
+                 f'<path d="{SM.STAR5}" fill="{col}" opacity=".85"/></g>')
 
-    def room(y, pad=22):
-        """Usable width at baseline y, stopping short of the red keyline."""
-        return (655 - 130 * y / H) - left - pad
+    # vertical spray tags down the margins
+    dv, wv, _ = fit(black, "ROOKIE", 46, 300, 5)
+    s.append(f'<g transform="translate(52 {H/2 + wv/2}) rotate(-90)">'
+             f'<path d="{dv}" fill="{WI}" opacity=".17"/></g>')
+    dv2, wv2, _ = fit(black, "PHILADELPHIA", 40, 420, 4)
+    s.append(f'<g transform="translate({W-40} {H/2 - wv2/2}) rotate(90)">'
+             f'<path d="{dv2}" fill="{WI}" opacity=".15"/></g>')
 
-    d1, w1, sz1 = fit(black, "SHAURYA", 104, room(196), tracking=2.0)
-    d2, w2, sz2 = fit(black, "SINGH", 104, room(284), tracking=2.0)
-    sz = min(sz1, sz2)
-    d1, w1 = P(black, "SHAURYA", sz, 2.0)
-    d2, w2 = P(black, "SINGH", sz, 2.0)
-    s.append(f'<path d="{d1}" fill="{t["ink"]}" transform="translate({left} 196)"/>')
-    s.append(f'<path d="{d2}" fill="{t["ink"]}" transform="translate({left} 284)"/>')
+    # ---------------- the card ----------------
+    s.append(f'<g class="card{uid}">')
+    s.append(f'<rect x="{CXL-9}" y="{CYT-9}" width="{CW+18}" height="{CH+18}" rx="24" '
+             f'fill="#00050C" opacity=".55"/>')
+    s.append(f'<rect x="{CXL-7}" y="{CYT-7}" width="{CW+14}" height="{CH+14}" rx="22" '
+             f'fill="url(#foil{uid})"/>')
+    s.append(f'<rect x="{CXL-1}" y="{CYT-1}" width="{CW+2}" height="{CH+2}" rx="19" '
+             f'fill="{NAVY}"/>')
 
-    # rule under the wordmark
-    s.append(f'<g class="b1{uid}" style="transform-origin:{left}px 306px">')
-    s.append(f'  <rect x="{left}" y="300" width="150" height="9" fill="{RED}"/>')
-    s.append(f'  <rect x="{left+158}" y="300" width="92" height="9" fill="{BLUE}"/>')
-    s.append("</g>")
+    s.append(f'<g clip-path="url(#card{uid})">')
+    s.append(f'<rect x="{CXL}" y="{CYT}" width="{CW}" height="{CH}" fill="url(#plate{uid})"/>')
+    s.append(f'<rect x="{CXL}" y="{CYT}" width="{CW}" height="{CH}" fill="url(#dotsL{uid})"/>')
+    s.append(G.blob(CX, CYT + 208, 168, 138, 77, WHITE, 0.10, uid=uid))
+    s.append(G.brush_stroke(CXL + 20, CYT + 372, CXL + CW - 24, CYT + 392, 26, 33, BLUE, .5, uid=uid))
+    s.append(G.splatter(CXL + 60, CYT + 330, 90, 41, RED, 13, 2, 9, .45, uid))
+    s.append(G.splatter(CXL + CW - 66, CYT + 150, 84, 49, BLUE, 12, 2, 9, .45, uid))
+    s.append(G.speckle(CXL, CYT, CW, CH, 53, 70, WHITE, 0.22, 1.9))
+    s.append(f'<path d="M{CXL} {CYT} H{CXL+160} L{CXL} {CYT+150} Z" '
+             f'fill="url(#slash{uid})" opacity=".55"/>')
 
-    # --- supporting type ---------------------------------------------------
-    dt, wt, _ = fit(din, "BUILDER OF AGENTS  ·  FIXER OF OTHER PEOPLE'S CODE",
-                    26, room(348), tracking=1.4)
-    s.append(f'<path d="{dt}" fill="{t["ink"]}" opacity=".92" transform="translate({left} 348)"/>')
-    dk, wk, _ = fit(din, "100 MERGES  ·  21 ORGANIZATIONS  ·  CLASS OF 2029",
-                    21, room(382), tracking=1.1)
-    s.append(f'<path d="{dk}" fill="{t["sub"]}" transform="translate({left} 382)"/>')
+    # Top strip. Everything sits left of the corner flash, which would
+    # otherwise swallow a right-aligned date.
+    pad = 26
+    d, w, _ = fit(din, "ROOKIE CARD", 22, 200, 2.6)
+    s.append(f'<path d="{d}" fill="{WHITE}" opacity=".92" '
+             f'transform="translate({CXL+pad} {CYT+42})"/>')
+    d2, w2, _ = fit(din, "2026", 22, 80, 2.6)
+    s.append(f'<path d="{d2}" fill="{RED_TXT}" transform="translate({CXL+pad+w+16} {CYT+42})"/>')
+    s.append(f'<rect x="{CXL+pad}" y="{CYT+54}" width="{CW-2*pad}" height="2" '
+             f'fill="{WHITE}" opacity=".28"/>')
 
-    dn, wn, _ = fit(din, "PHILADELPHIA 76ERS  ·  FREMONT, CALIFORNIA", 19, room(92), tracking=1.4)
-    s.append(f'<path d="{dn}" fill="{t["sub"]}" transform="translate({left} 92)"/>')
+    # The real 76ers badge, centred in the panel between the hairline and the
+    # name plate. Sized to the smaller of the panel's height and width.
+    py = CYT + 346                     # top rule of the name plate
+    panel_top, panel_bot = CYT + 70, py - 26
+    dia = min(panel_bot - panel_top, CW - 2 * pad - 30)
+    s.append(f'<g class="badge{uid}">'
+             f'{SM.badge(CX, (panel_top + panel_bot) / 2, dia)}</g>')
+    s.append(f'<rect x="{CXL+pad}" y="{py}" width="{CW-2*pad}" height="3" fill="{RED}"/>')
+    s.append(centered(black, "SHAURYA SINGH", 52, CX, py + 60, WHITE, CW - 2*pad - 10, 0))
+    s.append(centered(din, "BUILDER OF AGENTS  ·  FIXER OF OTHER PEOPLE'S CODE",
+                      21, CX, py + 86, "#AFC6E6", CW - 2*pad - 8, 1.0))
+    s.append(f'<rect x="{CXL+pad}" y="{py+102}" width="{CW-2*pad}" height="3" fill="{BLUE}"/>')
 
-    # --- light sweep across the whole card ---------------------------------
-    s.append(f'<rect class="sw{uid}" x="-460" y="0" width="300" height="{H}" '
-             f'fill="url(#sheen{uid})" transform="skewX(-18)"/>')
-    s.append(f'<rect width="{W}" height="{H}" filter="url(#grain{uid})" opacity=".8"/>')
+    sy = py + 172
+    cells = [("100", "MERGES"), ("21", "ORGS"), ("44", "REPOS"), ("2", "WINS")]
+    cw = (CW - 2 * pad) / len(cells)
+    for i, (n, lab) in enumerate(cells):
+        ccx = CXL + pad + cw * (i + 0.5)
+        s.append(centered(black, n, 34, ccx, sy, WHITE, cw - 8))
+        s.append(centered(din, lab, 16, ccx, sy + 21, RED_TXT if i % 2 == 0 else BLUE_TXT,
+                          cw - 6, 1.6))
+        if i:
+            s.append(f'<rect x="{CXL+pad+cw*i:.1f}" y="{sy-28}" width="1.5" height="48" '
+                     f'fill="{WHITE}" opacity=".2"/>')
+
+    s.append(f'<path d="M{CXL+CW} {CYT} L{CXL+CW} {CYT+96} L{CXL+CW-96} {CYT} Z" fill="{RED}"/>')
+    d, w = P(black, "RC", 30)
+    s.append(f'<g transform="translate({CXL+CW-34} {CYT+30}) rotate(45)">'
+             f'<path d="{d}" fill="{WHITE}" transform="translate({-w/2:.1f} 10)"/></g>')
+
+    s.append(f'<g class="holo{uid}"><rect x="{CXL-620}" y="{CYT-60}" width="230" '
+             f'height="{CH+120}" fill="url(#holo{uid})" transform="skewX(-20)"/></g>')
+    s.append("</g>")   # clip
+    s.append("</g>")   # card
+
+    s.append(f'<rect width="{W}" height="{H}" filter="url(#grain{uid})" opacity=".85"/>')
     s.append("</svg>")
     return "\n".join(s)
 
 
 # =========================================================================
-# LEDGER — broadcast lower-third with real count-up
+# LEDGER
 # =========================================================================
 def ledger():
-    W, H = 1200, 190
-    t = THEME
+    W, H = 1200, 200
     uid = "L"
+    t = THEME
     head = [f'<svg width="{W}" height="{H}" viewBox="0 0 {W} {H}" '
             f'xmlns="http://www.w3.org/2000/svg" role="img" '
-            f'aria-label="100 merges landed, 21 organizations, 44 repositories, 2 hackathons won">']
-    css_frames = []
-    s = []
+            f'aria-label="100 merges landed, 21 organizations, 44 repositories, '
+            f'2 hackathons won">']
+    css, s = [], []
+    ink = WHITE if t["dark"] else NAVY
 
     s.append(f'<rect width="{W}" height="{H}" fill="{NAVY if t["dark"] else WHITE}"/>')
-    s.append(f'<rect width="{W}" height="{H}" fill="url(#ht{uid})"/>')
-    s.append(f'<rect y="0" width="{W}" height="7" fill="{RED}"/>')
-    s.append(f'<rect y="{H-7}" width="{W}" height="7" fill="{BLUE}"/>')
+    s.append(f'<rect width="{W}" height="{H}" fill="url(#dots{uid})"/>')
+    s.append(G.brush_stroke(-20, 30, 420, 20, 26, 3, RED, .32, uid=uid))
+    s.append(G.brush_stroke(1220, 176, 800, 184, 24, 6, BLUE, .32, uid=uid))
+    s.append(G.speckle(0, 0, W, H, 19, 90, ink, 0.18, 2.0))
+    s.append(f'<rect y="0" width="{W}" height="8" fill="{RED}"/>')
+    s.append(f'<rect y="{H-8}" width="{W}" height="8" fill="{BLUE}"/>')
+    s.append(G.drips(120, 8, 940, 27, RED, 7, 10, 34, cls=f"dr{uid}"))
 
-    ink = WHITE if t["dark"] else NAVY
-    stats = [("100", "MERGES LANDED", RED), ("21", "ORGANIZATIONS", BLUE),
-             ("44", "REPOSITORIES", RED), ("2", "HACKATHONS WON", BLUE)]
+    lab_r = RED_TXT if t["dark"] else RED
+    lab_b = BLUE_TXT if t["dark"] else BLUE
+    stats = [("100", "MERGES LANDED", lab_r), ("21", "ORGANIZATIONS", lab_b),
+             ("44", "REPOSITORIES", lab_r), ("2", "HACKATHONS WON", lab_b)]
     slot = W / 4
     for i, (num, lab, col) in enumerate(stats):
         cx = slot * (i + 0.5)
         target = int(num)
-        # Roll-up frames, driven by CSS rather than SMIL. Both the 0% and the
-        # 100% keyframe of every frame hold the RESTING state — final number
-        # visible, intermediates hidden — so a renderer stuck at t=0 and one
-        # that runs to completion both show the true figure. The count-up only
-        # exists in between.
-        frames = sorted({int(target * p) for p in (0, .28, .55, .74, .87, .95)} | {target})
+        frames = sorted({int(target * p) for p in (0, .3, .58, .78, .9)} | {target})
         n = len(frames)
-        lead, roll = 6.0, 88.0          # percent of the 1.4s cycle
+        lead, roll = 5.0, 80.0
         seg = roll / n
         for j, v in enumerate(frames):
-            dv, wv = P(black, str(v), 74)
+            dv, wv = P(black, str(v), 78)
             a, b = lead + j * seg, lead + (j + 1) * seg
             cls = f"n{uid}{i}_{j}"
             if j == n - 1:
@@ -305,37 +303,33 @@ def ledger():
                       f"{lead+roll-seg+0.1:.1f}%,100%{{opacity:1}}}}")
                 op = "1"
             else:
-                # Intermediates are ghosted, never solid: if anything snaps a
-                # frame mid-roll it reads as a spinning counter rather than as
-                # a real figure. Only the true number is ever fully opaque.
+                # Ghosted: a frame caught mid-roll reads as a spinning counter,
+                # never as a real figure. Only the truth is ever fully opaque.
                 kf = (f"@keyframes {cls}k{{0%,{a-0.1:.1f}%{{opacity:0}}"
-                      f"{a:.1f}%,{b:.1f}%{{opacity:.42}}"
+                      f"{a:.1f}%,{b:.1f}%{{opacity:.38}}"
                       f"{b+0.1:.1f}%,100%{{opacity:0}}}}")
                 op = "0"
-            css_frames.append(f"{kf}.{cls}{{animation:{cls}k 1.4s linear forwards}}")
+            css.append(f"{kf}.{cls}{{animation:{cls}k 1.5s linear forwards}}")
             s.append(f'<g class="{cls}" opacity="{op}" '
-                     f'transform="translate({cx - wv/2:.1f} 96)">'
-                     f'<path d="{dv}" fill="{ink}"/></g>')
-        dl, wl, _ = fit(din, lab, 21, slot - 40, tracking=2.4)
-        s.append(f'<path d="{dl}" fill="{col}" transform="translate({cx-wl/2:.1f} 146)"/>')
-        s.append(f'<g class="u{uid}" style="transform-origin:{cx}px 116px">'
-                 f'<rect x="{cx-34}" y="112" width="68" height="5" fill="{col}"/></g>')
-        if i < 3:
-            s.append(f'<rect x="{slot*(i+1)-1}" y="42" width="2" height="100" '
-                     f'fill="{ink}" opacity=".16"/>')
+                     f'transform="translate({cx-wv/2:.1f} 104)"><path d="{dv}" fill="{ink}"/></g>')
+        s.append(centered(din, lab, 22, cx, 152, col, slot - 34, 2.4))
+        s.append(f'<rect x="{cx-36}" y="126" width="72" height="5" fill="{col}"/>')
+        if i:
+            s.append(f'<rect x="{slot*i-1}" y="46" width="2" height="112" '
+                     f'fill="{ink}" opacity=".18"/>')
 
-    s.append(f'<rect class="sw{uid}" x="-400" y="0" width="240" height="{H}" '
-             f'fill="url(#sheen{uid})" transform="skewX(-18)"/>')
     s.append(f'<rect width="{W}" height="{H}" filter="url(#grain{uid})" opacity=".7"/>')
     s.append("</svg>")
-    head.append(defs(uid, f"""
+    head.append(f"""<defs>
+    {G.filters(uid)}
+    {G.patterns(uid, t['dot'], t['dotop'])}
     <style><![CDATA[
-      @keyframes sweep{uid} {{ 0% {{transform:translateX(-400px)}} 100% {{transform:translateX(1500px)}} }}
-      @keyframes bar{uid} {{ from {{transform:scaleX(.3)}} to {{transform:scaleX(1)}} }}
-      .sw{uid} {{ animation: sweep{uid} 7s cubic-bezier(.5,0,.5,1) infinite }}
-      .u{uid} {{ animation: bar{uid} 1.1s cubic-bezier(.16,1,.3,1) both }}
-      {"".join(css_frames)}
-    ]]></style>"""))
+      @keyframes dr{uid} {{ 0%{{transform:scaleY(.8)}} 100%{{transform:scaleY(1)}} }}
+      .dr{uid} {{ animation: dr{uid} 3.6s ease-in-out infinite alternate;
+                  transform-box: fill-box; transform-origin: top center }}
+      {"".join(css)}
+    ]]></style>
+  </defs>""")
     return "\n".join(head + s)
 
 
@@ -343,37 +337,43 @@ def ledger():
 # SECTION HEADERS
 # =========================================================================
 def rule(name, num, title, accent):
-    W, H = 1200, 92
-    t = THEME
+    W, H = 1200, 104
     uid = "R" + name
-    s = [f'<svg width="{W}" height="{H}" viewBox="0 0 {W} {H}" '
-         f'xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{title}">']
-    s.append(defs(uid, f"""
-    <style><![CDATA[
-      @keyframes sweep{uid} {{ 0% {{transform:translateX(-300px)}} 100% {{transform:translateX(1450px)}} }}
-      @keyframes grow{uid} {{ from {{transform:scaleX(.82)}} to {{transform:scaleX(1)}} }}
-      .sw{uid} {{ animation: sweep{uid} 8s cubic-bezier(.5,0,.5,1) infinite }}
-      .g{uid} {{ animation: grow{uid} 1.2s cubic-bezier(.16,1,.3,1) both; transform-origin: 0 0 }}
-    ]]></style>"""))
-
-    s.append(f'<rect width="{W}" height="{H}" fill="{NAVY if t["dark"] else BONE}"/>')
-    s.append(f'<rect width="{W}" height="{H}" fill="url(#ht{uid})"/>')
-    # numeral block with a hard diagonal trailing edge
-    s.append(f'<path d="M0 0 H150 L124 {H} H0 Z" fill="{accent}"/>')
-    s.append(f'<path d="M150 0 H172 L146 {H} H124 Z" fill="{accent}" opacity=".28"/>')
-    dnum, wnum = P(black, num, 46)
-    s.append(f'<path d="{dnum}" fill="{WHITE}" transform="translate({64-wnum/2:.1f} 63)"/>')
-
+    t = THEME
     ink = WHITE if t["dark"] else NAVY
-    dt, wt, _ = fit(black, title.upper(), 42, 760, tracking=1.4)
-    s.append(f'<path d="{dt}" fill="{ink}" transform="translate(208 62)"/>')
-    # trailing rule + stripe bars on the right
-    s.append(f'<g class="g{uid}" style="transform-origin:{208+wt+26}px 46px">'
-             f'<rect x="{208+wt+26}" y="43" width="{max(40, W-260-wt-90)}" height="3" '
-             f'fill="{accent}" opacity=".6"/></g>')
-    s.append(stripe_bars(W - 62, 22, H - 44))
-    s.append(f'<rect class="sw{uid}" x="-300" y="0" width="180" height="{H}" '
-             f'fill="url(#sheen{uid})" transform="skewX(-18)"/>')
+    s = [f'<svg width="{W}" height="{H}" viewBox="0 0 {W} {H}" '
+         f'xmlns="http://www.w3.org/2000/svg" role="img" '
+         f'aria-label="Section {num} — {title}">']
+    s.append(f"""<defs>
+    {G.filters(uid)}
+    {G.patterns(uid, t['dot'], t['dotop'])}
+    <linearGradient id="sh{uid}" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#FFFFFF" stop-opacity="0.26"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <style><![CDATA[
+      @keyframes sw{uid} {{ 0%{{transform:translateX(-320px)}} 100%{{transform:translateX(1460px)}} }}
+      @keyframes dr{uid} {{ 0%{{transform:scaleY(.82)}} 100%{{transform:scaleY(1)}} }}
+      .sw{uid} {{ animation: sw{uid} 7.5s cubic-bezier(.45,0,.55,1) infinite }}
+      .dr{uid} {{ animation: dr{uid} 3.2s ease-in-out infinite alternate;
+                  transform-box: fill-box; transform-origin: top center }}
+    ]]></style>
+  </defs>""")
+    s.append(f'<rect width="{W}" height="{H}" fill="{NAVY if t["dark"] else BONE}"/>')
+    s.append(f'<rect width="{W}" height="{H}" fill="url(#dots{uid})"/>')
+    s.append(G.speckle(0, 0, W, H, 61, 60, ink, 0.16, 1.8))
+    s.append(f'<path d="M0 0 H176 L146 {H} H0 Z" fill="{accent}"/>')
+    s.append(G.splatter(176, H/2, 54, 13, accent, 12, 2, 8, .8, uid))
+    s.append(G.drips(16, H-4, 120, 21, accent, 4, 8, 22, cls=f"dr{uid}"))
+    d, w = P(black, num, 52)
+    s.append(f'<path d="{d}" fill="{WHITE}" transform="translate({72-w/2:.1f} {H/2+18:.1f})"/>')
+    d, w, _ = fit(black, title.upper(), 46, 700, 1.4)
+    s.append(f'<path d="{d}" fill="{ink}" transform="translate(228 {H/2+17:.1f})"/>')
+    s.append(f'<rect x="{228+w+28}" y="{H/2-2}" width="{max(40, W-330-w)}" height="4" '
+             f'fill="{accent}" opacity=".55"/>')
+    s.append(f'<g class="sw{uid}"><rect x="-320" y="0" width="200" height="{H}" '
+             f'fill="url(#sh{uid})" transform="skewX(-20)"/></g>')
     s.append(f'<rect width="{W}" height="{H}" filter="url(#grain{uid})" opacity=".7"/>')
     s.append("</svg>")
     return "\n".join(s)
