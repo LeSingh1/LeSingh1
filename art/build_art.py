@@ -25,7 +25,8 @@ Every glyph is a vector outline: <img>-embedded SVG cannot load a webfont.
 import os
 
 import graffiti as G
-import sixers_mark as SM
+import stats as ST
+import jersey as JS
 from text2path import load, text_path
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "profile", "art")
@@ -87,7 +88,9 @@ def hero():
          f'aria-label="Shaurya Singh rookie card — builder of agents, '
          f'100 merges landed">']
 
-    stars_css = ""
+    stars_css = "".join(
+        f".st{uid}{i}{{animation:tw{uid} 3s ease-in-out infinite {i*0.1:.2f}s}}"
+        for i in range(13))
     s.append(f"""<defs>
     {G.filters(uid)}
     {G.patterns(uid, t['dot'], t['dotop'])}
@@ -114,9 +117,11 @@ def hero():
     </linearGradient>
     <style><![CDATA[
       /* Motion only — every element is already visible at rest. */
-      @keyframes bob{uid} {{ 0%,100%{{transform:scale(1)}} 50%{{transform:scale(1.028)}} }}
-      .badge{uid} {{ animation: bob{uid} 5.5s ease-in-out infinite;
-                     transform-box: fill-box; transform-origin: center }}
+      @keyframes tw{uid} {{ 0%,100%{{opacity:.55}} 50%{{opacity:1}} }}
+      @keyframes bob{uid} {{ 0%,100%{{transform:translateY(0) rotate(-.4deg)}}
+                             50%{{transform:translateY(-5px) rotate(.4deg)}} }}
+      .badge{uid} {{ animation: bob{uid} 6s ease-in-out infinite;
+                     transform-box: fill-box; transform-origin: top center }}
       @keyframes holo{uid} {{ 0%{{transform:translateX(-620px)}} 100%{{transform:translateX(1360px)}} }}
       @keyframes tilt{uid} {{ 0%,100%{{transform:rotate(-.5deg) scale(1)}}
                               50%{{transform:rotate(.5deg) scale(1.008)}} }}
@@ -177,7 +182,7 @@ def hero():
             (1062, 596, 1.6, WI), (86, 604, 1.8, RED), (1150, 420, 1.3, BLUE),
             (196, 424, 1.2, WI)]:
         s.append(f'<g transform="translate({sx} {sy}) scale({sc})">'
-                 f'<path d="{SM.STAR5}" fill="{col}" opacity=".85"/></g>')
+                 f'<path d="{JS.STAR5}" fill="{col}" opacity=".85"/></g>')
 
     # vertical spray tags down the margins
     dv, wv, _ = fit(black, "ROOKIE", 46, 300, 5)
@@ -218,13 +223,22 @@ def hero():
     s.append(f'<rect x="{CXL+pad}" y="{CYT+54}" width="{CW-2*pad}" height="2" '
              f'fill="{WHITE}" opacity=".28"/>')
 
-    # The real 76ers badge, centred in the panel between the hairline and the
-    # name plate. Sized to the smaller of the panel's height and width.
+    # Original jersey, centred in the panel between the hairline and the name
+    # plate. The team logo is deliberately absent — the palette carries the
+    # theme, and the artwork stays free of anyone's trademark.
     py = CYT + 346                     # top rule of the name plate
-    panel_top, panel_bot = CYT + 70, py - 26
-    dia = min(panel_bot - panel_top, CW - 2 * pad - 30)
+    panel_top, panel_bot = CYT + 66, py - 20
+    # The star arc rides above the shoulders, so the jersey's real footprint is
+    # taller than its own height. Budget for the overhang or the stars land on
+    # the header line.
+    OVER = JS.ARC_OVERHANG                       # fraction of jersey height
+    jh = min((panel_bot - panel_top) / (1 + OVER), (CW - 2 * pad) * 1.34)
+    nm = fit(black, "SINGH", 34, jh * 0.32, 1.0)[:2]
+    nu = fit(black, "29", 96, jh * 0.34)[:2]
+    jcy = panel_top + jh * OVER + jh / 2
     s.append(f'<g class="badge{uid}">'
-             f'{SM.badge(CX, (panel_top + panel_bot) / 2, dia)}</g>')
+             f'{JS.jersey(CX, jcy, jh, name_paths=nm, number_paths=nu, star_cls=f"st{uid}")}'
+             f'</g>')
     s.append(f'<rect x="{CXL+pad}" y="{py}" width="{CW-2*pad}" height="3" fill="{RED}"/>')
     s.append(centered(black, "SHAURYA SINGH", 52, CX, py + 60, WHITE, CW - 2*pad - 10, 0))
     s.append(centered(din, "BUILDER OF AGENTS  ·  FIXER OF OTHER PEOPLE'S CODE",
@@ -232,7 +246,8 @@ def hero():
     s.append(f'<rect x="{CXL+pad}" y="{py+102}" width="{CW-2*pad}" height="3" fill="{BLUE}"/>')
 
     sy = py + 172
-    cells = [("100", "MERGES"), ("21", "ORGS"), ("44", "REPOS"), ("2", "WINS")]
+    cells = [(str(ST.MERGES), "MERGES"), (str(ST.ORGS), "ORGS"),
+             (str(ST.REPOS), "REPOS"), (str(ST.WINS), "WINS")]
     cw = (CW - 2 * pad) / len(cells)
     for i, (n, lab) in enumerate(cells):
         ccx = CXL + pad + cw * (i + 0.5)
@@ -267,7 +282,7 @@ def ledger():
     t = THEME
     head = [f'<svg width="{W}" height="{H}" viewBox="0 0 {W} {H}" '
             f'xmlns="http://www.w3.org/2000/svg" role="img" '
-            f'aria-label="100 merges landed, 21 organizations, 44 repositories, '
+            f'aria-label="104 merges landed, 21 organizations, 45 repositories, '
             f'2 hackathons won">']
     css, s = [], []
     ink = WHITE if t["dark"] else NAVY
@@ -283,8 +298,10 @@ def ledger():
 
     lab_r = RED_TXT if t["dark"] else RED
     lab_b = BLUE_TXT if t["dark"] else BLUE
-    stats = [("100", "MERGES LANDED", lab_r), ("21", "ORGANIZATIONS", lab_b),
-             ("44", "REPOSITORIES", lab_r), ("2", "HACKATHONS WON", lab_b)]
+    stats = [(str(ST.MERGES), "MERGES LANDED", lab_r),
+             (str(ST.ORGS), "ORGANIZATIONS", lab_b),
+             (str(ST.REPOS), "REPOSITORIES", lab_r),
+             (str(ST.WINS), "HACKATHONS WON", lab_b)]
     slot = W / 4
     for i, (num, lab, col) in enumerate(stats):
         cx = slot * (i + 0.5)

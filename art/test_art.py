@@ -164,7 +164,10 @@ class TestRestingState(unittest.TestCase):
 class TestCounters(unittest.TestCase):
     """The stat roll-up must never rest on a wrong number."""
 
-    TRUTH = {"100": "MERGES", "21": "ORGANIZATIONS", "44": "REPOSITORIES", "2": "HACKATHONS"}
+    @property
+    def TRUTH(self):
+        import stats
+        return [stats.MERGES, stats.ORGS, stats.REPOS, stats.WINS]
 
     def _counter_groups(self, path):
         root = ET.parse(path).getroot()
@@ -207,9 +210,15 @@ class TestCounters(unittest.TestCase):
                                                  "at both ends of the timeline")
 
     def test_numbers_match_the_claims_in_the_readme(self):
+        """stats.py is the single source of truth; prose must agree with it."""
         md = open(README).read()
         for n in self.TRUTH:
-            self.assertIn(n, md, f"stat {n} appears in art but not in the README")
+            self.assertIn(str(n), md,
+                          f"stats.py says {n} but the README never says it")
+
+    def test_stats_are_internally_consistent(self):
+        import stats
+        stats.check()
 
 
 class TestBounds(unittest.TestCase):
@@ -269,21 +278,36 @@ class TestReadme(unittest.TestCase):
 
 
 class TestBrand(unittest.TestCase):
-    def test_uses_the_official_logo_file(self):
-        import sixers_mark as SM
-        self.assertTrue(os.path.exists(SM.SRC), "official logo asset missing")
-        body = open(SM.SRC).read()
-        self.assertIn("#1d428a", body)
-        self.assertIn("#c8102e", body)
+    """Palette stays; the trademarked logo does not.
 
-    def test_hero_embeds_the_real_badge(self):
+    The team mark was deliberately removed. These tests keep it removed, so a
+    future edit cannot quietly reintroduce someone else's IP.
+    """
+
+    def test_palette_is_present(self):
         for p in glob.glob(os.path.join(ART, "hero*.svg")):
             t = open(p).read()
             with self.subTest(f=os.path.basename(p)):
-                self.assertIn("#1d428a", t, "official blue absent from hero")
-                self.assertIn("#c8102e", t, "official red absent from hero")
-                self.assertGreater(t.count("<polygon"), 12,
-                                   "the badge's star ring is missing")
+                self.assertIn("#1d428a", t, "Philadelphia blue absent")
+                self.assertIn("#c8102e", t, "Philadelphia red absent")
+
+    def test_no_team_logo_asset(self):
+        self.assertFalse(glob.glob(os.path.join(ART, "logo", "*")),
+                         "a team logo asset is back in art/logo/")
+        self.assertFalse(os.path.exists(os.path.join(HERE, "sixers_mark.py")),
+                         "sixers_mark.py (logo embedder) is back")
+
+    def test_no_trademarked_wordmark_in_artwork(self):
+        for p in art_files():
+            t = open(p).read().lower()
+            with self.subTest(f=os.path.basename(p)):
+                for mark in ("76ers", "sixers", "philadelphia 76"):
+                    self.assertNotIn(mark, t,
+                                     f"team wordmark {mark!r} present in artwork")
+
+    def test_readme_claims_no_team_affiliation(self):
+        md = open(README).read().lower()
+        self.assertNotIn("76ers", md, "team wordmark reintroduced in README")
 
 
 if __name__ == "__main__":
