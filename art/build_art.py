@@ -29,7 +29,9 @@ import stats as ST
 import motifs as MO
 from text2path import load, text_path
 
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "profile", "art")
+# This file lives in the art folder and writes beside itself, so the
+# generator works from a fresh clone rather than only from a dev layout.
+OUT = os.path.dirname(os.path.abspath(__file__))
 
 HELV = "/System/Library/Fonts/HelveticaNeue.ttc"
 DIN = "/System/Library/Fonts/Supplemental/DIN Condensed Bold.ttf"

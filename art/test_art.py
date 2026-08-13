@@ -20,9 +20,11 @@ import sys
 import unittest
 import xml.etree.ElementTree as ET
 
+# Paths are relative to this file, which lives in the art folder, so the
+# suite runs from a fresh clone and not only from a dev layout.
 HERE = os.path.dirname(os.path.abspath(__file__))
-ART = os.path.join(HERE, "profile", "art")
-README = os.path.join(HERE, "profile", "README.md")
+ART = HERE
+README = os.path.normpath(os.path.join(HERE, os.pardir, "README.md"))
 SVG = "{http://www.w3.org/2000/svg}"
 
 
@@ -66,7 +68,7 @@ class TestFilesPresent(unittest.TestCase):
     def test_readme_references_resolve(self):
         md = open(README).read()
         for ref in set(re.findall(r'(?:src|srcset)="\./(art/[^"]+)"', md)):
-            self.assertTrue(os.path.exists(os.path.join(HERE, "profile", ref)),
+            self.assertTrue(os.path.exists(os.path.normpath(os.path.join(HERE, os.pardir, ref))),
                             f"README references missing file {ref}")
 
     def test_every_art_file_is_used(self):
