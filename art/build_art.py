@@ -26,7 +26,7 @@ import os
 
 import graffiti as G
 import stats as ST
-import jersey as JS
+import motifs as MO
 from text2path import load, text_path
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "profile", "art")
@@ -204,7 +204,6 @@ def hero():
     s.append(f'<g clip-path="url(#card{uid})">')
     s.append(f'<rect x="{CXL}" y="{CYT}" width="{CW}" height="{CH}" fill="url(#plate{uid})"/>')
     s.append(f'<rect x="{CXL}" y="{CYT}" width="{CW}" height="{CH}" fill="url(#dotsL{uid})"/>')
-    s.append(G.blob(CX, CYT + 208, 168, 138, 77, WHITE, 0.10, uid=uid))
     s.append(G.brush_stroke(CXL + 20, CYT + 372, CXL + CW - 24, CYT + 392, 26, 33, BLUE, .5, uid=uid))
     s.append(G.splatter(CXL + 60, CYT + 330, 90, 41, RED, 13, 2, 9, .45, uid))
     s.append(G.splatter(CXL + CW - 66, CYT + 150, 84, 49, BLUE, 12, 2, 9, .45, uid))
@@ -223,22 +222,29 @@ def hero():
     s.append(f'<rect x="{CXL+pad}" y="{CYT+54}" width="{CW-2*pad}" height="2" '
              f'fill="{WHITE}" opacity=".28"/>')
 
-    # Original jersey, centred in the panel between the hairline and the name
-    # plate. The team logo is deliberately absent — the palette carries the
-    # theme, and the artwork stays free of anyone's trademark.
+    # Centrepiece: the headline number, set like a jersey number. No logo and
+    # no jersey — the one genuinely his thing on this card is the count, so it
+    # takes the space a player photo would have.
     py = CYT + 346                     # top rule of the name plate
-    panel_top, panel_bot = CYT + 66, py - 20
-    # The star arc rides above the shoulders, so the jersey's real footprint is
-    # taller than its own height. Budget for the overhang or the stars land on
-    # the header line.
-    OVER = JS.ARC_OVERHANG                       # fraction of jersey height
-    jh = min((panel_bot - panel_top) / (1 + OVER), (CW - 2 * pad) * 1.34)
-    nm = fit(black, "SINGH", 34, jh * 0.32, 1.0)[:2]
-    nu = fit(black, "29", 96, jh * 0.34)[:2]
-    jcy = panel_top + jh * OVER + jh / 2
-    s.append(f'<g class="badge{uid}">'
-             f'{JS.jersey(CX, jcy, jh, name_paths=nm, number_paths=nu, star_cls=f"st{uid}")}'
-             f'</g>')
+    panel_top, panel_bot = CYT + 68, py - 22
+    inner = CW - 2 * pad
+
+    # thirteen stars arcing over the numeral, the way they sit on a jersey yoke
+    s.append(JS.star_arc(CX, panel_top + 46, inner * 0.42, 34,
+                         size=1.05, fill=WHITE, cls=f"st{uid}"))
+
+    dn, wn, _sz = fit(black, str(ST.MERGES), 176, inner - 26)
+    ny = panel_bot - 46
+    s.append(f'<g class="badge{uid}">')
+    s.append(f'  <path d="{dn}" fill="{RED}" opacity=".9" '
+             f'transform="translate({CX - wn/2 + 10:.1f} {ny + 10})"/>')
+    s.append(f'  <path d="{dn}" fill="{BLUE}" '
+             f'transform="translate({CX - wn/2 + 5:.1f} {ny + 5})"/>')
+    s.append(f'  <path d="{dn}" fill="{WHITE}" '
+             f'transform="translate({CX - wn/2:.1f} {ny})"/>')
+    s.append("</g>")
+    s.append(centered(din, "MERGES LANDED IN OPEN SOURCE", 22, CX,
+                      panel_bot + 6, "#AFC6E6", inner - 20, 2.2))
     s.append(f'<rect x="{CXL+pad}" y="{py}" width="{CW-2*pad}" height="3" fill="{RED}"/>')
     s.append(centered(black, "SHAURYA SINGH", 52, CX, py + 60, WHITE, CW - 2*pad - 10, 0))
     s.append(centered(din, "BUILDER OF AGENTS  ·  FIXER OF OTHER PEOPLE'S CODE",
@@ -246,8 +252,8 @@ def hero():
     s.append(f'<rect x="{CXL+pad}" y="{py+102}" width="{CW-2*pad}" height="3" fill="{BLUE}"/>')
 
     sy = py + 172
-    cells = [(str(ST.MERGES), "MERGES"), (str(ST.ORGS), "ORGS"),
-             (str(ST.REPOS), "REPOS"), (str(ST.WINS), "WINS")]
+    cells = [(str(ST.ORGS), "ORGS"), (str(ST.REPOS), "REPOS"),
+             (str(ST.WINS), "WINS"), ("25", "INTO LEXICAL")]
     cw = (CW - 2 * pad) / len(cells)
     for i, (n, lab) in enumerate(cells):
         ccx = CXL + pad + cw * (i + 0.5)

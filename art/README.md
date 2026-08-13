@@ -16,14 +16,20 @@ A **graffiti rookie card**: a foil-edged trading card centred on a
 spray-painted wall — splatter, drips, overspray, halftone, ghosted
 basketballs and thrown tags.
 
-The centrepiece is an original jersey (`jersey.py`), not a team logo. An
-earlier revision inlined the real Philadelphia 76ers mark; it was removed on
-purpose. The palette carries the theme — Philadelphia blue `#1d428a` and red
+The centrepiece is the headline number, set the way a jersey number is set —
+white over an offset red and blue impression. A real card puts a photograph
+there; the honest substitute is the one figure on the card that is actually
+his.
+
+Two earlier revisions put borrowed iconography in that slot: first the real
+Philadelphia 76ers mark, then an original jersey. Both were removed. The
+palette still carries the theme — Philadelphia blue `#1d428a` and red
 `#c8102e` — while every shape in the artwork is original and free of anyone's
 trademark. `TestBrand` keeps it that way: it fails if a logo asset, the
 `sixers_mark` embedder, or the team wordmark reappears.
 
-The number on the jersey is **29**, for the class of 2029.
+The only ornament left from those passes is the thirteen-star arc in
+`motifs.py`, which is the 1776 colonies device and belongs to nobody.
 
 ## Where the numbers come from
 
