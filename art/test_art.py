@@ -310,5 +310,82 @@ class TestBrand(unittest.TestCase):
         self.assertNotIn("76ers", md, "team wordmark reintroduced in README")
 
 
+class TestGeneratorRuns(unittest.TestCase):
+    """The generator itself must execute.
+
+    A rename once left a stale module alias in build_art.py. The committed
+    SVGs were fine, so nothing looked wrong — but the script that produces
+    them raised NameError on import-time use and could not be re-run. Art that
+    cannot be regenerated is art you cannot fix.
+    """
+
+    def test_module_imports_and_renders_every_piece(self):
+        import importlib
+        ba = importlib.import_module("build_art")
+        for dark in (False, True):
+            ba.set_theme(dark)
+            with self.subTest(dark=dark):
+                self.assertIn("<svg", ba.hero())
+                self.assertIn("<svg", ba.ledger())
+                for name, num, title, accent in ba.SECTIONS:
+                    self.assertIn("<svg", ba.rule(name, num, title, accent))
+
+    def test_output_is_deterministic(self):
+        """Same inputs, same bytes — otherwise every build churns the diff."""
+        import importlib
+        ba = importlib.import_module("build_art")
+        ba.set_theme(True)
+        self.assertEqual(ba.hero(), ba.hero())
+        self.assertEqual(ba.ledger(), ba.ledger())
+
+    def test_committed_svgs_match_a_fresh_render(self):
+        """Guards against hand-edited SVGs drifting from the generator."""
+        import importlib
+        ba = importlib.import_module("build_art")
+        ba.set_theme(True)
+        fresh = ba.hero()
+        on_disk = open(os.path.join(ART, "hero-dark.svg")).read()
+        self.assertEqual(fresh, on_disk,
+                         "hero-dark.svg is stale; re-run build_art.py")
+
+
+class TestStarArc(unittest.TestCase):
+    """The crown must read as a crown."""
+
+    def _points(self, **kw):
+        import motifs, math
+        m = motifs.star_arc(300, 100, 168, kw.pop("ry", 78), **kw)
+        return [(float(a), float(b))
+                for a, b in re.findall(r"translate\(([-\d.]+) ([-\d.]+)\)", m)]
+
+    def test_thirteen_stars(self):
+        self.assertEqual(len(self._points()), 13, "one star per colony")
+
+    def test_evenly_spaced_along_the_arc(self):
+        """Stepping by angle instead of arc length bunches the end stars."""
+        import math
+        pts = self._points()
+        gaps = [math.hypot(pts[i + 1][0] - pts[i][0], pts[i + 1][1] - pts[i][1])
+                for i in range(len(pts) - 1)]
+        spread = (max(gaps) - min(gaps)) / (sum(gaps) / len(gaps))
+        self.assertLess(spread, 0.02,
+                        f"star spacing varies by {spread:.1%} along the arc")
+
+    def test_actually_curves(self):
+        """A rise this shallow reads as a straight line of stars."""
+        pts = self._points()
+        rise = max(p[1] for p in pts) - min(p[1] for p in pts)
+        span = max(p[0] for p in pts) - min(p[0] for p in pts)
+        self.assertGreater(rise / span, 0.12,
+                           f"arc rises only {rise:.0f}px over {span:.0f}px")
+
+    def test_symmetric(self):
+        pts = self._points()
+        for i in range(len(pts) // 2):
+            a, b = pts[i], pts[-1 - i]
+            self.assertAlmostEqual(a[0] - 300, -(b[0] - 300), delta=0.6)
+            self.assertAlmostEqual(a[1], b[1], delta=0.6)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

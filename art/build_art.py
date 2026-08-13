@@ -182,7 +182,7 @@ def hero():
             (1062, 596, 1.6, WI), (86, 604, 1.8, RED), (1150, 420, 1.3, BLUE),
             (196, 424, 1.2, WI)]:
         s.append(f'<g transform="translate({sx} {sy}) scale({sc})">'
-                 f'<path d="{JS.STAR5}" fill="{col}" opacity=".85"/></g>')
+                 f'<path d="{MO.STAR5}" fill="{col}" opacity=".85"/></g>')
 
     # vertical spray tags down the margins
     dv, wv, _ = fit(black, "ROOKIE", 46, 300, 5)
@@ -230,7 +230,10 @@ def hero():
     inner = CW - 2 * pad
 
     # thirteen stars arcing over the numeral, the way they sit on a jersey yoke
-    s.append(JS.star_arc(CX, panel_top + 46, inner * 0.42, 34,
+    # ry is what gives the arc its rise: at ry=34 across this span the crown
+    # was only 21px tall and read as a straight line of stars.
+    ARC_RY = 78
+    s.append(MO.star_arc(CX, panel_top + 8 + ARC_RY, inner * 0.40, ARC_RY,
                          size=1.05, fill=WHITE, cls=f"st{uid}"))
 
     dn, wn, _sz = fit(black, str(ST.MERGES), 176, inner - 26)
