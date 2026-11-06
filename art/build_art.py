@@ -258,7 +258,7 @@ def hero():
 
     sy = py + 172
     cells = [(str(ST.ORGS), "ORGS"), (str(ST.REPOS), "REPOS"),
-             (str(ST.WINS), "WINS"), ("25", "INTO LEXICAL")]
+             (str(ST.WINS), "WINS"), (str(ST.LEXICAL), "INTO LEXICAL")]
     cw = (CW - 2 * pad) / len(cells)
     for i, (n, lab) in enumerate(cells):
         ccx = CXL + pad + cw * (i + 0.5)
@@ -293,8 +293,8 @@ def ledger():
     t = THEME
     head = [f'<svg width="{W}" height="{H}" viewBox="0 0 {W} {H}" '
             f'xmlns="http://www.w3.org/2000/svg" role="img" '
-            f'aria-label="104 merges landed, 21 organizations, 45 repositories, '
-            f'2 hackathons won">']
+            f'aria-label="{ST.MERGES} merges landed, {ST.ORGS} organizations, {ST.REPOS} repositories, '
+            f'{ST.WINS} hackathons won">']
     css, s = [], []
     ink = WHITE if t["dark"] else NAVY
 

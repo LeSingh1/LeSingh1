@@ -9,7 +9,7 @@
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./art/ledger-dark.svg">
-  <img src="./art/ledger.svg" alt="104 merges landed · 21 organizations · 45 repositories · 2 hackathons won" width="100%">
+  <img src="./art/ledger.svg" alt="132 merges landed · 25 organizations · 50 repositories · 2 hackathons won" width="100%">
 </picture>
 
 </div>
@@ -23,7 +23,7 @@
 
 I am a sophomore in Fremont, and I spend most of my time in other people's codebases. Not writing tutorials about them. Fixing them.
 
-The pitch is narrow on purpose: I find a real bug in a library you already depend on, write the regression test that fails before and passes after, and send it cold. A hundred and four of those have landed.
+The pitch is narrow on purpose: I find a real bug in a library you already depend on, write the regression test that fails before and passes after, and send it cold. A hundred and thirty-two of those have landed.
 
 <table>
 <tr>
@@ -59,6 +59,9 @@ A type checker got measurably less wrong for everyone downstream. That is the wh
 <tr>
 <td width="50%" valign="top">
 
+#### [ShadowBuyer for Main Street](https://github.com/LeSingh1/Deca-Hackathon-IHS)
+A restaurant owner texts a photo of their card statement. Eight Claude agents find the hidden fees, expose a "1.35 factor" cash advance as 93% APR, and negotiate with a simulated processor rep. Nothing moves until the owner replies YES, and every dollar figure comes from tested calculators, never a model.
+
 #### [CourtCommand](https://github.com/LeSingh1/courtcommand)
 Thirty NBA analytics tools behind one natural-language command bar — shot quality, player similarity, a cap-legal trade machine, lineup optimization. Every panel computes live from ingested ESPN data for 500+ rostered players. 158 engine unit tests, a hand-rolled SVG chart kit, zero charting dependencies.
 
@@ -67,6 +70,9 @@ An NBA front office against 30 AI general managers, on a faithful 2025-26 CBA: a
 
 </td>
 <td width="50%" valign="top">
+
+#### [espn-api](https://github.com/LeSingh1/espn-api)
+One small, typed Node client for every ESPN sport, with zero dependencies. Parsers turn ESPN's raw, undocumented API into clean game logs, scoreboards and odds, with a separate package for each league.
 
 #### [edge-models](https://github.com/LeSingh1/edge-models)
 Player prop projection models for 13 sports, isotonic-calibrated with a clamp that stops them overclaiming, and an honest per-sport backtest for each one. [EdgeBoard](https://github.com/LeSingh1/edgeboard) is the front end: live board, lineup optimizer, real payout tiers, models that retrain themselves nightly.
@@ -85,7 +91,7 @@ First-person 3D basketball where your body is the controller. Three.js and Media
   <img src="./art/rule-merges.svg" alt="03 — The Merge Docket" width="100%">
 </picture>
 
-**104 merges. 21 organizations. 45 repositories.** Every one walked in cold — no referral, no internship, no one who knew my name first.
+**132 merges. 25 organizations. 50 repositories.** Every one walked in cold — no referral, no internship, no one who knew my name first.
 
 <details>
 <summary><b>The ten I would defend in a code review</b> &nbsp;<i>(click to open)</i></summary>
@@ -108,23 +114,23 @@ First-person 3D basketball where your body is the controller. Three.js and Media
 </details>
 
 <details>
-<summary><b>The full docket, by house</b> &nbsp;<i>(21 organizations)</i></summary>
+<summary><b>The full docket, by house</b> &nbsp;<i>(25 organizations)</i></summary>
 
 <br/>
 
 | House | Repositories | Merges |
 |:--|:--|--:|
-| **Meta** | `lexical` · `pyrefly` · `jscodeshift` · `stylex` · `idb` | 30 |
-| **Apple** | `coremltools` · `container` · `containerization` · `password-manager-resources` · `swift-nio` · `servicetalk` · `foundationdb` | 16 |
-| **NVIDIA** | `cuda-python` · `TransformerEngine` · `earth2studio` · `cutlass` · `apex` · `Megatron-LM` · `gpu-operator` | 14 |
-| **OpenAI** | `openai-agents-python` · `openai-agents-js` · `openai-node` | 9 |
+| **Meta** | `lexical` · `pyrefly` · `jscodeshift` · `stylex` · `idb` | 42 |
+| **Apple** | `coremltools` · `container` · `containerization` · `password-manager-resources` · `swift-nio` · `servicetalk` · `foundationdb` | 20 |
+| **NVIDIA** | `cuda-python` · `TransformerEngine` · `earth2studio` · `cutlass` · `apex` · `Megatron-LM` · `gpu-operator` | 20 |
+| **OpenAI** | `openai-agents-python` · `openai-agents-js` · `openai-node` · `openai-python` | 10 |
 | **Fastify** | `fastify` · `fastify-static` · `fastify-autoload` · `light-my-request` | 4 |
 | **Microsoft** | `rushstack` · `rushstack-websites` · `PowerApps-Samples` | 6 |
 | **Google** | `go-cloud` | 5 |
 | **Deno** | `deno` · `std` | 4 |
-| **Cloudflare** | `workers-sdk` | 3 |
+| **Cloudflare** | `workers-sdk` | 4 |
 | **Jest** | `jest` | 2 |
-| **Others** | `rust-lang/rust` · `vuejs/core` · `vitejs/vite` · `rollup/rollup` · `websockets/ws` · `vercel/satori` · `honojs/hono` · `h3js/h3` · `Kludex/starlette` · `nanostores/nanostores` · `ml-explore/mlx` | 11 |
+| **Others** | `rust-lang/rust` · `vuejs/core` · `vitejs/vite` · `rollup/rollup` · `websockets/ws` · `vercel/satori` · `honojs/hono` · `h3js/h3` · `Kludex/starlette` · `nanostores/nanostores` · `ml-explore/mlx` · `huggingface/datasets` · `unjs/unstorage` · `open-circle/valibot` · `nestjs/nest` | 15 |
 
 <sub>Counted from merged pull requests authored by <code>LeSingh1</code>, excluding my own repositories. Two Meta landings arrived through Phabricator, which GitHub does not label as merged.</sub>
 
