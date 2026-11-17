@@ -1,0 +1,34 @@
+name: Contribution snake
+
+# Redraws the contribution snake in the blueprint palette once a day and
+# publishes it to the `output` branch, which the README embeds.
+
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  snake:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Generate the snake (light and dark)
+        uses: Platane/snk/svg-only@v3.5.0
+        with:
+          github_user_name: ${{ github.repository_owner }}
+          outputs: |
+            dist/snake.svg?color_snake=#d9480f&color_dots=#e3eaf4,#b9cdea,#7fa3d9,#3f72c0,#1f4fa0
+            dist/snake-dark.svg?color_snake=#ffb547&color_dots=#13243d,#1d4673,#2e6fab,#56a0e3,#7cc4ff
+
+      - name: Publish to the output branch
+        uses: crazy-max/ghaction-github-pages@v5.0.0
+        with:
+          target_branch: output
+          build_dir: dist
+          commit_message: Redraw the contribution snake
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

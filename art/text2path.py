@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Convert a text string into an SVG path using a real font file.
 
-Used so the README artwork carries Caslon everywhere, not just on machines
-that happen to have it installed. GitHub renders README SVGs inside <img>,
-which blocks webfont loading — vector outlines are the only guarantee.
+Used so the README artwork carries DIN and Menlo everywhere, not just on
+machines that happen to have them installed. GitHub renders README SVGs inside
+<img>, which blocks webfont loading, so vector outlines are the only guarantee.
 """
 import sys, json, argparse
 from fontTools.ttLib import TTFont, TTCollection

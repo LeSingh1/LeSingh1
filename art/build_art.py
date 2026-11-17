@@ -1,437 +1,419 @@
 #!/usr/bin/env python3
-"""Generate the profile artwork — a 76ers graffiti rookie card.
+"""Generate the profile artwork: a blueprint drawing sheet.
 
-The 76ers marks are trademarks of the Philadelphia 76ers / NBA; this is a fan
-rendition on a personal page.
+The hero is an engineering drawing of an original two-finger robot gripper
+holding a ball, with a title block, a revision block, notes and a detail view.
+Its dimension callouts carry the real numbers from stats.py. The section
+strips use the same drafting language.
 
-Three rules, all learned by breaking them:
+Rules, each learned by breaking it (see art/README.md):
 
-1. NEVER put a CSS transform animation on an element that carries an SVG
-   `transform` attribute. The CSS transform replaces the attribute rather than
-   composing with it and the element snaps to the origin. Animate a child, or
-   wrap the element in a positioned <g>.
-
-2. The resting state must be the finished artwork. GitHub renders README
-   images inside <img>; preview cards and thumbnailers can rasterise at t=0 or
-   a few hundred ms in, without ever running the timeline to completion.
-   Nothing essential may animate in from opacity 0, and no number may animate
-   in from a wrong value.
-
-3. Text is fitted, never hardcoded. fit() shrinks a string until it clears the
-   space actually available, so copy changes cannot push type off an edge.
-
-Every glyph is a vector outline: <img>-embedded SVG cannot load a webfont.
+1. Every glyph is a vector outline. GitHub shows README images inside <img>,
+   and an <img> cannot load a webfont.
+2. Never put a CSS transform animation on an element that also has an SVG
+   transform attribute. This artwork animates only stroke-dashoffset and
+   opacity, so the question never comes up, and a test keeps it that way.
+3. A frozen frame must still read. Lines draw on over a pencil underlay and
+   type inks up from a ghost, so t=0 shows the whole drawing faintly.
+4. Text is fitted, never hardcoded. fit() shrinks a string until it clears
+   the space it actually has.
 """
+import math
 import os
 
-import graffiti as G
+import blueprint as B
 import stats as ST
-import motifs as MO
-from text2path import load, text_path
+from blueprint import DIN_ALT, DIN_COND, MONO
 
-# This file lives in the art folder and writes beside itself, so the
-# generator works from a fresh clone rather than only from a dev layout.
 OUT = os.path.dirname(os.path.abspath(__file__))
-
-HELV = "/System/Library/Fonts/HelveticaNeue.ttc"
-DIN = "/System/Library/Fonts/Supplemental/DIN Condensed Bold.ttf"
-black = load(HELV, 9)      # Helvetica Neue Condensed Black
-din = load(DIN)            # DIN Condensed Bold
-
-RED, BLUE, NAVY = "#c8102e", "#1d428a", "#0b2a5b"
-DEEP, WHITE, BONE = "#061A38", "#FFFFFF", "#F2F5FA"
-RED_TXT, BLUE_TXT = "#ff5a78", "#7FB0EE"   # tinted for small type on navy
 THEME = {}
 
 
 def set_theme(dark):
     THEME.clear()
-    THEME.update(
-        dark=dark,
-        page=DEEP if dark else BONE,
-        ink=WHITE if dark else NAVY,
-        sub="#9DB8D6" if dark else "#54708C",
-        dot=WHITE if dark else NAVY,
-        dotop="0.13" if dark else "0.10",
-    )
-
-
-def P(f, t, s, tr=0.0):
-    return text_path(f, t, s, tr)
-
-
-def fit(f, t, s, max_w, tr=0.0, floor=7.0):
-    while s > floor:
-        d, w = P(f, t, s, tr)
-        if w <= max_w:
-            return d, w, s
-        s -= 0.5
-    d, w = P(f, t, s, tr)
-    return d, w, s
-
-
-def centered(f, t, s, cx, y, fill, max_w, tr=0.0, extra=""):
-    d, w, _ = fit(f, t, s, max_w, tr)
-    return f'<path d="{d}" fill="{fill}" transform="translate({cx-w/2:.1f} {y})" {extra}/>'
+    THEME.update(B.PALETTES["dark" if dark else "light"], dark=dark)
 
 
 # =========================================================================
-# HERO — the rookie card
+# HERO: the drawing sheet
 # =========================================================================
+HERO_W, HERO_H = 1200, 720
+FRAME = (34, 34, 1166, 686)          # inner border x0, y0, x1, y1
+CX = 400                              # gripper axis
+
+HERO_LABEL = (
+    f"Engineering drawing of a two-finger robot gripper holding a ball. "
+    f"Title block: Shaurya Singh. Dimension callouts: {ST.MERGES} merged pull "
+    f"requests, {ST.ORGS} organizations, {ST.REPOS} repositories, "
+    f"{ST.WINS} hackathon wins. Detail A shows a planned contact microphone "
+    f"on the fingertip.")
+
+
+def sheet_frame(S):
+    """Outer trim line, inner border, zone markers and centring marks."""
+    p = S.p
+    x0, y0, x1, y1 = FRAME
+    W, H = S.W, S.H
+    S.stroke(B.rect(12, 12, W - 24, H - 24), w=1, color=p["line"], opacity=".55",
+             layer=S.back)
+    S.stroke(B.rect(x0, y0, x1 - x0, y1 - y0), w=2.2, color=p["line"],
+             layer=S.back)
+    cols, rows = 6, 4
+    cw, rh = (x1 - x0) / cols, (y1 - y0) / rows
+    ticks = []
+    for i in range(1, cols):
+        x = x0 + cw * i
+        ticks.append(B.line(x, 12, x, y0) + B.line(x, y1, x, H - 12))
+    for i in range(1, rows):
+        y = y0 + rh * i
+        ticks.append(B.line(12, y, x0, y) + B.line(x1, y, W - 12, y))
+    S.stroke("".join(ticks), w=1, color=p["line"], opacity=".55", layer=S.back)
+    for i in range(cols):
+        x = x0 + cw * (i + 0.5)
+        lab = str(cols - i)        # drawings number zones right to left
+        for yb in (28, H - 16):
+            S.text(DIN_COND, lab, 13, x, yb, p["muted"], anchor="middle",
+                   layer=S.back)
+    for i in range(rows):
+        y = y0 + rh * (i + 0.5) + 5
+        lab = "DCBA"[i]
+        for xc in (23, W - 23):
+            S.text(DIN_COND, lab, 13, xc, y, p["muted"], anchor="middle",
+                   layer=S.back)
+    # centring marks: small solid triangles at the middle of each edge
+    m = []
+    for x in (W / 2,):
+        m.append(B.poly([(x - 6, 12), (x + 6, 12), (x, y0 - 4)]))
+        m.append(B.poly([(x - 6, H - 12), (x + 6, H - 12), (x, y1 + 4)]))
+    for y in (H / 2,):
+        m.append(B.poly([(12, y - 6), (12, y + 6), (x0 - 4, y)]))
+        m.append(B.poly([(W - 12, y - 6), (W - 12, y + 6), (x1 + 4, y)]))
+    S.fill("".join(m), color=p["line"], layer=S.back)
+
+
+def callout_inline(S, cx, y, num, label, t):
+    """Number + label set in one line, centred on (cx, y). Returns half-width."""
+    p = S.p
+    dn, wn = B.text_path(DIN_ALT, num, 34)
+    dl, wl = B.text_path(DIN_COND, label, 19, 1.6)
+    gap = 9
+    total = wn + gap + wl
+    x = cx - total / 2
+    base = y + 12
+    S.body.append(S._fade(f'd="{dn}" fill="{p["accent"]}" '
+                          f'transform="translate({B.n(x)} {B.n(base)})"', t))
+    S.body.append(S._fade(f'd="{dl}" fill="{p["ink"]}" '
+                          f'transform="translate({B.n(x + wn + gap)} {B.n(base)})"',
+                          t + 0.12))
+    return total / 2
+
+
+def callout_stacked(S, cx, cy, num, label, t):
+    """Number over label, centred on (cx, cy). Returns (half-height)."""
+    p = S.p
+    S.text(DIN_ALT, num, 36, cx, cy - 2, p["accent"], anchor="middle", t=t)
+    S.text(DIN_COND, label, 19, cx, cy + 22, p["ink"], anchor="middle",
+           tracking=1.6, t=t + 0.12)
+    return 36
+
+
+def dim_vertical(S, x, y1, y2, ext1, ext2, num, label, t):
+    """Vertical dimension at x. ext1/ext2 are the x the extension lines
+    start from at y1 and y2."""
+    sgn = 1 if x > ext1 else -1
+    S.ink(B.line(ext1 + 4 * sgn, y1, x + 8 * sgn, y1), t, 0.5, w=1.1)
+    S.ink(B.line(ext2 + 4 * sgn, y2, x + 8 * sgn, y2), t + .05, 0.5, w=1.1)
+    cy = (y1 + y2) / 2
+    callout_stacked(S, x, cy, num, label, t + 0.45)
+    S.ink(B.line(x, cy - 40, x, y1 + 2), t + 0.2, 0.55, w=1.1)
+    S.ink(B.line(x, cy + 34, x, y2 - 2), t + 0.2, 0.55, w=1.1)
+    S.fill(B.arrowhead(x, y1, -90) + B.arrowhead(x, y2, 90), t=t + 0.6)
+
+
+def gripper(S):
+    """The centrepiece: an original two-finger parallel gripper on a ball."""
+    p = S.p
+    L = p["line"]
+    # mounting flange and palm
+    S.ink(B.rect(350, 120, 100, 24, 3), 0.05, 0.8, w=2.2)
+    S.ink(B.rect(230, 144, 340, 100, 9), 0.2, 1.1, w=2.4)
+    # carriages riding the palm's rail
+    S.ink(B.rect(262, 244, 64, 26, 2), 0.5, 0.7, w=2.2)
+    S.ink(B.rect(474, 244, 64, 26, 2), 0.55, 0.7, w=2.2)
+    # fingers, with a chamfer on the outer tip
+    left = [(272, 270), (312, 270), (312, 518), (290, 518), (272, 500)]
+    right = [(2 * CX - x, y) for x, y in left]
+    S.ink(B.poly(left), 0.7, 1.0, w=2.4)
+    S.ink(B.poly(right), 0.75, 1.0, w=2.4)
+    # lightening slots
+    S.ink(B.rect(282, 296, 20, 124, 10), 1.0, 0.8, w=1.6)
+    S.ink(B.rect(498, 296, 20, 124, 10), 1.05, 0.8, w=1.6)
+    # grip pads
+    S.ink(B.rect(312, 450, 8, 60), 1.1, 0.5, w=1.8)
+    S.ink(B.rect(480, 450, 8, 60), 1.1, 0.5, w=1.8)
+    S.stroke(B.hatch(312, 450, 320, 510, 5), w=0.9, opacity=p["hatch"], t=1.5)
+    S.stroke(B.hatch(480, 450, 488, 510, 5), w=0.9, opacity=p["hatch"], t=1.5)
+    # the ball, with two seams so it reads as a sphere
+    S.ink(B.circle(CX, 480, 80), 1.2, 1.1, w=2.4)
+    S.ink("M320 480A80 20 0 0 0 480 480", 1.6, 0.7, w=1.3)
+    S.ink("M400 400A30 80 0 0 1 400 560", 1.7, 0.7, w=1.3)
+    # contact mic: a piezo disc on the right finger (planned, see Detail A)
+    S.ink(B.circle(508, 480, 9), 1.8, 0.5, w=1.6)
+    S.ink(B.circle(508, 480, 4.5), 1.9, 0.4, w=1.2)
+    # holes: flange bolts, palm screws, carriage screws
+    holes = [(372, 132, 5), (428, 132, 5),
+             (248, 162, 4.5), (552, 162, 4.5), (248, 226, 4.5), (552, 226, 4.5),
+             (278, 257, 3.5), (310, 257, 3.5), (490, 257, 3.5), (522, 257, 3.5)]
+    for i, (hx, hy, hr) in enumerate(holes):
+        S.ink(B.circle(hx, hy, hr), 0.6 + 0.04 * i, 0.4, w=1.3)
+    S.stroke("".join(B.center_cross(hx, hy, hr + 4) for hx, hy, hr in holes),
+             w=0.8, opacity=".7", t=1.4)
+    # hidden lines: lead screw and motor inside the palm
+    S.stroke(B.line(262, 188, 538, 188) + B.line(262, 200, 538, 200),
+             w=1.2, dash="7 4", t=1.3)
+    S.stroke(B.circle(CX, 194, 20), w=1.2, dash="7 4", t=1.35)
+    # centre lines: gripper axis and the ball's horizontal
+    S.stroke(B.line(CX, 108, CX, 578), w=1, dash="22 4 4 4", t=1.45)
+    S.stroke(B.line(326, 480, 474, 480), w=1, dash="22 4 4 4", t=1.5)
+    # Detail A boundary on the main view
+    S.ink(B.circle(500, 480, 36), 2.0, 0.6, w=1.1)
+    S.ink(B.line(526, 455, 546, 436), 2.2, 0.3, w=1.1)
+    S.text(DIN_COND, "A", 24, 548, 436, p["ink"], t=2.3)
+
+
+def dimensions(S):
+    p = S.p
+    # top: palm width
+    x1, x2, y = 230, 570, 92
+    S.ink(B.line(x1, 140, x1, y - 8), 2.0, 0.5, w=1.1)
+    S.ink(B.line(x2, 140, x2, y - 8), 2.05, 0.5, w=1.1)
+    half = callout_inline(S, CX, y, str(ST.ORGS), "ORGANIZATIONS", 2.5)
+    S.ink(B.line(CX - half - 12, y, x1 + 2, y), 2.2, 0.55, w=1.1)
+    S.ink(B.line(CX + half + 12, y, x2 - 2, y), 2.2, 0.55, w=1.1)
+    S.fill(B.arrowhead(x1, y, 180) + B.arrowhead(x2, y, 0), t=2.6)
+
+    # left: finger length
+    dim_vertical(S, 168, 270, 518, 272, 290, str(ST.REPOS), "REPOSITORIES", 2.3)
+    # right: overall height, flange top to fingertip
+    dim_vertical(S, 662, 120, 518, 450, 528, str(ST.WINS), "HACKATHON WINS", 2.6)
+
+    # the ball's diameter: a leader note, the headline number
+    a = 58
+    tx = CX + 80 * math.cos(math.radians(a))
+    ty = 480 + 80 * math.sin(math.radians(a))
+    S.ink(B.line(tx + 4, ty + 7, 476, 606) + "H492", 2.9, 0.6, w=1.1)
+    S.fill(B.arrowhead(tx, ty, a - 180 + 360), t=3.2)
+    S.text(DIN_ALT, f"Ø{ST.MERGES}", 52, 500, 624, p["accent"], t=3.2)
+    S.text(DIN_COND, "MERGED PULL REQUESTS", 20, 502, 652, p["ink"],
+           tracking=1.8, t=3.35)
+
+    # view label
+    S.text(DIN_COND, "FRONT VIEW", 21, 62, 640, p["ink"], tracking=2)
+    S.stroke(B.line(62, 647, 62 + B.measure(DIN_COND, "FRONT VIEW", 21, 2), 647),
+             w=1.4, color=p["ink"])
+    S.text(DIN_COND, "TWO-FINGER GRIPPER  ·  SCALE 1:2", 15, 62, 668,
+           p["muted"], tracking=1.2)
+
+
+def detail_a(S):
+    """Detail A at 4:1: the fingertip, the pad, and the planned contact mic."""
+    p = S.p
+    u = S.uid
+    cx, cy, r = 880, 236, 100
+    S.defs.append(f'<clipPath id="dc{u}"><circle cx="{cx}" cy="{cy}" r="{r - 1}"/></clipPath>')
+    # the panel behind the detail hides the grid, as a cleared drafting area
+    S.body.append(f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="{p["page"]}"/>')
+    S.ink(B.circle(cx, cy, r), 1.9, 1.0, w=1.4)
+    # ball surface: circle centre (504,236) r 320, clipped to the detail
+    S.ink("M814.9 160.1A320 320 0 0 1 814.9 311.9", 2.3, 0.7, w=2.6)
+    # pad faces (x 824 and 856) clipped to the detail circle
+    for x, t in ((824, 2.35), (856, 2.45)):
+        h = math.sqrt(r * r - (x - cx) ** 2)
+        S.ink(B.line(x, cy - h, x, cy + h), t, 0.6, w=2.4)
+    S.body.append(f'<g clip-path="url(#dc{u})">')
+    S.stroke(B.hatch(824, 120, 856, 352, 8), w=1, opacity=p["hatch"], t=2.6)
+    S.body.append("</g>")
+    # piezo disc on the finger
+    S.ink(B.circle(936, 236, 34), 2.5, 0.6, w=2.2)
+    S.ink(B.circle(936, 236, 18), 2.6, 0.5, w=1.4)
+    # vibration from the contact patch, travelling toward the mic
+    for i, rr in enumerate((16, 30, 44)):
+        S.ink(B.arc(824, 236, rr, -38, 38), 2.8 + 0.12 * i, 0.4, w=1.4,
+              color=p["accent"])
+    # labels
+    tx = 1000
+    S.text(DIN_COND, "DETAIL A", 28, tx, 172, p["ink"], tracking=2, t=2.4)
+    S.text(DIN_COND, "SCALE 4:1", 15, tx, 194, p["muted"], tracking=1.4, t=2.5)
+    S.ink(B.line(962, 258, 990, 290) + "H1150", 2.9, 0.6, w=1.1)
+    S.fill(B.arrowhead(962, 258, 228), t=3.1)
+    S.text(DIN_COND, "CONTACT MIC", 20, tx, 284, p["ink"], tracking=1.6, t=3.0)
+    S.text(DIN_COND, "PLANNED, NOT BUILT YET", 15, tx, 310, p["accent"],
+           tracking=1.2, t=3.1)
+
+
+def revision_block(S):
+    p = S.p
+    x0, x1, y0 = 760, 1166, 34
+    S.body.append(f'<rect x="{x0}" y="{y0}" width="{x1 - x0}" height="58" '
+                  f'fill="{p["panel"]}"/>')
+    S.stroke(B.rect(x0, y0, x1 - x0, 58) + B.line(x0, y0 + 20, x1, y0 + 20)
+             + B.line(x0 + 54, y0, x0 + 54, y0 + 58)
+             + B.line(x1 - 110, y0, x1 - 110, y0 + 58), w=1.3)
+    for s, x in (("REV", x0 + 27), ("DESCRIPTION", (x0 + 54 + x1 - 110) / 2),
+                 ("DATE", x1 - 55)):
+        S.text(DIN_COND, s, 12, x, y0 + 15, p["muted"], anchor="middle",
+               tracking=1.4)
+    S.text(DIN_COND, "D", 22, x0 + 27, y0 + 48, p["accent"], anchor="middle")
+    S.text(DIN_COND, "REDRAWN AS A BLUEPRINT", 18, (x0 + 54 + x1 - 110) / 2,
+           y0 + 47, p["ink"], anchor="middle", tracking=1.4)
+    S.text(DIN_COND, "NOV 2026", 18, x1 - 55, y0 + 47, p["ink"],
+           anchor="middle", tracking=1.4)
+
+
+def notes(S):
+    p = S.p
+    x, y = 774, 392
+    S.text(DIN_COND, "NOTES", 17, x, y, p["accent"], tracking=2.4)
+    lines = [("1.", "DIMENSIONS ARE REAL COUNTS FROM GITHUB, NOV 2026."),
+             ("2.", "DETAIL A IS THE NEXT PROJECT: CAN A CHEAP CONTACT MIC "
+                    "HEAR A ROBOT'S GRIP START TO SLIP?")]
+    yy = y + 24
+    for num, body in lines:
+        S.text(DIN_COND, num, 16, x, yy, p["muted"], tracking=1)
+        for ln in B.wrap(DIN_COND, body, 16, 360, 1.0):
+            S.text(DIN_COND, ln, 16, x + 20, yy, p["ink"], tracking=1.0)
+            yy += 21
+    # the one looping detail: a caret blinking after a short command
+    cmd = "$ ./listen --for slip"
+    w = S.text(MONO, cmd, 15, x, yy + 10, p["accent"])
+    S.body.append(f'<rect class="cr{S.uid}" x="{B.n(x + w + 6)}" y="{yy - 3}" '
+                  f'width="9" height="16" fill="{p["accent"]}"/>')
+
+
+def title_block(S):
+    p = S.p
+    x0, y0, x1, y1 = 760, 514, 1166, 686
+    S.body.append(f'<rect x="{x0}" y="{y0}" width="{x1 - x0}" '
+                  f'height="{y1 - y0}" fill="{p["panel"]}"/>')
+    r1, r2, r3 = y0 + 66, y0 + 98, y0 + 135
+    grid = (B.rect(x0, y0, x1 - x0, y1 - y0)
+            + B.line(x0, r1, x1, r1) + B.line(x0, r2, x1, r2)
+            + B.line(x0, r3, x1, r3))
+    c3 = [x0, x0 + 132, x0 + 222, x0 + 302, x1]       # row 3 cells
+    c4 = [x0, x0 + 132, x0 + 302, x1]                 # row 4 cells
+    for x in c3[1:-1]:
+        grid += B.line(x, r2, x, r3)
+    for x in c4[1:-1]:
+        grid += B.line(x, r3, x, y1)
+    S.stroke(grid, w=1.3)
+    S.stroke(B.rect(x0, y0, x1 - x0, y1 - y0), w=2.2)
+
+    pad = 12
+    S.text(DIN_COND, "NAME", 12, x0 + pad, y0 + 16, p["muted"], tracking=1.4)
+    S.text(DIN_ALT, "SHAURYA SINGH", 38, x0 + pad, y0 + 56, p["ink"],
+           tracking=2.5, max_w=x1 - x0 - 2 * pad)
+    S.text(DIN_COND, "FIXES OPEN SOURCE  ·  DESIGNS ROBOTS  ·  BUILDS AGENTS",
+           17, x0 + pad, r1 + 23, p["line"], tracking=1.3,
+           max_w=x1 - x0 - 2 * pad)
+
+    def cells(xs, top, bottom, items):
+        for (a, b), (lab, val) in zip(zip(xs, xs[1:]), items):
+            S.text(DIN_COND, lab, 11, a + 9, top + 13, p["muted"], tracking=1.3)
+            S.text(DIN_COND, val, 18, a + 9, bottom - 7, p["ink"], tracking=1.2,
+                   max_w=b - a - 16)
+
+    cells(c3, r2, r3, [("DWG NO.", "LS1-2029-01"), ("SCALE", "1:2"),
+                       ("REV", "D"), ("SHEET", "1 OF 1")])
+    cells(c4, r3, y1, [("DRAWN", "S. SINGH"), ("CHECKED", "TEST_ART.PY"),
+                       ("DATE", "NOV 2026")])
+
+
 def hero():
-    W, H = 1200, 680
-    uid = "H"
-    t = THEME
-    CX = W / 2
-    CW, CH = 452, 588                      # card size
-    CXL, CYT = CX - CW / 2, 48             # card top-left
-    s = [f'<svg width="{W}" height="{H}" viewBox="0 0 {W} {H}" '
-         f'xmlns="http://www.w3.org/2000/svg" role="img" '
-         f'aria-label="Shaurya Singh rookie card — builder of agents, '
-         f'100 merges landed">']
-
-    stars_css = "".join(
-        f".st{uid}{i}{{animation:tw{uid} 3s ease-in-out infinite {i*0.1:.2f}s}}"
-        for i in range(13))
-    s.append(f"""<defs>
-    {G.filters(uid)}
-    {G.patterns(uid, t['dot'], t['dotop'])}
-    <clipPath id="card{uid}">
-      <rect x="{CXL}" y="{CYT}" width="{CW}" height="{CH}" rx="18"/>
-    </clipPath>
-    <linearGradient id="foil{uid}" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#8FC7F5"/><stop offset="18%" stop-color="#FFFFFF"/>
-      <stop offset="36%" stop-color="{RED}"/><stop offset="54%" stop-color="#FFFFFF"/>
-      <stop offset="72%" stop-color="{BLUE}"/><stop offset="88%" stop-color="#CFE6FA"/>
-      <stop offset="100%" stop-color="#8FC7F5"/>
-      <animate attributeName="x1" values="0%;-100%;0%" dur="9s" repeatCount="indefinite"/>
-      <animate attributeName="x2" values="100%;0%;100%" dur="9s" repeatCount="indefinite"/>
-    </linearGradient>
-    <linearGradient id="holo{uid}" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0"/>
-      <stop offset="38%" stop-color="#BFE3FF" stop-opacity="0.30"/>
-      <stop offset="50%" stop-color="#FFFFFF" stop-opacity="0.62"/>
-      <stop offset="62%" stop-color="#FFC7D8" stop-opacity="0.30"/>
-      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
-    </linearGradient>
-    <linearGradient id="plate{uid}" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#17407f"/><stop offset="100%" stop-color="#08214a"/>
-    </linearGradient>
-    <style><![CDATA[
-      /* Motion only — every element is already visible at rest. */
-      @keyframes tw{uid} {{ 0%,100%{{opacity:.55}} 50%{{opacity:1}} }}
-      @keyframes bob{uid} {{ 0%,100%{{transform:translateY(0) rotate(-.4deg)}}
-                             50%{{transform:translateY(-5px) rotate(.4deg)}} }}
-      .badge{uid} {{ animation: bob{uid} 6s ease-in-out infinite;
-                     transform-box: fill-box; transform-origin: top center }}
-      @keyframes holo{uid} {{ 0%{{transform:translateX(-620px)}} 100%{{transform:translateX(1360px)}} }}
-      @keyframes tilt{uid} {{ 0%,100%{{transform:rotate(-.5deg) scale(1)}}
-                              50%{{transform:rotate(.5deg) scale(1.008)}} }}
-      @keyframes drip{uid} {{ 0%{{transform:scaleY(.88)}} 100%{{transform:scaleY(1)}} }}
-      @keyframes puff{uid} {{ 0%,100%{{opacity:.42}} 50%{{opacity:.78}} }}
-      .holo{uid} {{ animation: holo{uid} 4.6s cubic-bezier(.45,0,.55,1) infinite }}
-      .card{uid} {{ animation: tilt{uid} 9s ease-in-out infinite;
-                    transform-box: fill-box; transform-origin: center }}
-      .drip{uid} {{ animation: drip{uid} 3.4s ease-in-out infinite alternate;
-                    transform-box: fill-box; transform-origin: top center }}
-      .puff{uid} {{ animation: puff{uid} 5s ease-in-out infinite }}
-      {stars_css}
-    ]]></style>
-  </defs>""")
-
-    # Wall graffiti has to be inked in the opposite of the wall. White spray
-    # on a light sheet is invisible spray.
-    WI = WHITE if t["dark"] else NAVY
-    # ---------------- background: the wall ----------------
-    s.append(f'<rect width="{W}" height="{H}" fill="{t["page"]}"/>')
-    s.append(f'<rect width="{W}" height="{H}" fill="url(#dots{uid})"/>')
-    s.append(f'<path d="M0 0 H300 L0 250 Z" fill="url(#slash{uid})" opacity=".5"/>')
-    s.append(f'<path d="M{W} {H} H{W-300} L{W} {H-250} Z" fill="url(#slash{uid})" opacity=".5"/>')
-
-    # rough colour masses either side of the card
-    s.append(G.blob(190, 250, 150, 132, 11, WI, 0.055, uid=uid))
-    s.append(G.blob(1010, 430, 158, 138, 23, WI, 0.05, uid=uid))
-    s.append(G.brush_stroke(60, 150, 330, 118, 46, 5, RED, 0.85, uid=uid))
-    s.append(G.brush_stroke(1150, 560, 880, 592, 40, 8, BLUE, 0.85, uid=uid))
-    s.append(G.brush_stroke(70, 470, 300, 505, 30, 12, BLUE, 0.6, uid=uid))
-    s.append(G.brush_stroke(900, 150, 1140, 128, 26, 17, RED, 0.6, uid=uid))
-
-    s.append(f'<g class="puff{uid}">{G.splatter(150, 330, 130, 31, RED, 20, 3, 15, .85, uid)}</g>')
-    s.append(f'<g class="puff{uid}">{G.splatter(1040, 260, 140, 44, BLUE, 22, 3, 16, .85, uid)}</g>')
-    s.append(G.splatter(240, 600, 120, 57, WI, 16, 2, 10, .5, uid))
-    s.append(G.splatter(960, 90, 110, 63, WI, 14, 2, 9, .45, uid))
-
-    s.append(G.drips(78, 176, 250, 71, RED, 6, 30, 130, cls=f"drip{uid}"))
-    s.append(G.drips(900, 610, 240, 83, BLUE, 5, 24, 66, cls=f"drip{uid}"))
-    s.append(G.speckle(0, 0, W, H, 97, 210, WI, 0.34, 2.4))
-    # ghosted basketballs behind the wall clutter
-    for bx, by, br in ((176, 452, 120), (1024, 196, 104)):
-        s.append(f'<g fill="none" stroke="{WI}" stroke-opacity=".13" stroke-width="7" '
-                 f'transform="translate({bx} {by})">'
-                 f'<circle r="{br}"/><line x1="{-br}" y1="0" x2="{br}" y2="0"/>'
-                 f'<line x1="0" y1="{-br}" x2="0" y2="{br}"/>'
-                 f'<path d="M{-br*0.66} {-br*0.75} C{-br*0.22} {-br*0.28} {-br*0.22} {br*0.28} {-br*0.66} {br*0.75}"/>'
-                 f'<path d="M{br*0.66} {-br*0.75} C{br*0.22} {-br*0.28} {br*0.22} {br*0.28} {br*0.66} {br*0.75}"/></g>')
-    s.append(G.splatter(320, 120, 90, 111, WI, 12, 2, 8, .35, uid))
-    s.append(G.splatter(880, 520, 100, 119, WI, 13, 2, 9, .35, uid))
-    s.append(G.splatter(60, 250, 80, 127, BLUE, 11, 2, 10, .6, uid))
-    s.append(G.splatter(1150, 620, 90, 131, RED, 11, 2, 10, .6, uid))
-    s.append(G.drips(240, 500, 90, 137, WI, 3, 14, 40, cls=f"drip{uid}"))
-
-    # loose stars on the wall
-    for sx, sy, sc, col in [
-            (110, 92, 2.1, BLUE), (268, 62, 1.5, RED), (1128, 214, 2.0, RED),
-            (1062, 596, 1.6, WI), (86, 604, 1.8, RED), (1150, 420, 1.3, BLUE),
-            (196, 424, 1.2, WI)]:
-        s.append(f'<g transform="translate({sx} {sy}) scale({sc})">'
-                 f'<path d="{MO.STAR5}" fill="{col}" opacity=".85"/></g>')
-
-    # vertical spray tags down the margins
-    dv, wv, _ = fit(black, "ROOKIE", 46, 300, 5)
-    s.append(f'<g transform="translate(52 {H/2 + wv/2}) rotate(-90)">'
-             f'<path d="{dv}" fill="{WI}" opacity=".17"/></g>')
-    dv2, wv2, _ = fit(black, "PHILADELPHIA", 40, 420, 4)
-    s.append(f'<g transform="translate({W-40} {H/2 - wv2/2}) rotate(90)">'
-             f'<path d="{dv2}" fill="{WI}" opacity=".15"/></g>')
-
-    # ---------------- the card ----------------
-    s.append(f'<g class="card{uid}">')
-    s.append(f'<rect x="{CXL-9}" y="{CYT-9}" width="{CW+18}" height="{CH+18}" rx="24" '
-             f'fill="#00050C" opacity=".55"/>')
-    s.append(f'<rect x="{CXL-7}" y="{CYT-7}" width="{CW+14}" height="{CH+14}" rx="22" '
-             f'fill="url(#foil{uid})"/>')
-    s.append(f'<rect x="{CXL-1}" y="{CYT-1}" width="{CW+2}" height="{CH+2}" rx="19" '
-             f'fill="{NAVY}"/>')
-
-    s.append(f'<g clip-path="url(#card{uid})">')
-    s.append(f'<rect x="{CXL}" y="{CYT}" width="{CW}" height="{CH}" fill="url(#plate{uid})"/>')
-    s.append(f'<rect x="{CXL}" y="{CYT}" width="{CW}" height="{CH}" fill="url(#dotsL{uid})"/>')
-    s.append(G.brush_stroke(CXL + 20, CYT + 372, CXL + CW - 24, CYT + 392, 26, 33, BLUE, .5, uid=uid))
-    s.append(G.splatter(CXL + 60, CYT + 330, 90, 41, RED, 13, 2, 9, .45, uid))
-    s.append(G.splatter(CXL + CW - 66, CYT + 150, 84, 49, BLUE, 12, 2, 9, .45, uid))
-    s.append(G.speckle(CXL, CYT, CW, CH, 53, 70, WHITE, 0.22, 1.9))
-    s.append(f'<path d="M{CXL} {CYT} H{CXL+160} L{CXL} {CYT+150} Z" '
-             f'fill="url(#slash{uid})" opacity=".55"/>')
-
-    # Top strip. Everything sits left of the corner flash, which would
-    # otherwise swallow a right-aligned date.
-    pad = 26
-    d, w, _ = fit(din, "ROOKIE CARD", 22, 200, 2.6)
-    s.append(f'<path d="{d}" fill="{WHITE}" opacity=".92" '
-             f'transform="translate({CXL+pad} {CYT+42})"/>')
-    d2, w2, _ = fit(din, "2026", 22, 80, 2.6)
-    s.append(f'<path d="{d2}" fill="{RED_TXT}" transform="translate({CXL+pad+w+16} {CYT+42})"/>')
-    s.append(f'<rect x="{CXL+pad}" y="{CYT+54}" width="{CW-2*pad}" height="2" '
-             f'fill="{WHITE}" opacity=".28"/>')
-
-    # Centrepiece: the headline number, set like a jersey number. No logo and
-    # no jersey — the one genuinely his thing on this card is the count, so it
-    # takes the space a player photo would have.
-    py = CYT + 346                     # top rule of the name plate
-    panel_top, panel_bot = CYT + 68, py - 22
-    inner = CW - 2 * pad
-
-    # thirteen stars arcing over the numeral, the way they sit on a jersey yoke
-    # ry is what gives the arc its rise: at ry=34 across this span the crown
-    # was only 21px tall and read as a straight line of stars.
-    ARC_RY = 78
-    s.append(MO.star_arc(CX, panel_top + 8 + ARC_RY, inner * 0.40, ARC_RY,
-                         size=1.05, fill=WHITE, cls=f"st{uid}"))
-
-    dn, wn, _sz = fit(black, str(ST.MERGES), 176, inner - 26)
-    ny = panel_bot - 46
-    s.append(f'<g class="badge{uid}">')
-    s.append(f'  <path d="{dn}" fill="{RED}" opacity=".9" '
-             f'transform="translate({CX - wn/2 + 10:.1f} {ny + 10})"/>')
-    s.append(f'  <path d="{dn}" fill="{BLUE}" '
-             f'transform="translate({CX - wn/2 + 5:.1f} {ny + 5})"/>')
-    s.append(f'  <path d="{dn}" fill="{WHITE}" '
-             f'transform="translate({CX - wn/2:.1f} {ny})"/>')
-    s.append("</g>")
-    s.append(centered(din, "MERGES LANDED IN OPEN SOURCE", 22, CX,
-                      panel_bot + 6, "#AFC6E6", inner - 20, 2.2))
-    s.append(f'<rect x="{CXL+pad}" y="{py}" width="{CW-2*pad}" height="3" fill="{RED}"/>')
-    s.append(centered(black, "SHAURYA SINGH", 52, CX, py + 60, WHITE, CW - 2*pad - 10, 0))
-    s.append(centered(din, "BUILDER OF AGENTS  ·  FIXER OF OTHER PEOPLE'S CODE",
-                      21, CX, py + 86, "#AFC6E6", CW - 2*pad - 8, 1.0))
-    s.append(f'<rect x="{CXL+pad}" y="{py+102}" width="{CW-2*pad}" height="3" fill="{BLUE}"/>')
-
-    sy = py + 172
-    cells = [(str(ST.ORGS), "ORGS"), (str(ST.REPOS), "REPOS"),
-             (str(ST.WINS), "WINS"), (str(ST.LEXICAL), "INTO LEXICAL")]
-    cw = (CW - 2 * pad) / len(cells)
-    for i, (n, lab) in enumerate(cells):
-        ccx = CXL + pad + cw * (i + 0.5)
-        s.append(centered(black, n, 34, ccx, sy, WHITE, cw - 8))
-        s.append(centered(din, lab, 16, ccx, sy + 21, RED_TXT if i % 2 == 0 else BLUE_TXT,
-                          cw - 6, 1.6))
-        if i:
-            s.append(f'<rect x="{CXL+pad+cw*i:.1f}" y="{sy-28}" width="1.5" height="48" '
-                     f'fill="{WHITE}" opacity=".2"/>')
-
-    s.append(f'<path d="M{CXL+CW} {CYT} L{CXL+CW} {CYT+96} L{CXL+CW-96} {CYT} Z" fill="{RED}"/>')
-    d, w = P(black, "RC", 30)
-    s.append(f'<g transform="translate({CXL+CW-34} {CYT+30}) rotate(45)">'
-             f'<path d="{d}" fill="{WHITE}" transform="translate({-w/2:.1f} 10)"/></g>')
-
-    s.append(f'<g class="holo{uid}"><rect x="{CXL-620}" y="{CYT-60}" width="230" '
-             f'height="{CH+120}" fill="url(#holo{uid})" transform="skewX(-20)"/></g>')
-    s.append("</g>")   # clip
-    s.append("</g>")   # card
-
-    s.append(f'<rect width="{W}" height="{H}" filter="url(#grain{uid})" opacity=".85"/>')
-    s.append("</svg>")
-    return "\n".join(s)
+    p = THEME
+    S = B.Sheet("H", HERO_W, HERO_H, p, HERO_LABEL)
+    x0, y0, x1, y1 = FRAME
+    S.grid(x0, y0, x1 - x0, y1 - y0)
+    sheet_frame(S)
+    revision_block(S)
+    gripper(S)
+    dimensions(S)
+    detail_a(S)
+    notes(S)
+    title_block(S)
+    caret = (f"@keyframes blink{S.uid} {{ 0%, 55% {{ opacity: 1 }} 56%, 100% {{ opacity: 0 }} }}\n"
+             f"      .cr{S.uid} {{ animation: blink{S.uid} 1.1s steps(1) infinite }}")
+    return S.render(caret)
 
 
 # =========================================================================
-# LEDGER
+# SECTION STRIPS
 # =========================================================================
-def ledger():
-    W, H = 1200, 200
-    uid = "L"
-    t = THEME
-    head = [f'<svg width="{W}" height="{H}" viewBox="0 0 {W} {H}" '
-            f'xmlns="http://www.w3.org/2000/svg" role="img" '
-            f'aria-label="{ST.MERGES} merges landed, {ST.ORGS} organizations, {ST.REPOS} repositories, '
-            f'{ST.WINS} hackathons won">']
-    css, s = [], []
-    ink = WHITE if t["dark"] else NAVY
-
-    s.append(f'<rect width="{W}" height="{H}" fill="{NAVY if t["dark"] else WHITE}"/>')
-    s.append(f'<rect width="{W}" height="{H}" fill="url(#dots{uid})"/>')
-    s.append(G.brush_stroke(-20, 30, 420, 20, 26, 3, RED, .32, uid=uid))
-    s.append(G.brush_stroke(1220, 176, 800, 184, 24, 6, BLUE, .32, uid=uid))
-    s.append(G.speckle(0, 0, W, H, 19, 90, ink, 0.18, 2.0))
-    s.append(f'<rect y="0" width="{W}" height="8" fill="{RED}"/>')
-    s.append(f'<rect y="{H-8}" width="{W}" height="8" fill="{BLUE}"/>')
-    s.append(G.drips(120, 8, 940, 27, RED, 7, 10, 34, cls=f"dr{uid}"))
-
-    lab_r = RED_TXT if t["dark"] else RED
-    lab_b = BLUE_TXT if t["dark"] else BLUE
-    stats = [(str(ST.MERGES), "MERGES LANDED", lab_r),
-             (str(ST.ORGS), "ORGANIZATIONS", lab_b),
-             (str(ST.REPOS), "REPOSITORIES", lab_r),
-             (str(ST.WINS), "HACKATHONS WON", lab_b)]
-    slot = W / 4
-    for i, (num, lab, col) in enumerate(stats):
-        cx = slot * (i + 0.5)
-        target = int(num)
-        frames = sorted({int(target * p) for p in (0, .3, .58, .78, .9)} | {target})
-        n = len(frames)
-        lead, roll = 5.0, 80.0
-        seg = roll / n
-        for j, v in enumerate(frames):
-            dv, wv = P(black, str(v), 78)
-            a, b = lead + j * seg, lead + (j + 1) * seg
-            cls = f"n{uid}{i}_{j}"
-            if j == n - 1:
-                kf = (f"@keyframes {cls}k{{0%,{lead-0.1:.1f}%{{opacity:1}}"
-                      f"{lead:.1f}%,{lead+roll-seg:.1f}%{{opacity:0}}"
-                      f"{lead+roll-seg+0.1:.1f}%,100%{{opacity:1}}}}")
-                op = "1"
-            else:
-                # Ghosted: a frame caught mid-roll reads as a spinning counter,
-                # never as a real figure. Only the truth is ever fully opaque.
-                kf = (f"@keyframes {cls}k{{0%,{a-0.1:.1f}%{{opacity:0}}"
-                      f"{a:.1f}%,{b:.1f}%{{opacity:.38}}"
-                      f"{b+0.1:.1f}%,100%{{opacity:0}}}}")
-                op = "0"
-            css.append(f"{kf}.{cls}{{animation:{cls}k 1.5s linear forwards}}")
-            s.append(f'<g class="{cls}" opacity="{op}" '
-                     f'transform="translate({cx-wv/2:.1f} 104)"><path d="{dv}" fill="{ink}"/></g>')
-        s.append(centered(din, lab, 22, cx, 152, col, slot - 34, 2.4))
-        s.append(f'<rect x="{cx-36}" y="126" width="72" height="5" fill="{col}"/>')
-        if i:
-            s.append(f'<rect x="{slot*i-1}" y="46" width="2" height="112" '
-                     f'fill="{ink}" opacity=".18"/>')
-
-    s.append(f'<rect width="{W}" height="{H}" filter="url(#grain{uid})" opacity=".7"/>')
-    s.append("</svg>")
-    head.append(f"""<defs>
-    {G.filters(uid)}
-    {G.patterns(uid, t['dot'], t['dotop'])}
-    <style><![CDATA[
-      @keyframes dr{uid} {{ 0%{{transform:scaleY(.8)}} 100%{{transform:scaleY(1)}} }}
-      .dr{uid} {{ animation: dr{uid} 3.6s ease-in-out infinite alternate;
-                  transform-box: fill-box; transform-origin: top center }}
-      {"".join(css)}
-    ]]></style>
-  </defs>""")
-    return "\n".join(head + s)
+RULE_W, RULE_H = 1200, 84
 
 
-# =========================================================================
-# SECTION HEADERS
-# =========================================================================
-def rule(name, num, title, accent):
-    W, H = 1200, 104
+def rule(name, num, title):
+    p = THEME
     uid = "R" + name
-    t = THEME
-    ink = WHITE if t["dark"] else NAVY
-    s = [f'<svg width="{W}" height="{H}" viewBox="0 0 {W} {H}" '
-         f'xmlns="http://www.w3.org/2000/svg" role="img" '
-         f'aria-label="Section {num} — {title}">']
-    s.append(f"""<defs>
-    {G.filters(uid)}
-    {G.patterns(uid, t['dot'], t['dotop'])}
-    <linearGradient id="sh{uid}" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0"/>
-      <stop offset="50%" stop-color="#FFFFFF" stop-opacity="0.26"/>
-      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
-    </linearGradient>
-    <style><![CDATA[
-      @keyframes sw{uid} {{ 0%{{transform:translateX(-320px)}} 100%{{transform:translateX(1460px)}} }}
-      @keyframes dr{uid} {{ 0%{{transform:scaleY(.82)}} 100%{{transform:scaleY(1)}} }}
-      .sw{uid} {{ animation: sw{uid} 7.5s cubic-bezier(.45,0,.55,1) infinite }}
-      .dr{uid} {{ animation: dr{uid} 3.2s ease-in-out infinite alternate;
-                  transform-box: fill-box; transform-origin: top center }}
-    ]]></style>
-  </defs>""")
-    s.append(f'<rect width="{W}" height="{H}" fill="{NAVY if t["dark"] else BONE}"/>')
-    s.append(f'<rect width="{W}" height="{H}" fill="url(#dots{uid})"/>')
-    s.append(G.speckle(0, 0, W, H, 61, 60, ink, 0.16, 1.8))
-    s.append(f'<path d="M0 0 H176 L146 {H} H0 Z" fill="{accent}"/>')
-    s.append(G.splatter(176, H/2, 54, 13, accent, 12, 2, 8, .8, uid))
-    s.append(G.drips(16, H-4, 120, 21, accent, 4, 8, 22, cls=f"dr{uid}"))
-    d, w = P(black, num, 52)
-    s.append(f'<path d="{d}" fill="{WHITE}" transform="translate({72-w/2:.1f} {H/2+18:.1f})"/>')
-    d, w, _ = fit(black, title.upper(), 46, 700, 1.4)
-    s.append(f'<path d="{d}" fill="{ink}" transform="translate(228 {H/2+17:.1f})"/>')
-    s.append(f'<rect x="{228+w+28}" y="{H/2-2}" width="{max(40, W-330-w)}" height="4" '
-             f'fill="{accent}" opacity=".55"/>')
-    s.append(f'<g class="sw{uid}"><rect x="-320" y="0" width="200" height="{H}" '
-             f'fill="url(#sh{uid})" transform="skewX(-20)"/></g>')
-    s.append(f'<rect width="{W}" height="{H}" filter="url(#grain{uid})" opacity=".7"/>')
-    s.append("</svg>")
-    return "\n".join(s)
+    S = B.Sheet(uid, RULE_W, RULE_H, p, f"Section {num}: {title}")
+    y0, y1 = 12, 72
+    x0, x1 = 6, RULE_W - 6
+    S.grid(0, 0, RULE_W, RULE_H)
+    S.body.append(f'<rect x="{x0}" y="{y0}" width="{x1 - x0}" height="{y1 - y0}" '
+                  f'fill="{p["page"]}" fill-opacity=".72"/>')
+    cell = 86
+    S.stroke(B.rect(x0, y0, x1 - x0, y1 - y0), w=1.8)
+    S.stroke(B.line(x0 + cell, y0, x0 + cell, y1), w=1.4)
+    S.text(DIN_ALT, num, 32, x0 + cell / 2, 54, p["accent"], anchor="middle")
+    tw = S.text(DIN_COND, title.upper(), 34, x0 + cell + 22, 55, p["ink"],
+                tracking=3, max_w=760)
+
+    # a leader runs from the title into a balloon carrying the section letter
+    letter = "ABCDEFGH"[int(num) - 1]
+    bx, br, ly = x1 - 34, 15, 42
+    lx0 = x0 + cell + 22 + tw + 26
+    S.fill(B.circle(lx0, ly, 3.2), t=0.1)
+    S.ink(B.line(lx0, ly, bx - br, ly), 0.15, 1.1, w=1.2)
+    S.ink(B.circle(bx, ly, br), 1.0, 0.5, w=1.5)
+    S.text(DIN_COND, letter, 18, bx, ly + 7, p["line"], anchor="middle", t=1.1)
+    # scale ticks hanging from the strip's lower edge
+    ticks = []
+    x = x0 + cell + 10
+    i = 0
+    while x < x1 - 4:
+        h = 9 if i % 5 == 0 else 4.5
+        ticks.append(B.line(x, y1, x, y1 - h))
+        x += 12
+        i += 1
+    S.stroke("".join(ticks), w=1, opacity=".5", t=0.4)
+    return S.render()
 
 
 SECTIONS = [
-    ("career", "01", "Career Highlights", RED),
-    ("builds", "02", "Featured Builds", BLUE),
-    ("merges", "03", "The Merge Docket", RED),
-    ("stack", "04", "The Stack", BLUE),
-    ("court", "05", "Off the Court", RED),
-    ("reach", "06", "Reach Me", BLUE),
+    ("highlights", "01", "Highlights"),
+    ("builds", "02", "Featured Builds"),
+    ("opensource", "03", "Open Source"),
+    ("robotics", "04", "Robotics and Research"),
+    ("life", "05", "Off the Keyboard"),
+    ("stack", "06", "Toolkit"),
+    ("activity", "07", "Contributions"),
+    ("contact", "08", "Contact"),
 ]
 
 
 def main():
-    os.makedirs(OUT, exist_ok=True)
     total = 0
     for dark in (False, True):
         set_theme(dark)
         suf = "-dark" if dark else ""
-        files = {f"hero{suf}.svg": hero(), f"ledger{suf}.svg": ledger()}
-        for nm, num, title, accent in SECTIONS:
-            files[f"rule-{nm}{suf}.svg"] = rule(nm, num, title, accent)
+        files = {f"hero{suf}.svg": hero()}
+        for nm, num, title in SECTIONS:
+            files[f"rule-{nm}{suf}.svg"] = rule(nm, num, title)
         for fn, body in files.items():
             with open(os.path.join(OUT, fn), "w") as f:
                 f.write(body)
             total += len(body)
-            print(f"{fn:24} {len(body)/1024:6.1f} KB")
-    print(f"{'total':24} {total/1024:6.1f} KB")
+            print(f"{fn:28} {len(body) / 1024:6.1f} KB")
+    print(f"{'total':28} {total / 1024:6.1f} KB")
 
 
 if __name__ == "__main__":

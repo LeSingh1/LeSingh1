@@ -2,77 +2,88 @@
 
 Generated, not hand-drawn. `build_art.py` emits every SVG in this folder, in a
 light and a dark variant. `test_art.py` enforces the invariants that keep them
-from breaking.
+from breaking, and checks the profile README too.
 
 ```bash
 pip3 install fonttools
-python3 build_art.py     # regenerate all 16 SVGs
-python3 test_art.py      # 23 regression tests
+python3 build_art.py     # regenerate all 18 SVGs
+python3 test_art.py      # regression tests
 ```
 
 ## What it draws
 
-A **graffiti rookie card**: a foil-edged trading card centred on a
-spray-painted wall — splatter, drips, overspray, halftone, ghosted
-basketballs and thrown tags.
+A **blueprint drawing sheet**. The dark variant is blueprint navy `#0a1628`
+with cyan linework `#7cc4ff` and amber callouts `#ffb547`. The light variant
+is drafting-paper white `#f7f9fc` with deep blue linework `#1f4fa0` and
+orange-red callouts `#d9480f`.
 
-The centrepiece is the headline number, set the way a jersey number is set —
-white over an offset red and blue impression. A real card puts a photograph
-there; the honest substitute is the one figure on the card that is actually
-his.
+The hero is an engineering drawing of an original two-finger robot gripper
+holding a ball. It has what a real drawing sheet has: a bordered frame with
+zone letters and numbers, centring marks, a revision block, notes, a title
+block, a front view and a detail view. The dimension callouts carry the real
+numbers from `stats.py`. Detail A, at 4:1, shows the planned contact
+microphone on the fingertip, which is the research project the README
+describes. Every shape is original; there are no logos or borrowed marks.
 
-Two earlier revisions put borrowed iconography in that slot: first the real
-Philadelphia 76ers mark, then an original jersey. Both were removed. The
-palette still carries the theme — Philadelphia blue `#1d428a` and red
-`#c8102e` — while every shape in the artwork is original and free of anyone's
-trademark. `TestBrand` keeps it that way: it fails if a logo asset, the
-`sixers_mark` embedder, or the team wordmark reappears.
+The section strips use the same language: a numbered title cell, a leader
+running into a lettered balloon, and scale ticks along the lower edge.
 
-The only ornament left from those passes is the thirteen-star arc in
-`motifs.py`, which is the 1776 colonies device and belongs to nobody.
+`blueprint.py` holds the drafting primitives (paths, arrowheads, hatching,
+fitted type, the pencil and ink layers). `build_art.py` composes the sheets.
 
 ## Where the numbers come from
 
-`stats.py` is the single source of truth for merges, organizations and
-repositories. The generator reads it, and `test_art.py` fails if the README
-prose disagrees with it or if the per-organization counts do not sum to the
-total.
+`stats.py` is the single source of truth for merges, organizations,
+repositories and wins. The generator draws the callouts from it, and
+`test_art.py` fails if the outlined callout glyphs, the hero's accessible
+label, or the README prose disagree with it, or if the per-organization counts
+do not add up.
 
 Counted from merged pull requests authored by `LeSingh1`, **excluding this
 account's own repositories**. Two Meta contributions landed through
 Phabricator, which closes the pull request without marking it merged, so a
-naive `is:merged` search undercounts by those two.
+plain merged search undercounts by exactly those two.
 
-## Four rules, each learned by breaking it
+## Five rules, each learned by breaking it
 
 **1. Type is baked to vector outlines.** GitHub renders README images inside
 `<img>`, which cannot load a webfont. `text2path.py` converts strings to paths
-with fontTools. Needs the macOS faces Helvetica Neue Condensed Black and DIN
-Condensed Bold. `test_text_is_outlined_not_live` enforces it.
+with fontTools, using the macOS faces DIN Condensed Bold, DIN Alternate Bold
+and Menlo Bold. `test_text_is_outlined_not_live` enforces it.
 
 **2. Never put a CSS transform animation on an element that also carries an
 SVG `transform` attribute.** CSS wins outright and *replaces* the attribute
-instead of composing with it. This stacked all thirteen stars of an earlier
-mark on the origin, and later silently dropped the `skewX(-20)` from the
-holographic sweep, so the "light" was rendering as an upright bar. Animate a
-child, or wrap the element in a positioned `<g>`.
-`test_no_transform_animation_on_transform_attribute` enforces it.
+instead of composing with it. An earlier version stacked a row of stars on
+the origin this way. This artwork animates only `stroke-dashoffset` and
+`opacity`, and `test_only_safe_properties_animate` keeps it that way.
 
-**3. The resting state must be the finished artwork.** Preview cards and
-thumbnailers rasterise at `t=0`, or a few hundred milliseconds in, without
-running the timeline to completion. An early hero rendered as a completely
-**empty frame** because every element sat behind a delay starting at
-`opacity: 0`. `test_nothing_essential_starts_invisible` enforces it.
+**3. A frozen frame must still read.** Preview cards and thumbnailers
+rasterise at `t=0` without running the timeline. An early hero rendered as an
+empty frame because everything started at `opacity: 0`. So every line that
+draws itself on sits over a faint pencil copy of the same geometry, and type
+inks up from a ghost instead of from nothing. Frozen at `t=0`, the sheet is a
+complete drawing in pencil. `test_every_draw_on_line_has_a_pencil_underlay`
+and `test_nothing_starts_at_zero_opacity` enforce it.
 
-**4. A counter may never rest on a wrong number.** The stat roll-up holds the
-true figure at both the 0% and 100% keyframe, so a frozen render shows the
-truth; the count-up only exists in between. Intermediate frames are ghosted at
-38% opacity, so a frame caught mid-roll reads as a spinning counter rather
-than as data. `TestCounters` enforces both halves.
+**4. Motion is optional.** Every SVG carries a
+`prefers-reduced-motion: reduce` block that stops every animation, which
+leaves the finished drawing. Only one thing loops: the caret after the
+`$ ./listen --for slip` note. `test_reduced_motion_stops_everything` and
+`test_exactly_one_loop` enforce both.
+
+**5. No em dashes or en dashes, anywhere.** Not in the README, the alt text,
+the SVG labels, or the source. `test_no_em_or_en_dashes_anywhere` scans every
+text file.
 
 ## Layout
 
-Nothing is positioned by eye. `fit()` shrinks a string until it clears the
-space actually available; the card sizes the jersey against the panel it
-actually has, including the overhang of the star arc above its shoulders.
-Copy can change without pushing type off an edge.
+Nothing is positioned by eye where it can be measured. `fit()` shrinks a
+string until it clears the space actually available and `wrap()` breaks the
+notes on measured widths, so copy can change without pushing type off an
+edge.
+
+## The snake
+
+`.github/workflows/snake.yml` runs `Platane/snk` once a day and publishes a
+light and a dark snake, in this palette, to the `output` branch. The README
+embeds both as a `<picture>` pair.
