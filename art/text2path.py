@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Convert a text string into an SVG path using a real font file.
 
-Used so the README artwork carries DIN and Menlo everywhere, not just on
+Used so the README artwork carries its typefaces everywhere, not just on
 machines that happen to have them installed. GitHub renders README SVGs inside
 <img>, which blocks webfont loading, so vector outlines are the only guarantee.
 """
@@ -18,8 +18,12 @@ def load(path, index=0):
     return TTFont(path)
 
 
-def text_path(font, text, size, letter_spacing=0.0, cap_align=False):
-    """Return (path_d, advance_width). Baseline sits at y=0, glyphs go up (-y)."""
+def text_path(font, text, size, letter_spacing=0.0, cap_align=False, word_spacing=0.0):
+    """Return (path_d, advance_width). Baseline sits at y=0, glyphs go up (-y).
+
+    word_spacing adds extra advance after each space, for faces whose space
+    is too tight at small sizes.
+    """
     upm = font["head"].unitsPerEm
     scale = size / upm
     cmap = font.getBestCmap()
@@ -50,6 +54,8 @@ def text_path(font, text, size, letter_spacing=0.0, cap_align=False):
         if d:
             parts.append(d)
         x += hmtx[gname][0] * scale + letter_spacing
+        if ch == " ":
+            x += word_spacing
         prev = gname
     if parts:
         x -= letter_spacing

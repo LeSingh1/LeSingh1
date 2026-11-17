@@ -1,0 +1,64 @@
+<svg width="1200" height="104" viewBox="0 0 1200 104" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Section 05: Off the Court">
+<title>Section 05: Off the Court</title>
+<defs>
+    
+    <filter id="roughRcourt" x="-15%" y="-15%" width="130%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="4" seed="3" result="t"/>
+      <feDisplacementMap in="SourceGraphic" in2="t" scale="14"
+                         xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="raggedRcourt" x="-15%" y="-15%" width="130%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.055" numOctaves="5" seed="9" result="t"/>
+      <feDisplacementMap in="SourceGraphic" in2="t" scale="7"
+                         xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="sprayRcourt" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.42" numOctaves="3" seed="21" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="26"
+                         xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="grainRcourt" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" seed="7" result="n"/>
+      <feColorMatrix in="n" type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.09"/></feComponentTransfer>
+    </filter>
+    
+    <pattern id="dotsRcourt" width="10" height="10" patternUnits="userSpaceOnUse">
+      <circle cx="2.5" cy="2.5" r="2.0" fill="#0b2a5b" opacity="0.10"/>
+    </pattern>
+    <pattern id="dotsLRcourt" width="17" height="17" patternUnits="userSpaceOnUse">
+      <circle cx="4" cy="4" r="3.4" fill="#0b2a5b" opacity="0.10"/>
+    </pattern>
+    <pattern id="slashRcourt" width="14" height="14" patternUnits="userSpaceOnUse"
+             patternTransform="rotate(-40)">
+      <rect width="5.5" height="14" fill="#0b2a5b" opacity="0.28"/>
+    </pattern>
+    <linearGradient id="shRcourt" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#FFFFFF" stop-opacity="0.26"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <style><![CDATA[
+      @keyframes swRcourt { 0%{transform:translateX(-320px)} 100%{transform:translateX(1460px)} }
+      @keyframes drRcourt { 0%{transform:scaleY(.82)} 100%{transform:scaleY(1)} }
+      .swRcourt { animation: swRcourt 7.5s cubic-bezier(.45,0,.55,1) infinite }
+      .drRcourt { animation: drRcourt 3.2s ease-in-out infinite alternate;
+                  transform-box: fill-box; transform-origin: top center }
+      
+      @media (prefers-reduced-motion: reduce) {
+        * { animation: none !important }
+      }
+    ]]></style>
+  </defs>
+<rect width="1200" height="104" fill="#F2F5FA"/>
+<rect width="1200" height="104" fill="url(#dotsRcourt)"/>
+<g fill="#0b2a5b" opacity="0.16"><circle cx="593.4" cy="57.9" r="1.6"/><circle cx="384.7" cy="33.4" r="1.4"/><circle cx="583.4" cy="37.4" r="1.0"/><circle cx="395.8" cy="17.4" r="1.3"/><circle cx="1072.5" cy="71.6" r="1.3"/><circle cx="405.1" cy="45.1" r="0.7"/><circle cx="874.5" cy="30.8" r="0.9"/><circle cx="1176.9" cy="35.4" r="1.8"/><circle cx="741.5" cy="79.2" r="1.3"/><circle cx="214.4" cy="74.1" r="0.8"/><circle cx="489.3" cy="13.6" r="0.6"/><circle cx="441.1" cy="1.5" r="1.0"/><circle cx="1020.2" cy="103.8" r="1.0"/><circle cx="129.5" cy="36.0" r="0.6"/><circle cx="261.0" cy="64.6" r="1.3"/><circle cx="37.6" cy="50.7" r="1.0"/><circle cx="477.4" cy="14.0" r="1.0"/><circle cx="122.7" cy="71.4" r="1.3"/><circle cx="754.5" cy="42.4" r="1.7"/><circle cx="442.5" cy="21.2" r="1.0"/><circle cx="1095.3" cy="16.4" r="1.5"/><circle cx="1125.8" cy="88.6" r="1.1"/><circle cx="540.1" cy="90.6" r="1.4"/><circle cx="968.2" cy="18.5" r="1.3"/><circle cx="885.9" cy="24.8" r="0.8"/><circle cx="1009.4" cy="59.1" r="1.0"/><circle cx="583.1" cy="26.8" r="0.8"/><circle cx="127.8" cy="41.8" r="0.7"/><circle cx="1076.2" cy="99.4" r="1.3"/><circle cx="108.3" cy="62.2" r="0.7"/><circle cx="445.8" cy="13.3" r="1.1"/><circle cx="90.3" cy="29.1" r="0.8"/><circle cx="559.4" cy="96.8" r="1.3"/><circle cx="938.9" cy="75.4" r="1.2"/><circle cx="81.4" cy="6.0" r="0.7"/><circle cx="619.5" cy="35.3" r="1.7"/><circle cx="239.5" cy="13.7" r="1.3"/><circle cx="728.1" cy="5.5" r="0.9"/><circle cx="533.2" cy="85.6" r="1.5"/><circle cx="1048.2" cy="55.7" r="1.7"/><circle cx="564.4" cy="30.1" r="0.7"/><circle cx="998.3" cy="67.6" r="1.3"/><circle cx="1173.8" cy="65.7" r="0.9"/><circle cx="833.9" cy="96.3" r="0.7"/><circle cx="1132.3" cy="43.3" r="0.6"/><circle cx="609.7" cy="81.2" r="1.1"/><circle cx="323.1" cy="79.8" r="0.6"/><circle cx="805.5" cy="37.6" r="1.3"/><circle cx="608.2" cy="29.1" r="0.8"/><circle cx="984.6" cy="47.5" r="0.9"/><circle cx="710.7" cy="79.9" r="0.6"/><circle cx="549.9" cy="15.8" r="1.5"/><circle cx="54.5" cy="86.6" r="1.2"/><circle cx="619.4" cy="55.9" r="0.9"/><circle cx="542.6" cy="17.7" r="1.0"/><circle cx="715.0" cy="63.6" r="0.9"/><circle cx="739.3" cy="81.6" r="1.5"/><circle cx="3.9" cy="52.1" r="0.7"/><circle cx="983.1" cy="60.6" r="1.1"/><circle cx="731.7" cy="53.1" r="0.8"/></g>
+<path d="M0 0 H176 L146 104 H0 Z" fill="#c8102e"/>
+<g fill="#c8102e" opacity="0.8" filter="url(#sprayRcourt)"><ellipse cx="0" cy="0" rx="7.0" ry="3.4" transform="translate(173.6 95.0) rotate(93)"/><ellipse cx="0" cy="0" rx="7.5" ry="4.1" transform="translate(151.6 17.5) rotate(235)"/><ellipse cx="0" cy="0" rx="3.0" ry="2.0" transform="translate(201.3 79.0) rotate(47)"/><circle cx="200.2" cy="83.9" r="0.6"/><ellipse cx="0" cy="0" rx="2.7" ry="1.3" transform="translate(224.4 49.9) rotate(357)"/><circle cx="229.7" cy="57.0" r="0.5"/><ellipse cx="0" cy="0" rx="7.5" ry="5.4" transform="translate(182.5 29.0) rotate(286)"/><circle cx="185.7" cy="11.8" r="0.9"/><circle cx="182.5" cy="14.1" r="0.7"/><ellipse cx="0" cy="0" rx="8.2" ry="4.1" transform="translate(196.0 9.3) rotate(295)"/><circle cx="216.0" cy="5.5" r="0.8"/><circle cx="204.0" cy="-4.8" r="0.7"/><ellipse cx="0" cy="0" rx="4.0" ry="3.0" transform="translate(188.5 78.3) rotate(65)"/><circle cx="198.3" cy="81.3" r="0.6"/><ellipse cx="0" cy="0" rx="3.2" ry="2.4" transform="translate(178.1 74.6) rotate(85)"/><ellipse cx="0" cy="0" rx="3.4" ry="2.8" transform="translate(139.0 69.3) rotate(155)"/><circle cx="134.4" cy="86.6" r="0.5"/><ellipse cx="0" cy="0" rx="4.3" ry="2.9" transform="translate(192.8 6.4) rotate(290)"/><circle cx="188.7" cy="-6.8" r="0.7"/><ellipse cx="0" cy="0" rx="5.6" ry="3.2" transform="translate(150.1 87.3) rotate(126)"/><circle cx="137.9" cy="82.5" r="0.7"/><circle cx="150.5" cy="102.1" r="0.7"/><ellipse cx="0" cy="0" rx="4.6" ry="2.5" transform="translate(141.6 32.8) rotate(209)"/><circle cx="134.7" cy="37.6" r="0.6"/></g>
+<g class="drRcourt"><rect x="35.8" y="100.0" width="7.0" height="17.7" rx="3.5" fill="#c8102e"/><circle cx="39.3" cy="117.7" r="5.5" fill="#c8102e"/></g><g class="drRcourt"><rect x="73.5" y="100.0" width="7.9" height="11.0" rx="3.9" fill="#c8102e"/><circle cx="77.4" cy="111.0" r="6.1" fill="#c8102e"/></g><g class="drRcourt"><rect x="112.9" y="100.0" width="6.3" height="15.2" rx="3.1" fill="#c8102e"/><circle cx="116.1" cy="115.2" r="4.9" fill="#c8102e"/></g><g class="drRcourt"><rect x="44.3" y="100.0" width="5.5" height="8.0" rx="2.8" fill="#c8102e"/><circle cx="47.1" cy="108.0" r="4.3" fill="#c8102e"/></g>
+<path d="M10.7 -12V-24.1Q10.7 -28 11.3 -29.4Q12 -30.8 13.5 -30.8Q15 -30.8 15.7 -29.4Q16.4 -28 16.4 -24.1V-12Q16.4 -8.1 15.7 -6.7Q15 -5.3 13.5 -5.3Q12 -5.3 11.3 -6.7Q10.7 -8.1 10.7 -12ZM1 -18Q1 -12.4 1.7 -8.8Q2.5 -5.2 4 -3.1Q5.6 -1 7.9 -0.2Q10.3 0.6 13.5 0.6Q16.7 0.6 19.1 -0.2Q21.5 -1 23 -3.1Q24.5 -5.2 25.3 -8.8Q26.1 -12.4 26.1 -18Q26.1 -23.6 25.3 -27.2Q24.5 -30.9 23 -33Q21.5 -35.2 19.1 -36Q16.7 -36.8 13.5 -36.8Q10.3 -36.8 7.9 -36Q5.6 -35.2 4 -33Q2.5 -30.9 1.7 -27.2Q1 -23.6 1 -18Z M29.2 -36.1 28.3 -15.7H37.1Q37.1 -17.3 37.8 -18Q38.5 -18.8 39.7 -18.8Q41.1 -18.8 41.8 -17.5Q42.5 -16.3 42.5 -13.2Q42.5 -10.6 42.3 -9Q42.2 -7.4 41.8 -6.6Q41.4 -5.8 41 -5.5Q40.5 -5.3 39.7 -5.3Q38.5 -5.3 37.8 -6.2Q37.1 -7.2 37.1 -9.8V-11H28V-9.8Q28 -4.8 30.9 -2.1Q33.7 0.6 40.1 0.6Q43.5 0.6 45.8 -0.3Q48.2 -1.1 49.6 -2.9Q51 -4.6 51.6 -7.3Q52.2 -10 52.2 -13.6Q52.2 -19.6 49.8 -22.5Q47.5 -25.3 43 -25.3Q40.9 -25.3 39.2 -24.6Q37.5 -23.9 36.1 -22.6L36.6 -28.8H50.5V-36.1Z" fill="#FFFFFF" transform="translate(45.0 70.0)"/>
+<path d="M9.9 -16.4Q9.9 -19.7 10 -21.9Q10.1 -24.1 10.4 -25.4Q10.7 -26.7 11.2 -27.2Q11.8 -27.7 12.8 -27.7Q13.8 -27.7 14.3 -27.2Q14.9 -26.7 15.2 -25.4Q15.5 -24.1 15.6 -21.9Q15.7 -19.7 15.7 -16.4Q15.7 -13.1 15.6 -10.9Q15.5 -8.7 15.2 -7.5Q14.9 -6.2 14.3 -5.7Q13.8 -5.2 12.8 -5.2Q11.8 -5.2 11.2 -5.7Q10.7 -6.2 10.4 -7.5Q10.1 -8.7 10 -10.9Q9.9 -13.1 9.9 -16.4ZM1.1 -16.4Q1.1 -11.8 1.7 -8.6Q2.3 -5.3 3.6 -3.3Q5 -1.2 7.3 -0.4Q9.5 0.5 12.8 0.5Q16.1 0.5 18.3 -0.4Q20.6 -1.2 21.9 -3.3Q23.3 -5.3 23.9 -8.6Q24.5 -11.8 24.5 -16.4Q24.5 -21 23.9 -24.3Q23.3 -27.5 21.9 -29.6Q20.6 -31.6 18.3 -32.5Q16.1 -33.5 12.8 -33.5Q9.5 -33.5 7.3 -32.5Q5 -31.6 3.6 -29.6Q2.3 -27.5 1.7 -24.3Q1.1 -21 1.1 -16.4Z M29 -32.8V0H37.6V-13.5H47.8V-20.2H37.6V-25.9H48.5V-32.8Z M52.5 -32.8V0H61.1V-13.5H71.3V-20.2H61.1V-25.9H72V-32.8Z M92 -25.6V0H100.6V-25.6H107V-32.8H85.7V-25.6Z M110.4 -32.8V0H118.9V-13.5H124.2V0H132.7V-32.8H124.2V-20.8H118.9V-32.8Z M138.2 -32.8V0H158V-7H146.7V-13.5H156.9V-20.2H146.7V-25.9H157.6V-32.8Z M189 -22.9V-21H197.3V-23.1Q197.3 -25.5 196.7 -27.4Q196.2 -29.3 194.9 -30.7Q193.6 -32 191.6 -32.8Q189.6 -33.5 186.7 -33.5Q183.4 -33.5 181.1 -32.6Q178.9 -31.7 177.5 -29.7Q176.1 -27.6 175.5 -24.4Q175 -21.1 175 -16.4Q175 -11.8 175.4 -8.6Q175.9 -5.3 177.2 -3.3Q178.5 -1.2 180.8 -0.4Q183.1 0.5 186.7 0.5Q188.8 0.5 190.7 0.1Q192.7 -0.4 194.2 -1.6Q195.7 -2.9 196.6 -5.1Q197.5 -7.3 197.5 -10.8V-13.2H189.3Q189.3 -10.9 189.2 -9.3Q189 -7.8 188.8 -6.9Q188.5 -5.9 188 -5.5Q187.5 -5.2 186.7 -5.2Q185.7 -5.2 185.1 -5.7Q184.6 -6.2 184.3 -7.5Q184 -8.7 183.9 -10.9Q183.8 -13.1 183.8 -16.4Q183.8 -19.7 183.9 -21.9Q184 -24.1 184.3 -25.4Q184.6 -26.7 185.1 -27.2Q185.7 -27.7 186.7 -27.7Q187.9 -27.7 188.5 -26.7Q189 -25.7 189 -22.9Z M209.9 -16.4Q209.9 -19.7 210 -21.9Q210.1 -24.1 210.4 -25.4Q210.7 -26.7 211.3 -27.2Q211.8 -27.7 212.8 -27.7Q213.8 -27.7 214.3 -27.2Q214.9 -26.7 215.2 -25.4Q215.5 -24.1 215.6 -21.9Q215.7 -19.7 215.7 -16.4Q215.7 -13.1 215.6 -10.9Q215.5 -8.7 215.2 -7.5Q214.9 -6.2 214.3 -5.7Q213.8 -5.2 212.8 -5.2Q211.8 -5.2 211.3 -5.7Q210.7 -6.2 210.4 -7.5Q210.1 -8.7 210 -10.9Q209.9 -13.1 209.9 -16.4ZM201.1 -16.4Q201.1 -11.8 201.7 -8.6Q202.3 -5.3 203.6 -3.3Q205 -1.2 207.3 -0.4Q209.5 0.5 212.8 0.5Q216.1 0.5 218.3 -0.4Q220.6 -1.2 221.9 -3.3Q223.3 -5.3 223.9 -8.6Q224.5 -11.8 224.5 -16.4Q224.5 -21 223.9 -24.3Q223.3 -27.5 221.9 -29.6Q220.6 -31.6 218.3 -32.5Q216.1 -33.5 212.8 -33.5Q209.5 -33.5 207.3 -32.5Q205 -31.6 203.6 -29.6Q202.3 -27.5 201.7 -24.3Q201.1 -21 201.1 -16.4Z M237.2 -32.8H228.6V-11.3Q228.6 -7.9 229.4 -5.6Q230.1 -3.3 231.5 -1.9Q232.9 -0.5 235 0Q237.1 0.5 239.8 0.5Q242.5 0.5 244.6 0Q246.6 -0.5 248 -1.9Q249.4 -3.3 250.2 -5.6Q250.9 -7.9 250.9 -11.3V-32.8H242.3V-9.2Q242.3 -6.8 241.7 -6Q241 -5.2 239.8 -5.2Q238.6 -5.2 237.9 -6Q237.2 -6.8 237.2 -9.2Z M264.5 -19V-26.7H266.2Q268.1 -26.7 269 -25.8Q269.8 -24.9 269.8 -22.9Q269.8 -21.1 269 -20Q268.1 -19 266.2 -19ZM256 -32.8V0H264.5V-13.2H266.8Q267.6 -13.2 268.1 -12.9Q268.6 -12.7 269 -12.2Q269.3 -11.7 269.5 -10.8Q269.6 -9.8 269.6 -8.5V-6.3Q269.6 -5.8 269.6 -4.9Q269.6 -4.1 269.7 -3.3Q269.8 -2.4 269.9 -1.5Q270.1 -0.6 270.4 0H279.5V-0.5Q279.1 -0.7 278.9 -0.9Q278.8 -1.2 278.6 -1.5Q278.4 -1.7 278.3 -2.3Q278.2 -2.8 278.2 -3.4Q278.2 -4 278.2 -4.7Q278.2 -5.4 278.2 -6V-8.8Q278.2 -12.1 277 -14Q275.9 -15.9 272.8 -16.2V-16.3Q275.7 -16.7 277 -18.8Q278.4 -20.8 278.4 -24.1Q278.4 -26 277.9 -27.6Q277.4 -29.2 276.3 -30.4Q275.3 -31.6 273.5 -32.2Q271.8 -32.8 269.4 -32.8Z M287.3 -25.6V0H295.8V-25.6H302.3V-32.8H280.9V-25.6Z" fill="#0b2a5b" transform="translate(228 69.0)"/>
+<rect x="558.184" y="50.0" width="567.816" height="4" fill="#c8102e" opacity=".55"/>
+<g class="swRcourt"><rect x="-320" y="0" width="200" height="104" fill="url(#shRcourt)" transform="skewX(-20)"/></g>
+<rect width="1200" height="104" filter="url(#grainRcourt)" opacity=".7"/>
+</svg>

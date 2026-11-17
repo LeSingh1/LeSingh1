@@ -2,7 +2,14 @@
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./art/hero-dark.svg">
-  <img src="./art/hero.svg" alt="Engineering drawing of a two-finger robot gripper holding a ball, with a title block reading Shaurya Singh. Its dimension callouts read 132 merged pull requests, 25 organizations, 50 repositories and 4 hackathon wins." width="100%">
+  <img src="./art/hero.svg" alt="Shaurya Singh holo trading card: HP 132, ability Parity Audit, moves Fast Break Build and Digital Twin, set number 23543" width="100%">
+</picture>
+
+<br/><br/>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./art/ledger-dark.svg">
+  <img src="./art/ledger.svg" alt="132 merges landed · 25 organizations · 50 repositories · 4 hackathons won" width="100%">
 </picture>
 
 </div>
@@ -10,11 +17,11 @@
 <br/>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./art/rule-highlights-dark.svg">
-  <img src="./art/rule-highlights.svg" alt="Section 01: Highlights" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="./art/rule-career-dark.svg">
+  <img src="./art/rule-career.svg" alt="01: Career Highlights" width="100%">
 </picture>
 
-I'm a sophomore in Fremont, California. I fix bugs in open-source libraries, design robots for my FTC team, and build AI agents at hackathons.
+I am a sophomore in Fremont, and I spend most of my time in other people's codebases. Not writing tutorials about them. Fixing them. When I'm not doing that, I design robots for my FTC team and build AI agents at hackathons.
 
 - **132 merged pull requests** into 50 repositories across 25 organizations, including Meta, Apple, NVIDIA, OpenAI, Google and the Rust project.
 - **4 hackathon wins** in 2026.
@@ -34,7 +41,7 @@ I'm a sophomore in Fremont, California. I fix bugs in open-source libraries, des
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./art/rule-builds-dark.svg">
-  <img src="./art/rule-builds.svg" alt="Section 02: Featured Builds" width="100%">
+  <img src="./art/rule-builds.svg" alt="02: Featured Builds" width="100%">
 </picture>
 
 <table>
@@ -85,19 +92,19 @@ Six agents handle procurement from start to finish: vendor scouting, quote colle
 <br/>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./art/rule-opensource-dark.svg">
-  <img src="./art/rule-opensource.svg" alt="Section 03: Open Source" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="./art/rule-merges-dark.svg">
+  <img src="./art/rule-merges.svg" alt="03: The Merge Docket" width="100%">
 </picture>
 
-**132 merged pull requests. 25 organizations. 50 repositories.** I sent every one cold: no referral, no internship, nobody who knew my name first.
+**132 merges. 25 organizations. 50 repositories.** I sent every one cold: no referral, no internship, nobody who knew my name first.
 
-The approach is narrow on purpose. I find a real bug in a library people already depend on, write a test that fails before the fix and passes after, and send it in.
+The pitch is narrow on purpose. I find a real bug in a library you already depend on, write the regression test that fails before and passes after, and send it in.
 
 <table>
 <tr>
 <td width="50%" valign="top">
 
-#### The one I'm proudest of
+#### The one I am proudest of
 
 [**pyrefly#3415**](https://github.com/pyrefly-org/pyrefly/pull/3415) fixes negative narrowing for `isinstance` checks against a tuple of classes, in Pyrefly, the Python type checker from Meta. Meta imported it through Phabricator and landed it as [`92413ec`](https://github.com/pyrefly-org/pyrefly/commit/92413ec83a599d50cd2aa1dfd8e94a22ba8a56a9). The mypy_primer bot ran it against 9 real open-source projects and classified the change as 5 improvements and 4 neutral.
 
@@ -117,7 +124,7 @@ NVIDIA's maintainer opened [cuda-python#2410](https://github.com/NVIDIA/cuda-pyt
 
 <br/>
 
-| Org | Pull request | What it fixes |
+| Org | Pull request | What it actually fixes |
 |:--|:--|:--|
 | **Meta** | [pyrefly#3415](https://github.com/pyrefly-org/pyrefly/pull/3415) | Negative narrowing for `isinstance` tuple targets. Landed through Phabricator; mypy_primer classified it as 5 improvements and 4 neutral across 9 projects. |
 | **websockets** | [ws#2329](https://github.com/websockets/ws/pull/2329) | A `maxFragments` limit bypass: empty continuation frames slipped past the counter. |
@@ -133,11 +140,11 @@ NVIDIA's maintainer opened [cuda-python#2410](https://github.com/NVIDIA/cuda-pyt
 </details>
 
 <details>
-<summary><b>The full docket, by organization</b> &nbsp;<i>(25 organizations)</i></summary>
+<summary><b>The full docket, by house</b> &nbsp;<i>(25 organizations)</i></summary>
 
 <br/>
 
-| Organization | Repositories | Merges |
+| House | Repositories | Merges |
 |:--|:--|--:|
 | **Meta** | `lexical` · `pyrefly` · `jscodeshift` · `stylex` · `idb` | 42 |
 | **Apple** | `coremltools` · `container` · `containerization` · `password-manager-resources` · `swift-nio` · `servicetalk` · `foundationdb` | 20 |
@@ -149,23 +156,23 @@ NVIDIA's maintainer opened [cuda-python#2410](https://github.com/NVIDIA/cuda-pyt
 | **Deno** | `deno` · `std` | 4 |
 | **Cloudflare** | `workers-sdk` | 4 |
 | **Jest** | `jest` | 2 |
-| **15 more, one each** | `rust-lang/rust` · `vuejs/core` · `vitejs/vite` · `rollup/rollup` · `websockets/ws` · `vercel/satori` · `honojs/hono` · `h3js/h3` · `Kludex/starlette` · `nanostores/nanostores` · `ml-explore/mlx` · `huggingface/datasets` · `unjs/unstorage` · `open-circle/valibot` · `nestjs/nest` | 15 |
+| **Others** | `rust-lang/rust` · `vuejs/core` · `vitejs/vite` · `rollup/rollup` · `websockets/ws` · `vercel/satori` · `honojs/hono` · `h3js/h3` · `Kludex/starlette` · `nanostores/nanostores` · `ml-explore/mlx` · `huggingface/datasets` · `unjs/unstorage` · `open-circle/valibot` · `nestjs/nest` | 15 |
 
 <sub>Counted from merged pull requests authored by <code>LeSingh1</code>, excluding my own repositories. Two Meta contributions (pyrefly and idb) landed through Phabricator, which GitHub does not label as merged, so they are added by hand.</sub>
 
 </details>
 
 <details>
-<summary><b>How I find these</b></summary>
+<summary><b>How I actually find these</b></summary>
 
 <br/>
 
 No fuzzing, no scanners, no bulk codemods.
 
-1. **Read the issue tracker backwards.** Old open issues with a clear repro and no assignee are the best inventory in open source. Somebody already did the hard part of proving the bug exists.
+1. **Read the issue tracker backwards.** Old open issues with a clear repro and no assignee are the best inventory in open source. Somebody already did the hard part of proving a bug exists.
 2. **Check that two code paths agree.** Most of my bugs come from asking whether two paths that should behave the same actually do: streamed and non-streamed, sync and async, a base class and its override, Linux and Windows.
 3. **Read the tests, not the code.** The gap between what a test file covers and what the module claims to do is where bugs sit. `toMatchObject` not handling class instances was sitting in that gap.
-4. **Write the failing test first.** If I can't make it go red, I don't understand the bug well enough to send a patch.
+4. **Write the failing test first.** If I cannot make it go red, I do not understand the bug well enough to send a patch.
 5. **One behavior per PR.** Maintainers are volunteers. A reviewable diff is a merged diff.
 
 </details>
@@ -173,58 +180,55 @@ No fuzzing, no scanners, no bulk codemods.
 <br/>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./art/rule-robotics-dark.svg">
-  <img src="./art/rule-robotics.svg" alt="Section 04: Robotics and Research" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="./art/rule-lab-dark.svg">
+  <img src="./art/rule-lab.svg" alt="04: In the Lab" width="100%">
 </picture>
 
 I'm the Lead CAD Designer and Design Captain for **FTC Team 23543, The Architects**, a 3x FTC Qualifier Finalist. I design our chassis, mechanisms, layout and blueprints in Fusion 360.
 
 **A digital twin of our robot.** This fall I built a model of our competition robot in Fusion 360: about 375 parts, down to every fastener, modeled from about 30 photos and driven by Python scripts through the Fusion API. I exported it into a MuJoCo physics simulation and ran intake, transfer, shooting and drive tests. In simulation, our intake could not pick a ball up off the floor. From those findings I directed a redesign with funnel guides that center each ball, and in simulation it passed every ball case: 59 of 59 starting positions and 64 of 64 ball sizes, inside the 18-inch size limit.
 
-**Next: a sense of touch.** I'm planning a research project on one question: can a cheap contact microphone hear a robot gripper start to slip, earlier and more reliably than a force sensor? The plan is an FTC gripper with a contact mic and a force sensor side by side, measuring how many milliseconds of warning each one gives before a drop. The drawing at the top of this page is a sketch of that idea, and Detail A is where the mic would go.
+**Next: a sense of touch.** I'm planning a research project on one question: can a cheap contact microphone hear a robot gripper start to slip, earlier and more reliably than a force sensor? The plan is an FTC gripper with a contact mic and a force sensor side by side, measuring how many milliseconds of warning each one gives before a drop.
 
 <br/>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./art/rule-life-dark.svg">
-  <img src="./art/rule-life.svg" alt="Section 05: Off the Keyboard" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="./art/rule-court-dark.svg">
+  <img src="./art/rule-court.svg" alt="05: Off the Court" width="100%">
 </picture>
 
+<div align="center">
+
 <table>
-<tr><td width="30%" valign="top"><b>Senior Patrol Leader</b><br/><sub>Scouts, Troop 199</sub></td><td>I lead a troop of 40 to 50 scouts: weekly meetings, outings and service projects. Life Scout. Service work I've done includes restoring a pony pen at Ardenwood Historic Farm, building a retaining wall along the trail at Tule Ponds, building a shed to protect the electrical equipment and water pump at the Warm Springs Little League snack shack, and helping build 20 patlas, the small tables used for poojas.</td></tr>
-<tr><td valign="top"><b>Basketball</b><br/><sub>Irvington High School</sub></td><td>Captain of the freshman team in 2025-26, where I led the team in scoring, rebounding and blocks. Now on varsity as the only sophomore.</td></tr>
-<tr><td valign="top"><b>Math</b></td><td>Qualified for the AIME through the AMC 10.</td></tr>
-<tr><td valign="top"><b>Anthropic Academy</b></td><td>Courses on Claude Code, agent skills and subagents. May 2026.</td></tr>
+<tr><td width="30%"><b>Basketball</b></td><td>Irvington High School. Captain of the freshman team in 2025-26, where I led the team in scoring, rebounding and blocks. Now on varsity as the only sophomore.</td></tr>
+<tr><td><b>Senior Patrol Leader</b></td><td>Scouts, Troop 199. I lead a troop of 40 to 50 scouts: weekly meetings, outings and service projects. Life Scout. Service work I've done includes restoring a pony pen at Ardenwood Historic Farm, building a retaining wall along the trail at Tule Ponds, building a shed to protect the electrical equipment and water pump at the Warm Springs Little League snack shack, and helping build 20 patlas, the small tables used for poojas.</td></tr>
+<tr><td><b>Lead CAD Designer</b></td><td>FTC Team 23543, The Architects. Fusion 360: chassis, mechanisms, layout and blueprints. 3x FTC Qualifier Finalist.</td></tr>
+<tr><td><b>AIME Qualifier</b></td><td>Qualified for the AIME through the AMC 10.</td></tr>
+<tr><td><b>Anthropic Academy</b></td><td>Courses on Claude Code, agent skills and subagents. May 2026.</td></tr>
 </table>
+
+</div>
 
 <br/>
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./art/rule-stack-dark.svg">
-  <img src="./art/rule-stack.svg" alt="Section 06: Toolkit" width="100%">
+  <img src="./art/rule-stack.svg" alt="06: The Stack" width="100%">
 </picture>
 
 <div align="center">
 <br/>
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://skillicons.dev/icons?i=py%2Cts%2Cjs%2Cgo%2Crust%2Cswift%2Creact%2Cnextjs&theme=dark">
-  <img src="https://skillicons.dev/icons?i=py%2Cts%2Cjs%2Cgo%2Crust%2Cswift%2Creact%2Cnextjs&theme=light" alt="Python, TypeScript, JavaScript, Go, Rust, Swift, React, Next.js" height="48"/>
-</picture>
-<br/><br/>
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://skillicons.dev/icons?i=nodejs%2Cvite%2Cthreejs%2Cfastapi%2Csklearn%2Credis%2Cdocker%2Cgithubactions&theme=dark">
-  <img src="https://skillicons.dev/icons?i=nodejs%2Cvite%2Cthreejs%2Cfastapi%2Csklearn%2Credis%2Cdocker%2Cgithubactions&theme=light" alt="Node.js, Vite, Three.js, FastAPI, scikit-learn, Redis, Docker, GitHub Actions" height="48"/>
-</picture>
-
-<sub>Also Fusion 360 and its Python API, MuJoCo, MediaPipe, pytest and Vitest.</sub>
+<p><img src="https://skillicons.dev/icons?i=ts,python,rust,go,swift,cpp,js&theme=dark" alt="TypeScript, Python, Rust, Go, Swift, C++, JavaScript" height="52"/></p>
+<p><img src="https://skillicons.dev/icons?i=react,nextjs,nodejs,fastapi,threejs,vite,jest&theme=dark" alt="React, Next.js, Node, FastAPI, Three.js, Vite, Jest" height="52"/></p>
+<p><img src="https://skillicons.dev/icons?i=docker,postgres,mongodb,redis,gcp,linux,git,github&theme=dark" alt="Docker, Postgres, MongoDB, Redis, Google Cloud, Linux, Git, GitHub" height="52"/></p>
 
 <br/>
 </div>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./art/rule-activity-dark.svg">
-  <img src="./art/rule-activity.svg" alt="Section 07: Contributions" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="./art/rule-gamelog-dark.svg">
+  <img src="./art/rule-gamelog.svg" alt="07: Game Log" width="100%">
 </picture>
 
 <div align="center">
@@ -232,7 +236,7 @@ I'm the Lead CAD Designer and Design Captain for **FTC Team 23543, The Architect
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/LeSingh1/LeSingh1/output/snake-dark.svg">
-  <img src="https://raw.githubusercontent.com/LeSingh1/LeSingh1/output/snake.svg" alt="My GitHub contribution graph, eaten by a snake in blueprint colors" width="100%">
+  <img src="https://raw.githubusercontent.com/LeSingh1/LeSingh1/output/snake.svg" alt="My GitHub contribution graph, eaten by a snake in Philadelphia blue and red" width="100%">
 </picture>
 
 <sub>Redrawn every day by <a href="./.github/workflows/snake.yml">a workflow</a> from my real contribution graph.</sub>
@@ -242,15 +246,15 @@ I'm the Lead CAD Designer and Design Captain for **FTC Team 23543, The Architect
 <br/>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./art/rule-contact-dark.svg">
-  <img src="./art/rule-contact.svg" alt="Section 08: Contact" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="./art/rule-reach-dark.svg">
+  <img src="./art/rule-reach.svg" alt="08: Reach Me" width="100%">
 </picture>
 
 <div align="center">
 
 <br/>
 
-<p><a href="https://www.linkedin.com/in/shaurya-singh-b7591540b"><img src="https://img.shields.io/badge/LinkedIn-1F4FA0?style=for-the-badge&logo=linkedin&logoColor=EAF2FC&labelColor=0A1628" alt="LinkedIn" height="34"/></a> &nbsp; <a href="mailto:sshaurya914@gmail.com"><img src="https://img.shields.io/badge/Email-D9480F?style=for-the-badge&logo=gmail&logoColor=EAF2FC&labelColor=0A1628" alt="Email" height="34"/></a> &nbsp; <a href="https://github.com/LeSingh1?tab=repositories"><img src="https://img.shields.io/badge/Repositories-1F4FA0?style=for-the-badge&logo=github&logoColor=EAF2FC&labelColor=0A1628" alt="Repositories" height="34"/></a></p>
+<p><a href="https://www.linkedin.com/in/shaurya-singh-b7591540b"><img src="https://img.shields.io/badge/LinkedIn-006BB6?style=for-the-badge&logo=linkedin&logoColor=F1E9D6&labelColor=00285E" alt="LinkedIn" height="34"/></a> &nbsp; <a href="mailto:sshaurya914@gmail.com"><img src="https://img.shields.io/badge/Email-ED174C?style=for-the-badge&logo=gmail&logoColor=F1E9D6&labelColor=8C0E2E" alt="Email" height="34"/></a> &nbsp; <a href="https://github.com/LeSingh1?tab=repositories"><img src="https://img.shields.io/badge/Repositories-00285E?style=for-the-badge&logo=github&logoColor=F1E9D6&labelColor=15120E" alt="Repositories" height="34"/></a></p>
 
 <br/><br/>
 
@@ -258,6 +262,6 @@ I'm the Lead CAD Designer and Design Captain for **FTC Team 23543, The Architect
 
 <br/>
 
-<sub><i>Artwork generated by <a href="./art/build_art.py">art/build_art.py</a>: an engineering drawing sheet in blueprint navy and drafting-paper white, with an original two-finger gripper whose dimensions are real counts. The lines draw themselves on, and every glyph is a vector outline, because GitHub renders these inside <code>&lt;img&gt;</code> and an <code>&lt;img&gt;</code> cannot load a font.</i></sub>
+<sub><i>Artwork generated by <a href="./art/build_art.py">art/build_art.py</a>: a 1st Edition holo trading card on a graffiti wall, in Philadelphia blue and red with white and silver foil. HP is the merge count and every move carries a real number.<br/>Every shape is original and every glyph is a real vector outline, because GitHub renders these inside <code>&lt;img&gt;</code> and an <code>&lt;img&gt;</code> cannot load a font.</i></sub>
 
 </div>
