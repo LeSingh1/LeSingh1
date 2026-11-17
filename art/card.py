@@ -71,7 +71,7 @@ def type_at(font, s, size, x, y, fill, anchor="start", tracking=0.0,
             f'{extra}/>'), w
 
 
-WS = 2.2                       # extra word space for Gill Sans body copy
+WS = 1.4                       # extra word space for Gill Sans body copy
 
 
 def body(font, s, size, x, y, fill):
