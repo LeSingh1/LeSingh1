@@ -208,13 +208,13 @@ I'm the Lead CAD Designer and Design Captain for **FTC Team 23543, The Architect
 <br/>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://skillicons.dev/icons?i=py,ts,js,go,rust,swift,react,nextjs&theme=dark">
-  <img src="https://skillicons.dev/icons?i=py,ts,js,go,rust,swift,react,nextjs&theme=light" alt="Python, TypeScript, JavaScript, Go, Rust, Swift, React, Next.js" height="48"/>
+  <source media="(prefers-color-scheme: dark)" srcset="https://skillicons.dev/icons?i=py%2Cts%2Cjs%2Cgo%2Crust%2Cswift%2Creact%2Cnextjs&theme=dark">
+  <img src="https://skillicons.dev/icons?i=py%2Cts%2Cjs%2Cgo%2Crust%2Cswift%2Creact%2Cnextjs&theme=light" alt="Python, TypeScript, JavaScript, Go, Rust, Swift, React, Next.js" height="48"/>
 </picture>
 <br/><br/>
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://skillicons.dev/icons?i=nodejs,vite,threejs,fastapi,sklearn,redis,docker,githubactions&theme=dark">
-  <img src="https://skillicons.dev/icons?i=nodejs,vite,threejs,fastapi,sklearn,redis,docker,githubactions&theme=light" alt="Node.js, Vite, Three.js, FastAPI, scikit-learn, Redis, Docker, GitHub Actions" height="48"/>
+  <source media="(prefers-color-scheme: dark)" srcset="https://skillicons.dev/icons?i=nodejs%2Cvite%2Cthreejs%2Cfastapi%2Csklearn%2Credis%2Cdocker%2Cgithubactions&theme=dark">
+  <img src="https://skillicons.dev/icons?i=nodejs%2Cvite%2Cthreejs%2Cfastapi%2Csklearn%2Credis%2Cdocker%2Cgithubactions&theme=light" alt="Node.js, Vite, Three.js, FastAPI, scikit-learn, Redis, Docker, GitHub Actions" height="48"/>
 </picture>
 
 <sub>Also Fusion 360 and its Python API, MuJoCo, MediaPipe, pytest and Vitest.</sub>

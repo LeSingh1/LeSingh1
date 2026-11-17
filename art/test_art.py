@@ -416,6 +416,14 @@ class TestPictures(unittest.TestCase):
                 self.assertRegex(pic, r'alt="[^"]{8,}"')
 
 
+    def test_srcset_urls_have_no_commas(self):
+        """GitHub splits srcset on commas, so a URL with a raw comma is cut
+        short. This once collapsed a row of eight tech icons to one."""
+        for url in re.findall(r'srcset="([^"]+)"', read(README)):
+            with self.subTest(url=url):
+                self.assertNotIn(",", url)
+
+
 class TestSnakeWorkflow(unittest.TestCase):
     def setUp(self):
         self.y = read(WORKFLOW)
